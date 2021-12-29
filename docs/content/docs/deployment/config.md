@@ -166,7 +166,7 @@ In most cases, users should only need to set the values `taskmanager.memory.proc
 
 For a detailed explanation of how these options interact,
 see the documentation on [TaskManager]({{< ref "docs/deployment/memory/mem_setup_tm" >}}) and
-[JobManager]({{< ref "docs/deployment/memory/mem_setup_jobmanager" >}} ) memory configurations.
+[JobManager]({{< ref "docs/deployment/memory/mem_setup_jobmanager" >}}) memory configurations.
 
 {{< generated/common_memory_section >}}
 

@@ -27,191 +27,191 @@ under the License.
 
 # 配置参数
 
-All configuration is done in `conf/flink-conf.yaml`, which is expected to be a flat collection of [YAML key value pairs](http://www.yaml.org/spec/1.2/spec.html) with format `key: value`.
+所有配置都在 `confflink-conf.yaml` 中完成，它应该是一个 [YAML 键值对](http://www.yaml.org/spec/1.2/spec.html) 格式为 `key: value` 的集合。
 
-The configuration is parsed and evaluated when the Flink processes are started. Changes to the configuration file require restarting the relevant processes.
+在 Flink 进程启动时解析和评估配置。对配置文件的更改需要重新启动相关进程。
 
-The out of the box configuration will use your default Java installation. You can manually set the environment variable `JAVA_HOME` or the configuration key `env.java.home` in `conf/flink-conf.yaml` if you want to manually override the Java runtime to use.
+开箱即用的配置将使用您的默认 Java 安装。如果您想手动覆盖 Java 运行时以使用，您可以在 `/conf/flink-conf.yaml` 中手动设置环境变量 `JAVA_HOME` 或配置键 `env.java.home`。
 
-You can specify a different configuration directory location by defining the `FLINK_CONF_DIR` environment variable. For resource providers which provide non-session deployments, you can specify per-job configurations this way. Make a copy of the `conf` directory from the Flink distribution and modify the settings on a per-job basis. Note that this is not supported in Docker or standalone Kubernetes deployments. On Docker-based deployments, you can use the `FLINK_PROPERTIES` environment variable for passing configuration values.
+您可以通过定义 `FLINK_CONF_DIR` 环境变量来指定不同的配置目录位置。对于提供非会话部署的资源提供者，您可以通过这种方式指定每个作业的配置。从 Flink 发行版复制 `conf` 目录，并在每个作业的基础上修改设置。请注意，这在 Docker 或独立的 Kubernetes 部署中不受支持。在基于 Docker 的部署中，您可以使用“FLINK_PROPERTIES”环境变量来传递配置值。
 
-On session clusters, the provided configuration will only be used for configuring [execution](#execution) parameters, e.g. configuration parameters affecting the job, not the underlying cluster.
+在会话集群上，提供的配置将仅用于配置 [execution](#execution) 参数，例如影响作业的配置参数，而不是底层集群。
 
-# Basic Setup
+# 基本设置
 
-The default configuration supports starting a single-node Flink session cluster without any changes.
-The options in this section are the ones most commonly needed for a basic distributed Flink setup.
+默认配置支持启动单节点 Flink 会话集群，无需任何更改。
+本节中的配置项是分布式 Flink 设置最基础常用的配置项。
 
-**Hostnames / Ports**
+**主机名 / 端口**
 
-These options are only necessary for *standalone* application- or session deployments ([simple standalone]({{< ref "docs/deployment/resource-providers/standalone/overview" >}}) or [Kubernetes]({{< ref "docs/deployment/resource-providers/standalone/kubernetes" >}})).
+这些配置项仅对 *standalone* 应用程序或会话部署（[simple standalone]({{< ref "docs/deployment/resource-providers/standalone/overview" >}}) 或 [Kubernetes]({{< ref "docs/deployment/resource-providers/standalone/kubernetes" >}}))。
 
-If you use Flink with [Yarn]({{< ref "docs/deployment/resource-providers/yarn" >}}) or the [*active* Kubernetes integration]({{< ref "docs/deployment/resource-providers/native_kubernetes" >}}), the hostnames and ports are automatically discovered.
+如果您将 Flink 与 [Yarn]({{< ref "docsdeploymentresource-providersyarn" >}}) 或 [*active* Kubernetes integration]({{< ref "docs/deployment/resource-providers/native_kubernetes" >}}) 一起使用，主机名和端口会自动发现。
 
-  - `rest.address`, `rest.port`: These are used by the client to connect to Flink. Set this to the hostname where the JobManager runs, or to the hostname of the (Kubernetes) service in front of the JobManager's REST interface.
+- `rest.address`, `rest.port`: 这些被客户端用来连接到 Flink。将其设置为 JobManager 运行的主机名或 JobManager REST 接口前面的 (Kubernetes) 服务的主机名。
 
-  - The `jobmanager.rpc.address` (defaults to *"localhost"*) and `jobmanager.rpc.port` (defaults to *6123*) config entries are used by the TaskManager to connect to the JobManager/ResourceManager. Set this to the hostname where the JobManager runs, or to the hostname of the (Kubernetes internal) service for the JobManager. This option is ignored on [setups with high-availability]({{< ref "docs/deployment/ha/overview" >}}) where the leader election mechanism is used to discover this automatically.
+- TaskManager 使用 `jobmanager.rpc.address`（默认为 *"localhost"*）和 `jobmanager.rpc.port`（默认为 *6123*）配置项来连接到 JobManager/ResourceManager。将此设置为 JobManager 运行的主机名或 JobManager 的（Kubernetes 内部）服务的主机名。这个配置项在 [setups with high-availability]({{< ref "docs/deployment/ha/overview" >}}) 无效，这里是通过自动发现来选举主节点。
 
-**Memory Sizes** 
+**内存大小**
 
-The default memory sizes support simple streaming/batch applications, but are too low to yield good performance for more complex applications.
+默认内存设置支持简单的流批处理应用程序，但太小而无法为更复杂的应用程序提供良好的性能。
 
-  - `jobmanager.memory.process.size`: Total size of the *JobManager* (JobMaster / ResourceManager / Dispatcher) process.
-  - `taskmanager.memory.process.size`: Total size of the TaskManager process.
+- `jobmanager.memory.process.size`: *JobManager* (JobMaster / ResourceManager / Dispatcher) 进程的总大小。
+- `taskmanager.memory.process.size`: TaskManager 进程的总大小。
 
-The total sizes include everything. Flink will subtract some memory for the JVM's own memory requirements (metaspace and others), and divide and configure the rest automatically between its components (JVM Heap, Off-Heap, for Task Managers also network, managed memory etc.).
+总大小包括一切。 Flink 会为 JVM 自身的内存需求（元空间和其他）减去一些内存，并在其组件（JVM 堆、堆外、任务管理器以及网络、托管内存等）之间自动划分和配置其余部分。
 
-These value are configured as memory sizes, for example *1536m* or *2g*.
+这些值被配置为内存大小，例如： *1536m* 或 *2g*。
 
 **Parallelism**
 
-  - `taskmanager.numberOfTaskSlots`: The number of slots that a TaskManager offers *(default: 1)*. Each slot can take one task or pipeline.
-    Having multiple slots in a TaskManager can help amortize certain constant overheads (of the JVM, application libraries, or network connections) across parallel tasks or pipelines. See the [Task Slots and Resources]({{< ref "docs/concepts/flink-architecture" >}}#task-slots-and-resources) concepts section for details.
+- `taskmanager.numberOfTaskSlots`: TaskManager 提供的 slots *（默认值：1）*。每个 slot 可以执行一项任务或管道。
+  在 TaskManager 中拥有多个 slots 可以帮助分摊并行任务或管道中的某些恒定开销（JVM、应用程序库或网络连接）。有关详细信息，请参阅 [Task Slots and Resources]({{< ref "docs/concepts/flink-architecture" >}}#task-slots-and-resources) 概念部分。
 
-     Running more smaller TaskManagers with one slot each is a good starting point and leads to the best isolation between tasks. Dedicating the same resources to fewer larger TaskManagers with more slots can help to increase resource utilization, at the cost of weaker isolation between the tasks (more tasks share the same JVM).
+  使用一个 slot 运行更多更小的 TaskManager 是一个很好的起点，并导致任务之间的最佳隔离。将相同的资源分配给具有更多 slot 的更少、更大的 TaskManager 有助于提高资源利用率，但代价是任务之间的隔离更弱（更多任务共享同一个 JVM）。
 
-  - `parallelism.default`: The default parallelism used when no parallelism is specified anywhere *(default: 1)*.
+- `parallelism.default`: 在任何地方都没有指定并行度时使用的默认并行度 *（默认值：1）*。
 
 **Checkpointing**
 
-You can configure checkpointing directly in code within your Flink job or application. Putting these values here in the configuration defines them as defaults in case the application does not configure anything.
+您可以直接在 Flink 作业或应用程序中的代码中配置检查点。将这些值放在配置中将它们定义为默认值，以防应用程序未配置任何内容。
 
-  - `state.backend`: The state backend to use. This defines the data structure mechanism for taking snapshots. Common values are `filesystem` or `rocksdb`.
-  - `state.checkpoints.dir`: The directory to write checkpoints to. This takes a path URI like *s3://mybucket/flink-app/checkpoints* or *hdfs://namenode:port/flink/checkpoints*.
-  - `state.savepoints.dir`: The default directory for savepoints. Takes a path URI, similar to `state.checkpoints.dir`.
-  - `execution.checkpointing.interval`: The base interval setting. To enable checkpointing, you need to set this value larger than 0.
+- `state.backend`: 要使用的状态后端。这定义了生成快照的数据结构机制。常见的值是 `filesystem` 或 `rocksdb`。
+- `state.checkpoints.dir`: 要写入检查点的目录。这需要一个路径 URI如：*s3://mybucket/flink-app/checkpoints* 或 *hdfs://namenode:port/flink/checkpoints*。
+- `state.savepoints.dir`: 保存点的默认目录。采用路径 URI，类似于 `state.checkpoints.dir`。
+- `execution.checkpointing.interval`: 基本间隔设置。要启用检查点，您需要将此值设置为大于 0。
 
 **Web UI**
 
-  - `web.submit.enable`: Enables uploading and starting jobs through the Flink UI *(true by default)*. Please note that even when this is disabled, session clusters still accept jobs through REST requests (HTTP calls). This flag only guards the feature to upload jobs in the UI.
-  - `web.cancel.enable`: Enables canceling jobs through the Flink UI *(true by default)*. Please note that even when this is disabled, session clusters still cancel jobs through REST requests (HTTP calls). This flag only guards the feature to cancel jobs in the UI.  
-  - `web.upload.dir`: The directory where to store uploaded jobs. Only used when `web.submit.enable` is true.
+- `web.submit.enable`: 通过 Flink UI 启用上传和启动作业（默认为 true）。请注意，即使禁用此功能，会话集群仍会通过 REST 请求（HTTP 调用）接受作业。此配置仅适用于在 UI 中上传作业的功能。
+- `web.cancel.enable`: 通过 Flink UI 启用取消作业（默认为 true）。请注意，即使禁用此功能，会话集群仍会通过 REST 请求（HTTP 调用）取消作业。此配置仅适用于在 UI 中取消作业的功能。
+- `web.upload.dir`: 存储上传作业的目录。仅在 `web.submit.enable` 为 true 时生效。
+- `web.exception-history-size`: 设置打印 Flink 为作业处理的最近失败的异常历史记录的大小。
 
-**Other**
+**其他**
 
-  - `io.tmp.dirs`: The directories where Flink puts local data, defaults to the system temp directory (`java.io.tmpdir` property). If a list of directories is configured, Flink will rotate files across the directories.
-    
-    The data put in these directories include by default the files created by RocksDB, spilled intermediate results (batch algorithms), and cached jar files.
-    
-    This data is NOT relied upon for persistence/recovery, but if this data gets deleted, it typically causes a heavyweight recovery operation. It is hence recommended to set this to a directory that is not automatically periodically purged.
-    
-    Yarn and Kubernetes setups automatically configure this value to the local working directories by default.
+- `io.tmp.dirs`: Flink 放置本地数据的目录，默认为系统临时目录（`java.io.tmpdir` 属性）。如果配置了目录列表，Flink 将在目录之间轮询写文件。
+
+  这些目录下的数据默认包括 RocksDB 创建的文件、溢出的中间结果（批处理算法）和缓存的 jar 文件。
+
+  持久性/恢复不依赖此数据，但如果此数据被删除，通常会导致重量级恢复操作。因此，建议将此设置该目录为不自动定期清除。
+
+  默认情况下，Yarn 和 Kubernetes 设置会自动将此值配置为本地工作目录。
 
 ----
 ----
 
-# Common Setup Options
+# 常用设置配置项
 
-*Common options to configure your Flink application or cluster.*
+*配置 Flink 应用程序或集群的常用配置项。*
 
-### Hosts and Ports
+### 主机名和端口
 
-Options to configure hostnames and ports for the different Flink components.
+为不同的 Flink 组件配置主机名和端口的配置项。
 
-The JobManager hostname and port are only relevant for standalone setups without high-availability.
-In that setup, the config values are used by the TaskManagers to find (and connect to) the JobManager.
-In all highly-available setups, the TaskManagers discover the JobManager via the High-Availability-Service (for example ZooKeeper).
+JobManager 主机名和端口在单机模式下生效，高可用模式下无效。
+在该设置中，TaskManager 使用配置值来查找（并连接到）JobManager。
+在所有高可用设置中，TaskManager 通过 High-Availability-Service（例如 ZooKeeper）发现 JobManager。
 
-Setups using resource orchestration frameworks (K8s, Yarn) typically use the framework's service discovery facilities.
+使用资源编排框架（K8s、Yarn）的设置通常使用框架的服务发现工具。
 
-You do not need to configure any TaskManager hosts and ports, unless the setup requires the use of specific port ranges or specific network interfaces to bind to.
+您不需要配置任何 TaskManager 主机和端口，除非设置需要使用特定的端口范围或特定的网络接口来绑定。
 
 {{< generated/common_host_port_section >}}
 
-### Fault Tolerance
+### 容错
 
-These configuration options control Flink's restart behaviour in case of failures during the execution. 
-By configuring these options in your `flink-conf.yaml`, you define the cluster's default restart strategy. 
+这些配置配置项控制 Flink 在执行过程中出现故障时的重启行为。
+你在 `flink-conf.yaml` 中配置这些配置项决定了集群的默认重启策略。
 
-The default restart strategy will only take effect if no job specific restart strategy has been configured via the `ExecutionConfig`.
+默认重启策略只有在没有通过 `ExecutionConfig` 配置特定于作业的重启策略时才会生效。
 
 {{< generated/restart_strategy_configuration >}}
 
-**Fixed Delay Restart Strategy**
+**固定延迟重启策略**
 
 {{< generated/fixed_delay_restart_strategy_configuration >}}
 
-**Failure Rate Restart Strategy**
+**故障率重启策略**
 
 {{< generated/failure_rate_restart_strategy_configuration >}}
 
-### Checkpoints and State Backends
+### 检查点和状态后端
 
-These options control the basic setup of state backends and checkpointing behavior.
+这些配置项控制状态后端和检查点行为的基本设置。
 
-The options are only relevant for jobs/applications executing in a continuous streaming fashion.
-Jobs/applications executing in a batch fashion do not use state backends and checkpoints, but different internal data structures that are optimized for batch processing.
+这些配置项仅与以无界流方式执行的作业应用程序相关。
+以批处理方式执行的作业应用程序不使用状态后端和检查点，而是使用针对批处理优化的不同内部数据结构。
 
 {{< generated/common_state_backends_section >}}
 
-### High Availability
+### 高可用
 
-High-availability here refers to the ability of the JobManager process to recover from failures.
+这里的高可用性指的是 JobManager 进程从故障中恢复的能力。
 
-The JobManager ensures consistency during recovery across TaskManagers. For the JobManager itself to recover consistently, an external service must store a minimal amount of recovery metadata (like "ID of last committed checkpoint"), as well as help to elect and lock which JobManager is the leader (to avoid split-brain situations).
+JobManager 确保在跨 TaskManager 恢复期间的一致性。为了让 JobManager 本身始终如一地恢复，外部服务必须存储最少量的恢复元数据（例如“上次提交的 checkpoint 的 ID”），以及帮助选择和锁定哪个 JobManager 是领导者（以避免裂脑）。
 
 {{< generated/common_high_availability_section >}}
 
-**Options for high-availability setups with ZooKeeper**
+**使用 ZooKeeper 进行高可用性设置的配置项**
 
 {{< generated/common_high_availability_zk_section >}}
 
-### Memory Configuration
+### 内存配置
 
-These configuration values control the way that TaskManagers and JobManagers use memory.
+这些配置值控制 TaskManager 和 JobManager 使用内存的方式。
 
-Flink tries to shield users as much as possible from the complexity of configuring the JVM for data-intensive processing.
-In most cases, users should only need to set the values `taskmanager.memory.process.size` or `taskmanager.memory.flink.size` (depending on how the setup), and possibly adjusting the ratio of JVM heap and Managed Memory via `taskmanager.memory.managed.fraction`. The other options below can be used for performance tuning and fixing memory related errors.
+Flink 试图尽可能地使用户免受配置 JVM 以进行数据密集型处理的复杂性。
+大多数情况下，用户只需要设置 `taskmanager.memory.process.size` 或 `taskmanager.memory.flink.size` 的值（取决于如何设置），并可能调整 JVM 堆和 Managed Memory 的比例通过 `taskmanager.memory.managed.fraction`。下面的其他配置项可用于性能调整和修复与内存相关的错误。
 
-For a detailed explanation of how these options interact,
-see the documentation on [TaskManager]({{< ref "docs/deployment/memory/mem_setup_tm" >}}) and
-[JobManager]({{< ref "docs/deployment/memory/mem_setup_jobmanager" >}} ) memory configurations.
+有关这些配置项如何相互作用的详细说明，
+请参阅有关 [TaskManager]({{< ref "docs/deployment/memory/mem_setup_tm" >}}) 和 [JobManager]({{< ref "docs/deployment/memory/mem_setup_jobmanager" >}}) 内存配置的文档。
 
 {{< generated/common_memory_section >}}
 
-### Miscellaneous Options
+### 其他配置项
 
 {{< generated/common_miscellaneous_section >}}
 
 ----
 ----
 
-# Security
+# 安全
 
-Options for configuring Flink's security and secure interaction with external systems.
+用于配置 Flink 的安全性以及与外部系统的安全交互的配置项。
 
 ### SSL
 
-Flink's network connections can be secured via SSL. Please refer to the [SSL Setup Docs]({{< ref "docs/deployment/security/security-ssl" >}}) for detailed setup guide and background.
+Flink 的网络连接可以通过 SSL 进行保护。有关详细的设置指南和背景，请参阅 [SSL 设置文档]({{< ref "docs/deployment/security/security-ssl" >}})。
 
 {{< generated/security_ssl_section >}}
 
 
-### Auth with External Systems
+### 使用外部系统进行身份验证
 
-**ZooKeeper Authentication / Authorization**
+**ZooKeeper 认证授权**
 
-These options are necessary when connecting to a secured ZooKeeper quorum.
+连接到安全的 ZooKeeper quorum时，这些配置项项是必需的。
 
 {{< generated/security_auth_zk_section >}}
 
-**Kerberos-based Authentication / Authorization**
+**基于 Kerberos 的身份验证授权**
 
-Please refer to the [Flink and Kerberos Docs]({{< ref "docs/deployment/security/security-kerberos" >}}) for a setup guide and a list of external system to which Flink can authenticate itself via Kerberos.
+请参阅 [Flink 和 Kerberos 文档]({{< ref "docs/deployment/security/security-kerberos" >}}) 以获取设置指南和 Flink 可以通过 Kerberos 对其进行身份验证的外部系统列表。
 
 {{< generated/security_auth_kerberos_section >}}
 
 ----
 ----
 
-# Resource Orchestration Frameworks
+# 资源编排框架
 
-This section contains options related to integrating Flink with resource orchestration frameworks, like Kubernetes, Yarn, etc.
+本节包含与将 Flink 与资源编排框架（如 Kubernetes、Yarn 等）集成的相关配置。
 
-Note that is not always necessary to integrate Flink with the resource orchestration framework.
-For example, you can easily deploy Flink applications on Kubernetes without Flink knowing that it runs on Kubernetes (and without specifying any of the Kubernetes config options here.) See [this setup guide]({{< ref "docs/deployment/resource-providers/standalone/kubernetes" >}}) for an example.
+请注意，并不总是需要将 Flink 与资源编排框架集成。
+例如，您可以轻松地在 Kubernetes 上部署 Flink 应用程序，而 Flink 不知道它在 Kubernetes 上运行（并且无需在此处指定任何 Kubernetes 配置配置项。）请参阅 [this setup guide]({{< ref "docs/deployment/resource-providers/standalone/kubernetes" >}}) 为例。
 
-The options in this section are necessary for setups where Flink itself actively requests and releases resources from the orchestrators.
+本节中的配置项对于 Flink 本身主动从编排器请求和释放资源的设置是必需的。
 
 ### YARN
 
@@ -221,35 +221,36 @@ The options in this section are necessary for setups where Flink itself actively
 
 {{< generated/kubernetes_config_configuration >}}
 
+
 ----
 ----
 
-# State Backends
+# 状态后端
 
-Please refer to the [State Backend Documentation]({{< ref "docs/ops/state/state_backends" >}}) for background on State Backends.
+有关状态后端的背景信息，请参阅 [状态后端文档]({{< ref "docs/ops/state/state_backends" >}})。
 
 ### RocksDB State Backend
 
-These are the options commonly needed to configure the RocksDB state backend. See the [Advanced RocksDB Backend Section](#advanced-rocksdb-state-backends-options) for options necessary for advanced low level configurations and trouble-shooting.
+这些是配置 RocksDB 状态后端所需的基本配置项。有关进阶底层配置和故障排除所需的配置项，请参阅 [Advanced RocksDB Backend Section](#advanced-rocksdb-state-backends-options)。
 
 {{< generated/state_backend_rocksdb_section >}}
 
 ----
 ----
 
-# Metrics
+# 指标
 
-Please refer to the [metrics system documentation]({{< ref "docs/ops/metrics" >}}) for background on Flink's metrics infrastructure.
+有关 Flink 指标基础架构的背景信息，请参阅 [指标系统文档]({{< ref "docs/ops/metrics" >}})。
 
 {{< generated/metric_configuration >}}
 
-### RocksDB Native Metrics
+### RocksDB 原生指标
 
-Flink can report metrics from RocksDB's native code, for applications using the RocksDB state backend.
-The metrics here are scoped to the operators and then further broken down by column family; values are reported as unsigned longs. 
+对于使用 RocksDB 状态后端的应用程序，Flink 可以从 RocksDB 的源码中报告指标。
+此处的指标仅限于运算符，然后按列族进一步细分；值为无符号长整型。
 
 {{< hint warning >}}
-Enabling RocksDB's native metrics may cause degraded performance and should be set carefully. 
+启用 RocksDB 的原生指标可能会导致性能下降，应谨慎设置。
 {{< /hint >}}
 
 {{< generated/rocksdb_native_metric_configuration >}}
@@ -259,30 +260,30 @@ Enabling RocksDB's native metrics may cause degraded performance and should be s
 
 # History Server
 
-The history server keeps the information of completed jobs (graphs, runtimes, statistics). To enable it, you have to enable "job archiving" in the JobManager (`jobmanager.archive.fs.dir`).
+历史服务器保存已完成作业的信息（图表、运行时间、统计信息）。要启用它，您必须在 JobManager (`jobmanager.archive.fs.dir`) 中启用 "job archiving"。
 
-See the [History Server Docs]({{< ref "docs/deployment/advanced/historyserver" >}}) for details.
+有关详细信息，请参阅 [历史服务器文档]({{< ref "docs/deployment/advanced/historyserver" >}})。
 
 {{< generated/history_server_configuration >}}
 
 ----
 ----
 
-# Experimental
+# 实验性的功能
 
-*Options for experimental features in Flink.*
+*Flink 中实验性功能的配置项。*
 
-### Queryable State
+### 可查询状态
 
-*Queryable State* is an experimental features that gives lets you access Flink's internal state like a key/value store.
-See the [Queryable State Docs]({{< ref "docs/dev/datastream/fault-tolerance/queryable_state" >}}) for details.
+*可查询状态*是一项实验性功能，可让您像键值存储一样访问 Flink 的内部状态。
+有关详细信息，请参阅 [可查询状态文档]({{< ref "docs/dev/datastream/fault-tolerance/queryable_state" >}})。
 
 {{< generated/queryable_state_configuration >}}
 
 ----
 ----
 
-# Client
+# 客户端
 
 {{< generated/client_configuration >}}
 
@@ -295,102 +296,102 @@ See the [Queryable State Docs]({{< ref "docs/dev/datastream/fault-tolerance/quer
 {{< generated/savepoint_config_configuration >}}
 {{< generated/execution_configuration >}}
 
-### Pipeline
+### 管道
 
 {{< generated/pipeline_configuration >}}
 {{< generated/stream_pipeline_configuration >}}
 
-### Checkpointing
+### 检查点
 
 {{< generated/execution_checkpointing_configuration >}}
 
 ----
 ----
 
-# Debugging & Expert Tuning
+# 调试和专家调优
 
 {{< hint warning >}}
-The options below here are meant for expert users and for fixing/debugging problems. Most setups should not need to configure these options.
+下面的配置项适用于专家用户和修复调试问题。大多数设置不需要配置这些配置项。
 {{< /hint >}}
 
-### Class Loading
+### 类加载
 
-Flink dynamically loads the code for jobs submitted to a session cluster. In addition, Flink tries to hide many dependencies in the classpath from the application. This helps to reduce dependency conflicts between the application code and the dependencies in the classpath.
+Flink 动态加载提交到会话集群的作业的代码。此外，Flink 试图对应用程序隐藏类路径中的许多依赖项。这有助于减少应用程序代码和类路径中的依赖项之间的依赖项冲突。
 
-Please refer to the [Debugging Classloading Docs]({{< ref "docs/ops/debugging/debugging_classloading" >}}) for details.
+详情请参阅[调试类加载文档]({{< ref "docs/ops/debugging/debugging_classloading" >}})。
 
 {{< generated/expert_class_loading_section >}}
 
-### Advanced Options for the debugging
+### 调试的高级配置项
 
 {{< generated/expert_debugging_and_tuning_section >}}
 
-### Advanced State Backends Options
+### 状态后端高级配置项
 
 {{< generated/expert_state_backends_section >}}
 
-### State Backends Latency Tracking Options
+### 追踪状态后端延迟配置项
 
 {{< generated/state_backend_latency_tracking_section >}}
 
-### Advanced RocksDB State Backends Options
+### RocksDB 状态后端高级配置项
 
-Advanced options to tune RocksDB and RocksDB checkpoints.
+调优 RocksDB 和 RocksDB 检查点的进阶配置项。
 
 {{< generated/expert_rocksdb_section >}}
 
-**RocksDB Configurable Options**
+**RocksDB 可配置项**
 
-These options give fine-grained control over the behavior and resources of ColumnFamilies.
-With the introduction of `state.backend.rocksdb.memory.managed` and `state.backend.rocksdb.memory.fixed-per-slot` (Apache Flink 1.10), it should be only necessary to use the options here for advanced performance tuning. These options here can also be specified in the application program via `RocksDBStateBackend.setRocksDBOptions(RocksDBOptionsFactory)`.
+这些配置项可以对 ColumnFamilies 的行为和资源进行细粒度控制。
+随着`state.backend.rocksdb.memory.managed`和`state.backend.rocksdb.memory.fixed-per-slot`（Apache Flink 1.10）的引入，应该只需要使用这里的配置项来获得高级性能调优。这里的这些配置项也可以通过`RocksDBStateBackend.setRocksDBOptions(RocksDBOptionsFactory)`在应用程序中指定。
 
 {{< generated/rocksdb_configurable_configuration >}}
 
-### Advanced Fault Tolerance Options
+### 容错高级配置项
 
-*These parameters can help with problems related to failover and to components erroneously considering each other as failed.*
+*这些参数可以帮助解决与故障转移和组件错误地将彼此视为故障相关的问题。*
 
 {{< generated/expert_fault_tolerance_section >}}
 
-### Advanced Cluster Options
+### 集群高级配置项
 
 {{< generated/expert_cluster_section >}}
 
-### Advanced JobManager Options
+### 进阶 JobManager 配置
 
 {{< generated/expert_jobmanager_section >}}
 
-### Advanced Scheduling Options
+### 进阶调度配置
 
-*These parameters can help with fine-tuning scheduling for specific situations.*
+*这些参数可以帮助微调特定情况的调度。*
 
 {{< generated/expert_scheduling_section >}}
 
-### Advanced High-availability Options
+### 高可用性高级配置项
 
 {{< generated/expert_high_availability_section >}}
 
-### Advanced High-availability ZooKeeper Options
+### 高可用性 ZooKeeper 高级配置项
 
 {{< generated/expert_high_availability_zk_section >}}
 
-### Advanced High-availability Kubernetes Options
+### 高可用性 Kubernetes 高级配置项
 
 {{< generated/expert_high_availability_k8s_section >}}
 
-### Advanced SSL Security Options
+### SSL 安全高级配置项
 
 {{< generated/expert_security_ssl_section >}}
 
-### Advanced Options for the REST endpoint and Client
+### REST 端点和客户端的高级配置项
 
 {{< generated/expert_rest_section >}}
 
-### Advanced Options for Flink Web UI
+### Flink Web UI 的高级配置项
 
 {{< generated/web_configuration >}}
 
-### Full JobManager Options
+### 所有的 JobManager 配置项
 
 **JobManager**
 
@@ -398,65 +399,64 @@ With the introduction of `state.backend.rocksdb.memory.managed` and `state.backe
 
 **Blob Server**
 
-The Blob Server is a component in the JobManager. It is used for distribution of objects that are too large to be attached to a RPC message and that benefit from caching (like Jar files or large serialized code objects).
+Blob Server 是 JobManager 中的一个组件。它用于分发太大而无法附加到 RPC 消息并受益于缓存的对象（如 Jar 文件或大型序列化代码对象）。
 
 {{< generated/blob_server_configuration >}}
 
-**ResourceManager**
+**资源管理器**
 
-These configuration keys control basic Resource Manager behavior, independent of the used resource orchestration management framework (YARN, etc.)
+这些配置项控制基本的资源管理器行为，独立于使用的资源编排管理框架（YARN 等）。
 
 {{< generated/resource_manager_configuration >}}
 
 ### Full TaskManagerOptions
 
-Please refer to the [network memory tuning guide]({{< ref "docs/deployment/memory/network_mem_tuning" >}}) for details on how to use the `taskmanager.network.memory.buffer-debloat.*` configuration.
+有关如何使用`taskmanager.network.memory.buffer-debloat.*` 配置的详细信息，请参阅[网络内存调整指南]({{< ref "docs/deployment/memory/network_mem_tuning" >}})。
 
 {{< generated/all_taskmanager_section >}}
 
-**Data Transport Network Stack**
+**数据传输网络堆栈**
 
-These options are for the network stack that handles the streaming and batch data exchanges between TaskManagers.
+这些配置项用于 TaskManager 之间的流和批处理数据交换的网络堆栈。
 
 {{< generated/all_taskmanager_network_section >}}
 
 ### RPC / Akka
 
-Flink uses Akka for RPC between components (JobManager/TaskManager/ResourceManager).
-Flink does not use Akka for data transport.
+Flink 使用 Akka 进行组件之间的 RPC（JobManager/TaskManager/ResourceManager）。
+Flink 不使用 Akka 进行数据传输。
 
 {{< generated/akka_configuration >}}
 
 ----
 ----
 
-# JVM and Logging Options
+# JVM 和日志配置
 
 {{< generated/environment_configuration >}}
 
-# Forwarding Environment Variables
+# 转发环境变量
 
-You can configure environment variables to be set on the JobManager and TaskManager processes started on Yarn.
+您可以在 Yarn 上启动的 JobManager 和 TaskManager 进程上配置要设置的环境变量。
 
-  - `containerized.master.env.`: Prefix for passing custom environment variables to Flink's JobManager process. 
-   For example for passing LD_LIBRARY_PATH as an env variable to the JobManager, set containerized.master.env.LD_LIBRARY_PATH: "/usr/lib/native"
-    in the flink-conf.yaml.
+- `containerized.master.env.`: 将自定义环境变量传递给 Flink 的 JobManager 进程的前缀。
+例如，要将 LD_LIBRARY_PATH 作为环境变量传递给 JobManager，请在 flink-conf.yaml 中设置 containerized.master.env.LD_LIBRARY_PATH: "/usr/lib/native"。
 
-  - `containerized.taskmanager.env.`: Similar to the above, this configuration prefix allows setting custom environment variables for the workers (TaskManagers).
+- `containerized.taskmanager.env.`: 与上述类似，此配置前缀可以在工作节点（TaskManagers）设置自定义环境变量。
 
 ----
 ----
 
-# Deprecated Options
+# 弃用的配置项
 
-These options relate to parts of Flink that are not actively developed any more.
-These options may be removed in a future release.
+这些配置项与 Flink 中不再积极开发的部分有关。
+这些配置项可能会在未来的版本中删除。
 
-**DataSet API Optimizer**
+**DataSet API 优化器**
 
 {{< generated/optimizer_configuration >}}
 
-**DataSet API Runtime Algorithms**
+**DataSet API 运行时算法**
 
 {{< generated/algorithm_configuration >}}
 
