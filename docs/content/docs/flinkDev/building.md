@@ -47,23 +47,23 @@ git clone {{< github_repo >}}
 The simplest way of building Flink is by running:
 
 ```bash
-mvn clean install -DskipTests
+./mvnw clean install -DskipTests
 ```
 
-This instructs [Maven](http://maven.apache.org) (`mvn`) to first remove all existing builds (`clean`) and then create a new Flink binary (`install`).
+This instructs [Maven](http://maven.apache.org) (`mvnw`) to first remove all existing builds (`clean`) and then create a new Flink binary (`install`).
 
 To speed up the build you can:
 - skip tests by using ' -DskipTests'
 - skip QA plugins and javadoc generation by using the `fast` Maven profile
 - skip the WebUI compilation by using the `skip-webui-build` Maven profile
-- use Maven's parallel build feature, e.g., 'mvn package -T 1C' will attempt to build 1 module for each CPU core in parallel.
+- use Maven's parallel build feature, e.g., 'mvnw package -T 1C' will attempt to build 1 module for each CPU core in parallel.
   {{< hint warning >}}
-  Parallel builds may deadlock due to a bug in the maven-shade-plugin. It is recommended to only use it as a 2 steps process, where you first run `mvn validate/test-compile/test` in parallel, and then run `mvn package/verify/install` with a single thread.
+  Parallel builds may deadlock due to a bug in the maven-shade-plugin. It is recommended to only use it as a 2 steps process, where you first run `mvnw validate/test-compile/test` in parallel, and then run `mvnw package/verify/install` with a single thread.
   {{< /hint >}}
 
 The build script will be:
 ```bash
-mvn clean install -DskipTests -Dfast -Pskip-webui-build -T 1C
+mvnw clean install -DskipTests -Dfast -Pskip-webui-build -T 1C
 ```
 The `fast` and `skip-webui-build` profiles have a significant impact on the build time, particularly on slower storage devices, due to them reading/writing many small files.
 
@@ -123,26 +123,26 @@ Flink [shades away](https://maven.apache.org/plugins/maven-shade-plugin/) some o
 The dependency shading mechanism was recently changed in Maven and requires users to build Flink slightly differently, depending on their Maven version:
 
 **Maven and 3.2.x**
-It is sufficient to call `mvn clean install -DskipTests` in the root directory of Flink code base.
+It is sufficient to call `mvnw clean install -DskipTests` in the root directory of Flink code base.
 
 **Maven 3.3.x**
 The build has to be done in two steps: First in the base directory, then in shaded modules, such as the distribution and the filesystems:
 
 ```bash
 # build overall project
-mvn clean install -DskipTests
+mvnw clean install -DskipTests
 
 # build shaded modules used in dist again, for example:
 cd flink-filesystems/flink-s3-fs-presto/
-mvn clean install -DskipTests
+mvnw clean install -DskipTests
 # ... and other modules
 
 # build dist again to include shaded modules
 cd flink-dist
-mvn clean install
+mvnw clean install
 ```
 
-*Note:* To check your Maven version, run `mvn --version`.
+*Note:* To check your Maven version, run `mvnw --version`.
 
 *Note:* We recommend using the latest Maven 3.2.x version for building production-grade Flink distributions, as this is the version the Flink developers are using for the official releases and testing.
 
@@ -161,12 +161,12 @@ Since version 1.7 Flink builds with Scala version 2.11 (default) and 2.12.
 
 To build Flink against Scala 2.12, issue the following command:
 ```bash
-mvn clean install -DskipTests -Dscala-2.12
+mvnw clean install -DskipTests -Dscala-2.12
 ```
 
 To build against a specific binary Scala version you can use:
 ```bash
-mvn clean install -DskipTests -Dscala-2.12 -Dscala.version=<scala version>
+mvnw clean install -DskipTests -Dscala-2.12 -Dscala.version=<scala version>
 ```
 
 
