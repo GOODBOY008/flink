@@ -194,7 +194,7 @@ DROP DATABASE [IF EXISTS] [catalog_name.]db_name [ (RESTRICT | CASCADE) ]
 ## DROP VIEW
 
 ```sql
-DROP [TEMPORARY] VIEW  [IF EXISTS] [catalog_name.][db_name.]view_name
+DROP [TEMPORARY] VIEW  [IF EXISTS] [[catalog_name.]db_name.]view_name
 ```
 
 删除一个有 catalog 和数据库命名空间的视图。若需要删除的视图不存在，则会产生异常。
@@ -213,7 +213,7 @@ Flink 没有使用 CASCADE / RESTRICT 关键字来维护视图的依赖关系，
 ## DROP FUNCTION
 
 ```sql
-DROP [TEMPORARY|TEMPORARY SYSTEM] FUNCTION [IF EXISTS] [catalog_name.][db_name.]function_name;
+DROP [TEMPORARY|TEMPORARY SYSTEM] FUNCTION [IF EXISTS] [[catalog_name.]db_name.]function_name;
 ```
 
 删除一个有 catalog 和数据库命名空间的 catalog function。若需要删除的函数不存在，则会产生异常。

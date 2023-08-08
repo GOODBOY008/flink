@@ -450,13 +450,13 @@ ALTER TABLE DataGenSource RESET ('rows-per-second');
 ## ALTER VIEW
 
 ```sql
-ALTER VIEW [catalog_name.][db_name.]view_name RENAME TO new_view_name
+ALTER VIEW [[catalog_name.]db_name.]view_name RENAME TO new_view_name
 ```
 
 Renames a given view to a new name within the same catalog and database.
 
 ```sql
-ALTER VIEW [catalog_name.][db_name.]view_name AS new_query_expression
+ALTER VIEW [[catalog_name.]db_name.]view_name AS new_query_expression
 ```
 
 Changes the underlying query defining the given view to a new query.
@@ -477,7 +477,7 @@ ALTER DATABASE [catalog_name.]db_name SET (key1=val1, key2=val2, ...)
 
 ```sql
 ALTER [TEMPORARY|TEMPORARY SYSTEM] FUNCTION
-  [IF EXISTS] [catalog_name.][db_name.]function_name
+  [IF EXISTS] [[catalog_name.]db_name.]function_name
   AS identifier [LANGUAGE JAVA|SCALA|PYTHON]
 ```
 

@@ -832,7 +832,7 @@ SHOW VIEWS
 ## SHOW CREATE VIEW
 
 ```sql
-SHOW CREATE VIEW [catalog_name.][db_name.]view_name
+SHOW CREATE VIEW [[catalog_name.]db_name.]view_name
 ```
 
 展示创建指定视图的 create 语句。

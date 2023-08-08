@@ -830,7 +830,7 @@ Show all views in the current catalog and the current database.
 ## SHOW CREATE VIEW
 
 ```sql
-SHOW CREATE VIEW [catalog_name.][db_name.]view_name
+SHOW CREATE VIEW [[catalog_name.]db_name.]view_name
 ```
 
 Show create view statement for specified view.

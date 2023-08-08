@@ -652,7 +652,7 @@ The key and value of expression `key1=val1` should both be string literal.
 
 ## CREATE VIEW
 ```sql
-CREATE [TEMPORARY] VIEW [IF NOT EXISTS] [catalog_name.][db_name.]view_name
+CREATE [TEMPORARY] VIEW [IF NOT EXISTS] [[catalog_name.]db_name.]view_name
   [( columnName [, columnName ]* )] [COMMENT view_comment]
   AS query_expression
 ```
@@ -672,7 +672,7 @@ If the view already exists, nothing happens.
 ## CREATE FUNCTION
 ```sql
 CREATE [TEMPORARY|TEMPORARY SYSTEM] FUNCTION 
-  [IF NOT EXISTS] [catalog_name.][db_name.]function_name 
+  [IF NOT EXISTS] [[catalog_name.]db_name.]function_name 
   AS identifier [LANGUAGE JAVA|SCALA|PYTHON] 
   [USING JAR '<path_to_filename>.jar' [, JAR '<path_to_filename>.jar']* ]
 ```

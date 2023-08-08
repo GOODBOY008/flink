@@ -190,7 +190,7 @@ Dropping a non-empty database also drops all associated tables and functions.
 ## DROP VIEW
 
 ```sql
-DROP [TEMPORARY] VIEW  [IF EXISTS] [catalog_name.][db_name.]view_name
+DROP [TEMPORARY] VIEW  [IF EXISTS] [[catalog_name.]db_name.]view_name
 ```
 
 Drop a view that has catalog and database namespaces. If the view to drop does not exist, an exception is thrown.
@@ -209,7 +209,7 @@ Flink does not maintain dependencies of view by CASCADE/RESTRICT keywords, the c
 ## DROP FUNCTION
 
 ```sql
-DROP [TEMPORARY|TEMPORARY SYSTEM] FUNCTION [IF EXISTS] [catalog_name.][db_name.]function_name;
+DROP [TEMPORARY|TEMPORARY SYSTEM] FUNCTION [IF EXISTS] [[catalog_name.]db_name.]function_name;
 ```
 
 Drop a catalog function that has catalog and database namespaces. If the function to drop does not exist, an exception is thrown.
