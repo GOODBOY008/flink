@@ -297,7 +297,7 @@ Flink SQL> SHOW TABLES;
 
 The following grammar gives an overview about the available syntax:
 ```text
-ALTER TABLE [IF EXISTS] table_name {
+ALTER TABLE [IF EXISTS] [[catalog_name.]db_name.]table_name {
     ADD { <schema_component> | (<schema_component> [, ...]) | [IF NOT EXISTS] <partition_component> [<partition_component> ...]}
   | MODIFY { <schema_component> | (<schema_component> [, ...]) }
   | DROP {column_name | (column_name, column_name, ....) | PRIMARY KEY | CONSTRAINT constraint_name | WATERMARK | [IF EXISTS] <partition_component> [, ...]}

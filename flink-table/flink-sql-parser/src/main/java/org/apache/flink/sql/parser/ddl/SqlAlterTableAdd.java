@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * SqlNode to describe ALTER TABLE [IF EXISTS] table_name ADD column/constraint/watermark clause.
+ * SqlNode to describe ALTER TABLE [IF EXISTS] [[catalog_name.]db_name.]table_name ADD column/constraint/watermark clause.
  *
  * <p>Example: DDL like the below for add column/constraint/watermark.
  *
