@@ -191,7 +191,7 @@ Flink SQL> INSERT INTO RubberOrders SELECT product, amount FROM Orders WHERE pro
 
 ```sql
 
-[EXECUTE] INSERT { INTO | OVERWRITE } [catalog_name.][db_name.]table_name [PARTITION part_spec] select_statement
+[EXECUTE] INSERT { INTO | OVERWRITE } [[catalog_name.]db_name.]table_name [PARTITION part_spec] select_statement
 
 part_spec:
   (part_col_name1=val1 [, part_col_name2=val2, ...])
@@ -249,7 +249,7 @@ INSERT OVERWRITE country_page_view PARTITION (date='2019-8-30')
 ### 语法
 
 ```sql
-[EXECUTE] INSERT { INTO | OVERWRITE } [catalog_name.][db_name.]table_name VALUES values_row [, values_row ...]
+[EXECUTE] INSERT { INTO | OVERWRITE } [[catalog_name.]db_name.]table_name VALUES values_row [, values_row ...]
 
 values_row:
     : (val1 [, val2, ...])

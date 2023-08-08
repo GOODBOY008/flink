@@ -154,7 +154,7 @@ If the catalog does not exist, nothing happens.
 ## DROP TABLE
 
 ```sql
-DROP [TEMPORARY] TABLE [IF EXISTS] [catalog_name.][db_name.]table_name
+DROP [TEMPORARY] TABLE [IF EXISTS] [[catalog_name.]db_name.]table_name
 ```
 
 Drop a table with the given table name. If the table to drop does not exist, an exception is thrown.

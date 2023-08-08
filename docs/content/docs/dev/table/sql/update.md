@@ -215,6 +215,6 @@ Jessica                         Banana           2
 ## UPDATE ROWS
 
 ```sql
-UPDATE [catalog_name.][db_name.]table_name SET column_name1 = expression1 [, column_name2 = expression2, ...][ WHERE condition ]
+UPDATE [[catalog_name.]db_name.]table_name SET column_name1 = expression1 [, column_name2 = expression2, ...][ WHERE condition ]
 ```
 

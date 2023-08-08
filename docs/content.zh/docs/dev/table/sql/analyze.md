@@ -340,7 +340,7 @@ Flink SQL> ANALYZE TABLE Orders PARTITION(sold_year, sold_month, sold_day) COMPU
 ## 语法
 
 ```sql
-ANALYZE TABLE [catalog_name.][db_name.]table_name PARTITION(partcol1[=val1] [, partcol2[=val2], ...]) COMPUTE STATISTICS [FOR COLUMNS col1 [, col2, ...] | FOR ALL COLUMNS]
+ANALYZE TABLE [[catalog_name.]db_name.]table_name PARTITION(partcol1[=val1] [, partcol2[=val2], ...]) COMPUTE STATISTICS [FOR COLUMNS col1 [, col2, ...] | FOR ALL COLUMNS]
 ```
 - 对于分区表， 语法中 PARTITION(partcol1[=val1] [, partcol2[=val2], ...]) 是必须指定的
   - 如果没有指定某分区，则会收集所有分区的统计信息

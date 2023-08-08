@@ -337,7 +337,7 @@ Flink SQL> ANALYZE TABLE Orders PARTITION(sold_year, sold_month, sold_day) COMPU
 ## Syntax
 
 ```sql
-ANALYZE TABLE [catalog_name.][db_name.]table_name PARTITION(partcol1[=val1] [, partcol2[=val2], ...]) COMPUTE STATISTICS [FOR COLUMNS col1 [, col2, ...] | FOR ALL COLUMNS]
+ANALYZE TABLE [[catalog_name.]db_name.]table_name PARTITION(partcol1[=val1] [, partcol2[=val2], ...]) COMPUTE STATISTICS [FOR COLUMNS col1 [, col2, ...] | FOR ALL COLUMNS]
 ```
 - PARTITION(partcol1[=val1] [, partcol2[=val2], ...]) is required for the partition table
   - If no partition is specified, the statistics will be gathered for all partitions

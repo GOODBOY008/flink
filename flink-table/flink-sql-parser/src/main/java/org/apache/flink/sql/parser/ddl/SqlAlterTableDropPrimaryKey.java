@@ -26,7 +26,7 @@ import org.apache.calcite.sql.parser.SqlParserPos;
 import java.util.Collections;
 import java.util.List;
 
-/** ALTER TABLE [IF EXISTS] [catalog_name.][db_name.]table_name DROP PRIMARY KEY. */
+/** ALTER TABLE [IF EXISTS] [[catalog_name.]db_name.]table_name DROP PRIMARY KEY. */
 public class SqlAlterTableDropPrimaryKey extends SqlAlterTable {
 
     public SqlAlterTableDropPrimaryKey(

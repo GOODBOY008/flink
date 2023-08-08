@@ -29,7 +29,7 @@ import org.apache.calcite.util.ImmutableNullableList;
 import java.util.List;
 
 /**
- * ALTER TABLE [IF EXISTS] [catalog_name.][db_name.]table_name ADD [CONSTRAINT constraint_name]
+ * ALTER TABLE [IF EXISTS] [[catalog_name.]db_name.]table_name ADD [CONSTRAINT constraint_name]
  * (PRIMARY KEY | UNIQUE) (column, ...) [[NOT] ENFORCED].
  */
 public class SqlAlterTableAddConstraint extends SqlAlterTable {

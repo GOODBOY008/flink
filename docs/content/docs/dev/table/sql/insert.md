@@ -188,7 +188,7 @@ Query Results can be inserted into tables by using the insert clause.
 
 ```sql
 
-[EXECUTE] INSERT { INTO | OVERWRITE } [catalog_name.][db_name.]table_name [PARTITION part_spec] [column_list] select_statement
+[EXECUTE] INSERT { INTO | OVERWRITE } [[catalog_name.]db_name.]table_name [PARTITION part_spec] [column_list] select_statement
 
 part_spec:
   (part_col_name1=val1 [, part_col_name2=val2, ...])
@@ -258,7 +258,7 @@ The INSERT...VALUES statement can be used to insert data into tables directly fr
 ### Syntax
 
 ```sql
-[EXECUTE] INSERT { INTO | OVERWRITE } [catalog_name.][db_name.]table_name VALUES values_row [, values_row ...]
+[EXECUTE] INSERT { INTO | OVERWRITE } [[catalog_name.]db_name.]table_name VALUES values_row [, values_row ...]
 
 values_row:
     (val1 [, val2, ...])

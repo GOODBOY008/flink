@@ -162,7 +162,7 @@ DROP CATALOG [IF EXISTS] catalog_name
 ## DROP TABLE
 
 ```sql
-DROP TABLE [IF EXISTS] [catalog_name.][db_name.]table_name
+DROP TABLE [IF EXISTS] [[catalog_name.]db_name.]table_name
 ```
 
 根据给定的表名删除某个表。若需要删除的表不存在，则抛出异常。

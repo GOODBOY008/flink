@@ -149,7 +149,7 @@ Flink SQL> INSERT INTO RubberOrders SELECT product, amount FROM Orders WHERE pro
 ##  CREATE TABLE
 
 ```text
-CREATE TABLE [IF NOT EXISTS] [catalog_name.][db_name.]table_name
+CREATE TABLE [IF NOT EXISTS] [[catalog_name.]db_name.]table_name
   (
     { <physical_column_definition> | <metadata_column_definition> | <computed_column_definition> }[ , ...n]
     [ <watermark_definition> ]
@@ -179,7 +179,7 @@ CREATE TABLE [IF NOT EXISTS] [catalog_name.][db_name.]table_name
   WATERMARK FOR rowtime_column_name AS watermark_strategy_expression
 
 <source_table>:
-  [catalog_name.][db_name.]table_name
+  [[catalog_name.]db_name.]table_name
 
 <like_options>:
 {
@@ -560,7 +560,7 @@ INSERT INTO my_ctas_table SELECT id, name, age FROM source_table WHERE mod(id, 1
 
 ## [CREATE OR] REPLACE TABLE
 ```sql
-[CREATE OR] REPLACE TABLE [catalog_name.][db_name.]table_name
+[CREATE OR] REPLACE TABLE [[catalog_name.]db_name.]table_name
 [COMMENT table_comment]
 WITH (key1=val1, key2=val2, ...)
 AS select_query

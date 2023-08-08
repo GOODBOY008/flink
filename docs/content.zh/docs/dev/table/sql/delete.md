@@ -203,6 +203,6 @@ Mr.White                         Chicken           3
 ## 语法
 
 ```sql
-DELETE FROM [catalog_name.][db_name.]table_name [ WHERE condition ]
+DELETE FROM [[catalog_name.]db_name.]table_name [ WHERE condition ]
 ```
 
