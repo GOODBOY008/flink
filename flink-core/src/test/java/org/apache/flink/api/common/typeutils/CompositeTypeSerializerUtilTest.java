@@ -56,8 +56,7 @@ public class CompositeTypeSerializerUtilTest {
         Assertions.assertTrue(intermediateCompatibilityResult.isCompatibleAsIs());
         Assertions.assertTrue(intermediateCompatibilityResult.getFinalResult().isCompatibleAsIs());
         Assertions.assertArrayEquals(
-                testNewSerializers,
-                intermediateCompatibilityResult.getNestedSerializers());
+                testNewSerializers, intermediateCompatibilityResult.getNestedSerializers());
     }
 
     @Test
@@ -85,7 +84,8 @@ public class CompositeTypeSerializerUtilTest {
                     new SchemaCompatibilityTestingSerializer("b"),
                 };
 
-        Assertions.assertTrue(intermediateCompatibilityResult.isCompatibleWithReconfiguredSerializer());
+        Assertions.assertTrue(
+                intermediateCompatibilityResult.isCompatibleWithReconfiguredSerializer());
         Assertions.assertArrayEquals(
                 expectedReconfiguredNestedSerializers,
                 intermediateCompatibilityResult.getNestedSerializers());
@@ -114,7 +114,8 @@ public class CompositeTypeSerializerUtilTest {
                         testNewSerializers, testSerializerSnapshots);
 
         Assertions.assertTrue(intermediateCompatibilityResult.isCompatibleAfterMigration());
-        Assertions.assertTrue(intermediateCompatibilityResult.getFinalResult().isCompatibleAfterMigration());
+        Assertions.assertTrue(
+                intermediateCompatibilityResult.getFinalResult().isCompatibleAfterMigration());
     }
 
     @Test

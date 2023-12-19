@@ -97,7 +97,8 @@ public class CompositeTypeSerializerSnapshotTest {
                 reconfiguredSerializer.getNestedSerializers();
         // nested serializer at index 1 should strictly be a ReconfiguredNestedSerializer
         Assertions.assertSame(reconfiguredNestedSerializers[0].getClass(), NestedSerializer.class);
-        Assertions.assertSame(reconfiguredNestedSerializers[1].getClass(), ReconfiguredNestedSerializer.class);
+        Assertions.assertSame(
+                reconfiguredNestedSerializers[1].getClass(), ReconfiguredNestedSerializer.class);
         Assertions.assertSame(reconfiguredNestedSerializers[2].getClass(), NestedSerializer.class);
     }
 
@@ -230,9 +231,15 @@ public class CompositeTypeSerializerSnapshotTest {
         // now, restore the composite type serializer;
         // the restored nested serializer should be a RestoredNestedSerializer
         testSerializer = (TestCompositeTypeSerializer) testSerializerSnapshot.restoreSerializer();
-        Assertions.assertSame(testSerializer.getNestedSerializers()[0].getClass(), RestoredNestedSerializer.class);
-        Assertions.assertSame(testSerializer.getNestedSerializers()[1].getClass(), RestoredNestedSerializer.class);
-        Assertions.assertSame(testSerializer.getNestedSerializers()[2].getClass(), RestoredNestedSerializer.class);
+        Assertions.assertSame(
+                testSerializer.getNestedSerializers()[0].getClass(),
+                RestoredNestedSerializer.class);
+        Assertions.assertSame(
+                testSerializer.getNestedSerializers()[1].getClass(),
+                RestoredNestedSerializer.class);
+        Assertions.assertSame(
+                testSerializer.getNestedSerializers()[2].getClass(),
+                RestoredNestedSerializer.class);
     }
 
     // ------------------------------------------------------------------------------------------------

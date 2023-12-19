@@ -47,8 +47,7 @@ class MapOperatorTest implements java.io.Serializable {
     @Test
     void testMapPlain() {
         try {
-            final MapFunction<String, Integer> parser =
-                    Integer::parseInt;
+            final MapFunction<String, Integer> parser = Integer::parseInt;
 
             MapOperatorBase<String, Integer, MapFunction<String, Integer>> op =
                     new MapOperatorBase<>(
@@ -111,8 +110,7 @@ class MapOperatorTest implements java.io.Serializable {
                             taskName);
 
             List<String> input = new ArrayList<>(asList("1", "2", "3", "4", "5", "6"));
-            final HashMap<String, Accumulator<?, ?>> accumulatorMap =
-                    new HashMap<>();
+            final HashMap<String, Accumulator<?, ?>> accumulatorMap = new HashMap<>();
             final HashMap<String, Future<Path>> cpTasks = new HashMap<>();
             final TaskInfo taskInfo = new TaskInfo(taskName, 1, 0, 1, 0);
             ExecutionConfig executionConfig = new ExecutionConfig();

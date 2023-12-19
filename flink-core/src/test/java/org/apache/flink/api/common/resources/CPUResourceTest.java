@@ -37,11 +37,11 @@ public class CPUResourceTest extends TestLogger {
         MatcherAssert.assertThat(new CPUResource(1.235).toHumanReadableString(), is("1.24 cores"));
         MatcherAssert.assertThat(new CPUResource(10).toHumanReadableString(), is("10.00 cores"));
         MatcherAssert.assertThat(new CPUResource(100).toHumanReadableString(), is("100.00 cores"));
-        MatcherAssert.assertThat(new CPUResource(1000).toHumanReadableString(),
-                is("1000.00 cores"));
-        MatcherAssert.assertThat(new CPUResource(123456789).toHumanReadableString(),
-                is("123456789.00 cores"));
-        MatcherAssert.assertThat(new CPUResource(12345.6789).toHumanReadableString(),
-                is("12345.68 cores"));
+        MatcherAssert.assertThat(
+                new CPUResource(1000).toHumanReadableString(), is("1000.00 cores"));
+        MatcherAssert.assertThat(
+                new CPUResource(123456789).toHumanReadableString(), is("123456789.00 cores"));
+        MatcherAssert.assertThat(
+                new CPUResource(12345.6789).toHumanReadableString(), is("12345.68 cores"));
     }
 }

@@ -77,8 +77,7 @@ public class GenericDataSourceBaseTest implements java.io.Serializable {
                             new OperatorInformation<>(BasicTypeInfo.STRING_TYPE_INFO),
                             "testSource");
 
-            final HashMap<String, Accumulator<?, ?>> accumulatorMap =
-                    new HashMap<>();
+            final HashMap<String, Accumulator<?, ?>> accumulatorMap = new HashMap<>();
             final HashMap<String, Future<Path>> cpTasks = new HashMap<>();
             final TaskInfo taskInfo = new TaskInfo("test_source", 1, 0, 1, 0);
 

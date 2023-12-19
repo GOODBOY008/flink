@@ -130,7 +130,6 @@ public class FlatMapOperatorCollectionTest implements Serializable {
                 new UnaryOperatorInformation<>(
                         BasicTypeInfo.STRING_TYPE_INFO, BasicTypeInfo.STRING_TYPE_INFO);
 
-        return new FlatMapOperatorBase<>(
-                udf, typeInfo, "flatMap on Collections");
+        return new FlatMapOperatorBase<>(udf, typeInfo, "flatMap on Collections");
     }
 }

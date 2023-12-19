@@ -119,9 +119,8 @@ public class DelimitedInputFormatSamplingTest {
 
             TestFileSystem.resetStreamOpenCounter();
             format2.getStatistics(null);
-            Assertions.assertEquals(8,
-                    TestFileSystem.getNumtimeStreamOpened(),
-                    "Wrong number of samples taken.");
+            Assertions.assertEquals(
+                    8, TestFileSystem.getNumtimeStreamOpened(), "Wrong number of samples taken.");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -155,9 +154,8 @@ public class DelimitedInputFormatSamplingTest {
 
             TestFileSystem.resetStreamOpenCounter();
             format2.getStatistics(null);
-            Assertions.assertEquals(8,
-                    TestFileSystem.getNumtimeStreamOpened(),
-                    "Wrong number of samples taken.");
+            Assertions.assertEquals(
+                    8, TestFileSystem.getNumtimeStreamOpened(), "Wrong number of samples taken.");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -178,10 +176,13 @@ public class DelimitedInputFormatSamplingTest {
 
             final int numLines = TEST_DATA_1_LINES;
             final float avgWidth = ((float) TEST_DATA1.length()) / TEST_DATA_1_LINES;
-            Assertions.assertTrue(stats.getNumberOfRecords() < numLines + 1
-                    & stats.getNumberOfRecords() > numLines - 1, "Wrong record count.");
-            Assertions.assertTrue(stats.getAverageRecordWidth() < avgWidth + 1
-                    & stats.getAverageRecordWidth() > avgWidth - 1,
+            Assertions.assertTrue(
+                    stats.getNumberOfRecords() < numLines + 1
+                            & stats.getNumberOfRecords() > numLines - 1,
+                    "Wrong record count.");
+            Assertions.assertTrue(
+                    stats.getAverageRecordWidth() < avgWidth + 1
+                            & stats.getAverageRecordWidth() > avgWidth - 1,
                     "Wrong avg record size.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -258,10 +259,13 @@ public class DelimitedInputFormatSamplingTest {
             final int numLines = TEST_DATA_1_LINES;
             final float avgWidth = ((float) testData.length()) / TEST_DATA_1_LINES;
 
-            Assertions.assertTrue(stats.getNumberOfRecords() < numLines + 1
-                    & stats.getNumberOfRecords() > numLines - 1, "Wrong record count.");
-            Assertions.assertTrue(stats.getAverageRecordWidth() < avgWidth + 1
-                    & stats.getAverageRecordWidth() > avgWidth - 1,
+            Assertions.assertTrue(
+                    stats.getNumberOfRecords() < numLines + 1
+                            & stats.getNumberOfRecords() > numLines - 1,
+                    "Wrong record count.");
+            Assertions.assertTrue(
+                    stats.getAverageRecordWidth() < avgWidth + 1
+                            & stats.getAverageRecordWidth() > avgWidth - 1,
                     "Wrong avg record size.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -281,8 +285,8 @@ public class DelimitedInputFormatSamplingTest {
             format.setFilePath(tempFile);
             format.configure(conf);
 
-            Assertions.assertNull(format.getStatistics(null),
-                    "Expected exception due to overly long record.");
+            Assertions.assertNull(
+                    format.getStatistics(null), "Expected exception due to overly long record.");
         } catch (Exception e) {
             e.printStackTrace();
             Assertions.fail(e.getMessage());
@@ -312,10 +316,11 @@ public class DelimitedInputFormatSamplingTest {
 
             TestFileSystem.resetStreamOpenCounter();
             BaseStatistics stats2 = format2.getStatistics(stats);
-            Assertions.assertTrue(0 == TestFileSystem.getNumtimeStreamOpened(),
+            Assertions.assertTrue(
+                    0 == TestFileSystem.getNumtimeStreamOpened(),
                     "Using cached statistics should cicumvent sampling.");
-            Assertions.assertTrue(stats == stats2,
-                    "Using cached statistics should cicumvent sampling.");
+            Assertions.assertTrue(
+                    stats == stats2, "Using cached statistics should cicumvent sampling.");
 
         } catch (Exception e) {
             e.printStackTrace();

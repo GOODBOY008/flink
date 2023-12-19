@@ -20,8 +20,6 @@ package org.apache.flink.api.common.operators.util;
 
 import org.apache.flink.api.common.io.NonParallelInput;
 
-import java.io.IOException;
-
 /** Test Non rich input format class which emits just five elements. */
 public class TestNonRichInputFormat extends NonRichGenericInputFormat<String>
         implements NonParallelInput {

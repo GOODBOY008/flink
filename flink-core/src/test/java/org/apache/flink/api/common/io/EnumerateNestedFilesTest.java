@@ -33,7 +33,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
-import java.io.IOException;
 
 public class EnumerateNestedFilesTest {
 
@@ -258,9 +257,7 @@ public class EnumerateNestedFilesTest {
 
             BaseStatistics stats = format.getStatistics(null);
             Assertions.assertEquals(
-                    SIZE,
-                    stats.getTotalInputSize(),
-                    "The file size from the statistics is wrong.");
+                    SIZE, stats.getTotalInputSize(), "The file size from the statistics is wrong.");
         } catch (Exception ex) {
             ex.printStackTrace();
             Assertions.fail(ex.getMessage());
@@ -306,7 +303,8 @@ public class EnumerateNestedFilesTest {
 
             BaseStatistics stats2 = format.getStatistics(stats);
             Assertions.assertNotEquals(stats2, stats);
-            Assertions.assertEquals(TOTAL + 42L,
+            Assertions.assertEquals(
+                    TOTAL + 42L,
                     stats2.getTotalInputSize(),
                     "The file size from the statistics is wrong.");
 

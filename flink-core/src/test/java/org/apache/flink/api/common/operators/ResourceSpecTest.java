@@ -130,11 +130,13 @@ public class ResourceSpecTest extends TestLogger {
         ResourceSpec rs3 = rs1.merge(rs2);
         Assertions.assertEquals(new CPUResource(2.0), rs3.getCpuCores());
         Assertions.assertEquals(200, rs3.getTaskHeapMemory().getMebiBytes());
-        Assertions.assertEquals(new ExternalResource(EXTERNAL_RESOURCE_NAME, 1.1),
+        Assertions.assertEquals(
+                new ExternalResource(EXTERNAL_RESOURCE_NAME, 1.1),
                 rs3.getExtendedResource(EXTERNAL_RESOURCE_NAME).get());
 
         ResourceSpec rs4 = rs1.merge(rs3);
-        Assertions.assertEquals(new ExternalResource(EXTERNAL_RESOURCE_NAME, 2.2),
+        Assertions.assertEquals(
+                new ExternalResource(EXTERNAL_RESOURCE_NAME, 2.2),
                 rs4.getExtendedResource(EXTERNAL_RESOURCE_NAME).get());
     }
 
@@ -217,7 +219,8 @@ public class ResourceSpecTest extends TestLogger {
         final ResourceSpec subtracted = rs1.subtract(rs2);
         Assertions.assertEquals(new CPUResource(0.8), subtracted.getCpuCores());
         Assertions.assertEquals(0, subtracted.getTaskHeapMemory().getMebiBytes());
-        Assertions.assertEquals(new ExternalResource(EXTERNAL_RESOURCE_NAME, 0.6),
+        Assertions.assertEquals(
+                new ExternalResource(EXTERNAL_RESOURCE_NAME, 0.6),
                 subtracted.getExtendedResource(EXTERNAL_RESOURCE_NAME).get());
     }
 
@@ -269,7 +272,7 @@ public class ResourceSpecTest extends TestLogger {
                         .setExtendedResource(new ExternalResource(EXTERNAL_RESOURCE_NAME, 1.0))
                         .build();
 
-        Assertions.assertEquals(resourceSpec.subtract(resourceSpec).getExtendedResources().size(),
-                0);
+        Assertions.assertEquals(
+                resourceSpec.subtract(resourceSpec).getExtendedResources().size(), 0);
     }
 }
