@@ -25,8 +25,6 @@ import org.apache.flink.api.common.io.statistics.BaseStatistics;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.core.io.GenericInputSplit;
 
-import java.io.IOException;
-
 /**
  * Generic base class for all inputs that are not based on files. This is copied from {@link
  * org.apache.flink.api.common.io.GenericInputFormat} This class doesn't provide access to

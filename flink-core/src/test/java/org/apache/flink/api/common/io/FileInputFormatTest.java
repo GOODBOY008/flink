@@ -70,7 +70,8 @@ public class FileInputFormatTest {
     @Test
     void testToStringWithoutPathSet() {
         final DummyFileInputFormat format = new DummyFileInputFormat();
-        Assertions.assertEquals("File Input (unknown file)",
+        Assertions.assertEquals(
+                "File Input (unknown file)",
                 format.toString(),
                 "The toString() should be correct.");
     }
@@ -288,9 +289,7 @@ public class FileInputFormatTest {
 
             BaseStatistics stats = format.getStatistics(null);
             Assertions.assertEquals(
-                    SIZE,
-                    stats.getTotalInputSize(),
-                    "The file size from the statistics is wrong.");
+                    SIZE, stats.getTotalInputSize(), "The file size from the statistics is wrong.");
         } catch (Exception ex) {
             ex.printStackTrace();
             Assertions.fail(ex.getMessage());
@@ -338,9 +337,7 @@ public class FileInputFormatTest {
 
             FileBaseStatistics stats = format.getStatistics(null);
             Assertions.assertEquals(
-                    SIZE,
-                    stats.getTotalInputSize(),
-                    "The file size from the statistics is wrong.");
+                    SIZE, stats.getTotalInputSize(), "The file size from the statistics is wrong.");
 
             format = new DummyFileInputFormat();
             format.setFilePath(tempFile);
@@ -620,7 +617,9 @@ public class FileInputFormatTest {
                     FileInputFormat.getSupportedCompressionFormats();
             Assertions.assertEquals(supportedCompressionFormats.size(), splits.length);
             for (FileInputSplit split : splits) {
-                Assertions.assertEquals(FileInputFormat.READ_WHOLE_SPLIT_FLAG, split.getLength()); // unsplittable compressed files have this size as a
+                Assertions.assertEquals(
+                        FileInputFormat.READ_WHOLE_SPLIT_FLAG,
+                        split.getLength()); // unsplittable compressed files have this size as a
                 // flag for "read whole file"
                 Assertions.assertEquals(0L, split.getStart()); // always read from the beginning.
             }
@@ -643,7 +642,8 @@ public class FileInputFormatTest {
                             FileInputFormat.READ_WHOLE_SPLIT_FLAG,
                             split.getLength()); // unsplittable compressed files have this size as a
                     // flag for "read whole file"
-                    Assertions.assertEquals(0L, split.getStart()); // always read from the beginning.
+                    Assertions.assertEquals(
+                            0L, split.getStart()); // always read from the beginning.
                 } else {
                     Assertions.assertEquals(0L, split.getStart());
                     Assertions.assertTrue(split.getLength() > 0, "split size not correct");
@@ -749,8 +749,9 @@ public class FileInputFormatTest {
             final URI childUri1 = child1.toURI();
             final URI childUri2 = child2.toURI();
 
-            Assertions.assertTrue((uri1.equals(childUri1) && uri2.equals(childUri2))
-                    || (uri1.equals(childUri2) && uri2.equals(childUri1)));
+            Assertions.assertTrue(
+                    (uri1.equals(childUri1) && uri2.equals(childUri2))
+                            || (uri1.equals(childUri2) && uri2.equals(childUri1)));
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();

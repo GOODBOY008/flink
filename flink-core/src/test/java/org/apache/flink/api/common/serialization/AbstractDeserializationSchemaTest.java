@@ -29,8 +29,6 @@ import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.util.JSON
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 /** Tests for {@link AbstractDeserializationSchema}. */
 class AbstractDeserializationSchemaTest {
 

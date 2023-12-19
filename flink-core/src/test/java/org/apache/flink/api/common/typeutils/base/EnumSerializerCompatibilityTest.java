@@ -55,7 +55,8 @@ public class EnumSerializerCompatibilityTest extends TestLogger {
     /** Check that appending fields to the enum does not require migration */
     @Test
     void checkAppendedField() throws Exception {
-        Assertions.assertTrue(checkCompatibility(ENUM_A, ENUM_B).isCompatibleWithReconfiguredSerializer());
+        Assertions.assertTrue(
+                checkCompatibility(ENUM_A, ENUM_B).isCompatibleWithReconfiguredSerializer());
     }
 
     /** Check that removing enum fields makes the snapshot incompatible */
@@ -67,7 +68,8 @@ public class EnumSerializerCompatibilityTest extends TestLogger {
     /** Check that changing the enum field order don't require migration */
     @Test
     void checkDifferentFieldOrder() throws Exception {
-        Assertions.assertTrue(checkCompatibility(ENUM_A, ENUM_D).isCompatibleWithReconfiguredSerializer());
+        Assertions.assertTrue(
+                checkCompatibility(ENUM_A, ENUM_D).isCompatibleWithReconfiguredSerializer());
     }
 
     @SuppressWarnings("unchecked")

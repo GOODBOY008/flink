@@ -107,11 +107,12 @@ public abstract class SerializerTestBase<T> {
             Assertions.assertNotNull(type, "The test is corrupt: type class is null.");
 
             if (!type.isAssignableFrom(instance.getClass())) {
-                Assertions.fail("Type of the instantiated object is wrong. "
-                        + "Expected Type: "
-                        + type
-                        + " present type "
-                        + instance.getClass());
+                Assertions.fail(
+                        "Type of the instantiated object is wrong. "
+                                + "Expected Type: "
+                                + type
+                                + " present type "
+                                + instance.getClass());
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -250,15 +251,16 @@ public abstract class SerializerTestBase<T> {
                 serializer.serialize(value, out);
                 TestInputView in = out.getInputView();
 
-                Assertions.assertTrue(in.available() > 0,
-                        "No data available during deserialization.");
+                Assertions.assertTrue(
+                        in.available() > 0, "No data available during deserialization.");
 
                 T deserialized = serializer.deserialize(serializer.createInstance(), in);
                 checkToString(deserialized);
 
                 deepEquals("Deserialized value if wrong.", value, deserialized);
 
-                Assertions.assertEquals(0, in.available(), "Trailing data available after deserialization.");
+                Assertions.assertEquals(
+                        0, in.available(), "Trailing data available after deserialization.");
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -280,15 +282,16 @@ public abstract class SerializerTestBase<T> {
                 serializer.serialize(value, out);
                 TestInputView in = out.getInputView();
 
-                Assertions.assertTrue(in.available() > 0,
-                        "No data available during deserialization.");
+                Assertions.assertTrue(
+                        in.available() > 0, "No data available during deserialization.");
 
                 T deserialized = serializer.deserialize(reuseValue, in);
                 checkToString(deserialized);
 
                 deepEquals("Deserialized value if wrong.", value, deserialized);
 
-                Assertions.assertEquals(0, in.available(), "Trailing data available after deserialization.");
+                Assertions.assertEquals(
+                        0, in.available(), "Trailing data available after deserialization.");
 
                 reuseValue = deserialized;
             }
@@ -384,7 +387,8 @@ public abstract class SerializerTestBase<T> {
 
                 deepEquals("Deserialized value if wrong.", value, deserialized);
 
-                Assertions.assertEquals(0, toVerify.available(), "Trailing data available after deserialization.");
+                Assertions.assertEquals(
+                        0, toVerify.available(), "Trailing data available after deserialization.");
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -442,9 +446,7 @@ public abstract class SerializerTestBase<T> {
             }
 
             Assertions.assertEquals(
-                    ser1,
-                    ser2,
-                    "The copy of the serializer is not equal to the original one.");
+                    ser1, ser2, "The copy of the serializer is not equal to the original one.");
 
             // Make sure the serializer can be used after cloning
             testCopy(ser2);
@@ -496,9 +498,7 @@ public abstract class SerializerTestBase<T> {
 
     private void deepEquals(String message, T should, T is) {
         MatcherAssert.assertThat(
-                message,
-                is,
-                CustomEqualityMatcher.deeplyEquals(should).withChecker(checker));
+                message, is, CustomEqualityMatcher.deeplyEquals(should).withChecker(checker));
     }
 
     // --------------------------------------------------------------------------------------------

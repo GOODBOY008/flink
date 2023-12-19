@@ -88,7 +88,8 @@ class WatermarkStrategyTest {
         WatermarkStrategy<Object> wmStrategy =
                 WatermarkStrategy.forMonotonousTimestamps()
                         .withTimestampAssigner(
-                                (SerializableTimestampAssigner<Object>) (element, recordTimestamp) -> 42);
+                                (SerializableTimestampAssigner<Object>)
+                                        (element, recordTimestamp) -> 42);
         // ensure that the closure can be cleaned through the Watermark Strategies
         ClosureCleaner.clean(wmStrategy, ExecutionConfig.ClosureCleanerLevel.RECURSIVE, true);
 

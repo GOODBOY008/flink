@@ -68,17 +68,23 @@ public class EnumSerializerTest extends TestLogger {
 
         // verify that the serializer is first using the "wrong order" (i.e., the initial new
         // configuration)
-        Assertions.assertEquals(PublicEnum.FOO.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.FOO.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.FOO).intValue());
-        Assertions.assertEquals(PublicEnum.BAR.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.BAR.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.BAR).intValue());
-        Assertions.assertEquals(PublicEnum.PETER.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.PETER.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.PETER).intValue());
-        Assertions.assertEquals(PublicEnum.NATHANIEL.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.NATHANIEL.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.NATHANIEL).intValue());
-        Assertions.assertEquals(PublicEnum.EMMA.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.EMMA.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.EMMA).intValue());
-        Assertions.assertEquals(PublicEnum.PAULA.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.PAULA.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.PAULA).intValue());
 
         // reconfigure and verify compatibility
@@ -104,8 +110,7 @@ public class EnumSerializerTest extends TestLogger {
         int i = 0;
         for (PublicEnum constant : expectedOrder) {
             Assertions.assertEquals(
-                    i,
-                    configuredSerializer.getValueToOrdinal().get(constant).intValue());
+                    i, configuredSerializer.getValueToOrdinal().get(constant).intValue());
             i++;
         }
 
@@ -135,17 +140,23 @@ public class EnumSerializerTest extends TestLogger {
                 restoredConfig.resolveSchemaCompatibility(serializer);
         Assertions.assertTrue(compatResult.isCompatibleAsIs());
 
-        Assertions.assertEquals(PublicEnum.FOO.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.FOO.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.FOO).intValue());
-        Assertions.assertEquals(PublicEnum.BAR.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.BAR.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.BAR).intValue());
-        Assertions.assertEquals(PublicEnum.PETER.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.PETER.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.PETER).intValue());
-        Assertions.assertEquals(PublicEnum.NATHANIEL.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.NATHANIEL.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.NATHANIEL).intValue());
-        Assertions.assertEquals(PublicEnum.EMMA.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.EMMA.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.EMMA).intValue());
-        Assertions.assertEquals(PublicEnum.PAULA.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.PAULA.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.PAULA).intValue());
         Assertions.assertTrue(Arrays.equals(PublicEnum.values(), serializer.getValues()));
     }
@@ -155,17 +166,23 @@ public class EnumSerializerTest extends TestLogger {
         EnumSerializer<PublicEnum> serializer = new EnumSerializer<>(PublicEnum.class);
 
         // verify original transient parameters
-        Assertions.assertEquals(PublicEnum.FOO.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.FOO.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.FOO).intValue());
-        Assertions.assertEquals(PublicEnum.BAR.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.BAR.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.BAR).intValue());
-        Assertions.assertEquals(PublicEnum.PETER.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.PETER.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.PETER).intValue());
-        Assertions.assertEquals(PublicEnum.NATHANIEL.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.NATHANIEL.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.NATHANIEL).intValue());
-        Assertions.assertEquals(PublicEnum.EMMA.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.EMMA.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.EMMA).intValue());
-        Assertions.assertEquals(PublicEnum.PAULA.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.PAULA.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.PAULA).intValue());
         Assertions.assertTrue(Arrays.equals(PublicEnum.values(), serializer.getValues()));
 
@@ -175,17 +192,23 @@ public class EnumSerializerTest extends TestLogger {
         serializer =
                 InstantiationUtil.deserializeObject(
                         serializedSerializer, Thread.currentThread().getContextClassLoader());
-        Assertions.assertEquals(PublicEnum.FOO.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.FOO.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.FOO).intValue());
-        Assertions.assertEquals(PublicEnum.BAR.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.BAR.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.BAR).intValue());
-        Assertions.assertEquals(PublicEnum.PETER.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.PETER.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.PETER).intValue());
-        Assertions.assertEquals(PublicEnum.NATHANIEL.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.NATHANIEL.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.NATHANIEL).intValue());
-        Assertions.assertEquals(PublicEnum.EMMA.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.EMMA.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.EMMA).intValue());
-        Assertions.assertEquals(PublicEnum.PAULA.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.PAULA.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.PAULA).intValue());
         Assertions.assertTrue(Arrays.equals(PublicEnum.values(), serializer.getValues()));
     }
@@ -201,17 +224,23 @@ public class EnumSerializerTest extends TestLogger {
 
         // verify that the serializer is first using the "wrong order" (i.e., the initial new
         // configuration)
-        Assertions.assertEquals(PublicEnum.FOO.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.FOO.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.FOO).intValue());
-        Assertions.assertEquals(PublicEnum.BAR.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.BAR.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.BAR).intValue());
-        Assertions.assertEquals(PublicEnum.PETER.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.PETER.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.PETER).intValue());
-        Assertions.assertEquals(PublicEnum.NATHANIEL.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.NATHANIEL.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.NATHANIEL).intValue());
-        Assertions.assertEquals(PublicEnum.EMMA.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.EMMA.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.EMMA).intValue());
-        Assertions.assertEquals(PublicEnum.PAULA.ordinal(),
+        Assertions.assertEquals(
+                PublicEnum.PAULA.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.PAULA).intValue());
 
         // reconfigure and verify compatibility
@@ -237,8 +266,7 @@ public class EnumSerializerTest extends TestLogger {
         int i = 0;
         for (PublicEnum constant : expectedOrder) {
             Assertions.assertEquals(
-                    i,
-                    configuredSerializer.getValueToOrdinal().get(constant).intValue());
+                    i, configuredSerializer.getValueToOrdinal().get(constant).intValue());
             i++;
         }
 

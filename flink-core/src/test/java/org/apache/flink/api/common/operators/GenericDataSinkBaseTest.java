@@ -46,9 +46,7 @@ public class GenericDataSinkBaseTest implements java.io.Serializable {
     private static final TestNonRichInputFormat in = new TestNonRichInputFormat();
     final GenericDataSourceBase<String, TestNonRichInputFormat> source =
             new GenericDataSourceBase<>(
-                    in,
-                    new OperatorInformation<>(BasicTypeInfo.STRING_TYPE_INFO),
-                    "testSource");
+                    in, new OperatorInformation<>(BasicTypeInfo.STRING_TYPE_INFO), "testSource");
 
     @Test
     void testDataSourcePlain() {
@@ -94,8 +92,7 @@ public class GenericDataSinkBaseTest implements java.io.Serializable {
             sink.setInput(source);
 
             ExecutionConfig executionConfig = new ExecutionConfig();
-            final HashMap<String, Accumulator<?, ?>> accumulatorMap =
-                    new HashMap<>();
+            final HashMap<String, Accumulator<?, ?>> accumulatorMap = new HashMap<>();
             final HashMap<String, Future<Path>> cpTasks = new HashMap<>();
             final TaskInfo taskInfo = new TaskInfo("test_sink", 1, 0, 1, 0);
             executionConfig.disableObjectReuse();

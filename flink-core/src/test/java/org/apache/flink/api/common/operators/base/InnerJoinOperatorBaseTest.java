@@ -117,25 +117,23 @@ class InnerJoinOperatorBaseTest implements Serializable {
         InnerJoinOperatorBase<
                         String, String, Integer, RichFlatJoinFunction<String, String, Integer>>
                 base =
-                new InnerJoinOperatorBase<>(
-                        joiner,
-                        new BinaryOperatorInformation<>(
-                                BasicTypeInfo.STRING_TYPE_INFO,
-                                BasicTypeInfo.STRING_TYPE_INFO,
-                                BasicTypeInfo.INT_TYPE_INFO),
-                        new int[0],
-                        new int[0],
-                        taskName);
+                        new InnerJoinOperatorBase<>(
+                                joiner,
+                                new BinaryOperatorInformation<>(
+                                        BasicTypeInfo.STRING_TYPE_INFO,
+                                        BasicTypeInfo.STRING_TYPE_INFO,
+                                        BasicTypeInfo.INT_TYPE_INFO),
+                                new int[0],
+                                new int[0],
+                                taskName);
 
-        final List<String> inputData1 =
-                new ArrayList<>(Arrays.asList("foo", "bar", "foobar"));
+        final List<String> inputData1 = new ArrayList<>(Arrays.asList("foo", "bar", "foobar"));
         final List<String> inputData2 = new ArrayList<>(Arrays.asList("foobar", "foo"));
         final List<Integer> expected = new ArrayList<>(Arrays.asList(3, 3, 6, 6));
 
         try {
             final TaskInfo taskInfo = new TaskInfo(taskName, 1, 0, 1, 0);
-            final HashMap<String, Accumulator<?, ?>> accumulatorMap =
-                    new HashMap<>();
+            final HashMap<String, Accumulator<?, ?>> accumulatorMap = new HashMap<>();
             final HashMap<String, Future<Path>> cpTasks = new HashMap<>();
 
             ExecutionConfig executionConfig = new ExecutionConfig();
