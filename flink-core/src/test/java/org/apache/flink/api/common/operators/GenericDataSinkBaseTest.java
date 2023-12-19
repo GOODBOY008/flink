@@ -43,21 +43,21 @@ import static java.util.Arrays.asList;
 @SuppressWarnings("serial")
 public class GenericDataSinkBaseTest implements java.io.Serializable {
 
-    private static TestNonRichInputFormat in = new TestNonRichInputFormat();
-    GenericDataSourceBase<String, TestNonRichInputFormat> source =
-            new GenericDataSourceBase<String, TestNonRichInputFormat>(
+    private static final TestNonRichInputFormat in = new TestNonRichInputFormat();
+    final GenericDataSourceBase<String, TestNonRichInputFormat> source =
+            new GenericDataSourceBase<>(
                     in,
-                    new OperatorInformation<String>(BasicTypeInfo.STRING_TYPE_INFO),
+                    new OperatorInformation<>(BasicTypeInfo.STRING_TYPE_INFO),
                     "testSource");
 
     @Test
-    public void testDataSourcePlain() {
+    void testDataSourcePlain() {
         try {
             TestNonRichOutputFormat out = new TestNonRichOutputFormat();
             GenericDataSinkBase<String> sink =
-                    new GenericDataSinkBase<String>(
+                    new GenericDataSinkBase<>(
                             out,
-                            new UnaryOperatorInformation<String, Nothing>(
+                            new UnaryOperatorInformation<>(
                                     BasicTypeInfo.STRING_TYPE_INFO,
                                     BasicTypeInfo.getInfoFor(Nothing.class)),
                             "test_sink");
@@ -81,13 +81,13 @@ public class GenericDataSinkBaseTest implements java.io.Serializable {
     }
 
     @Test
-    public void testDataSourceWithRuntimeContext() {
+    void testDataSourceWithRuntimeContext() {
         try {
             TestRichOutputFormat out = new TestRichOutputFormat();
             GenericDataSinkBase<String> sink =
-                    new GenericDataSinkBase<String>(
+                    new GenericDataSinkBase<>(
                             out,
-                            new UnaryOperatorInformation<String, Nothing>(
+                            new UnaryOperatorInformation<>(
                                     BasicTypeInfo.STRING_TYPE_INFO,
                                     BasicTypeInfo.getInfoFor(Nothing.class)),
                             "test_sink");
@@ -95,7 +95,7 @@ public class GenericDataSinkBaseTest implements java.io.Serializable {
 
             ExecutionConfig executionConfig = new ExecutionConfig();
             final HashMap<String, Accumulator<?, ?>> accumulatorMap =
-                    new HashMap<String, Accumulator<?, ?>>();
+                    new HashMap<>();
             final HashMap<String, Future<Path>> cpTasks = new HashMap<>();
             final TaskInfo taskInfo = new TaskInfo("test_sink", 1, 0, 1, 0);
             executionConfig.disableObjectReuse();

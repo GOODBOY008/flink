@@ -24,10 +24,10 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 
 /** Tests for the {@link AscendingTimestampsWatermarks} class. */
-public class BoundedOutOfOrdernessWatermarksTest {
+class BoundedOutOfOrdernessWatermarksTest {
 
     @Test
-    public void testWatermarkBeforeRecords() {
+    void testWatermarkBeforeRecords() {
         final TestingWatermarkOutput output = new TestingWatermarkOutput();
         final BoundedOutOfOrdernessWatermarks<Object> watermarks =
                 new BoundedOutOfOrdernessWatermarks<>(Duration.ofMillis(10));
@@ -39,7 +39,7 @@ public class BoundedOutOfOrdernessWatermarksTest {
     }
 
     @Test
-    public void testWatermarkAfterEvent() {
+    void testWatermarkAfterEvent() {
         final TestingWatermarkOutput output = new TestingWatermarkOutput();
         final BoundedOutOfOrdernessWatermarks<Object> watermarks =
                 new BoundedOutOfOrdernessWatermarks<>(Duration.ofMillis(10));
@@ -51,7 +51,7 @@ public class BoundedOutOfOrdernessWatermarksTest {
     }
 
     @Test
-    public void testWatermarkAfterNonMonotonousEvents() {
+    void testWatermarkAfterNonMonotonousEvents() {
         final TestingWatermarkOutput output = new TestingWatermarkOutput();
         final BoundedOutOfOrdernessWatermarks<Object> watermarks =
                 new BoundedOutOfOrdernessWatermarks<>(Duration.ofMillis(10));
@@ -66,7 +66,7 @@ public class BoundedOutOfOrdernessWatermarksTest {
     }
 
     @Test
-    public void testRepeatedProbe() {
+    void testRepeatedProbe() {
         final TestingWatermarkOutput output = new TestingWatermarkOutput();
         final BoundedOutOfOrdernessWatermarks<Object> watermarks =
                 new BoundedOutOfOrdernessWatermarks<>(Duration.ofMillis(10));

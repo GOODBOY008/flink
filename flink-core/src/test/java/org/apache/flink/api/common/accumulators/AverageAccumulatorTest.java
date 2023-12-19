@@ -21,16 +21,16 @@ package org.apache.flink.api.common.accumulators;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class AverageAccumulatorTest {
+class AverageAccumulatorTest {
 
     @Test
-    public void testGet() {
+    void testGet() {
         AverageAccumulator average = new AverageAccumulator();
         Assertions.assertEquals(0.0, average.getLocalValue(), 0.0);
     }
 
     @Test
-    public void testAdd() {
+    void testAdd() {
         AverageAccumulator average = new AverageAccumulator();
         int i1;
         for (i1 = 0; i1 < 10; i1++) {
@@ -78,7 +78,7 @@ public class AverageAccumulatorTest {
     }
 
     @Test
-    public void testMergeSuccess() {
+    void testMergeSuccess() {
         AverageAccumulator avg1 = new AverageAccumulator();
         for (int i = 0; i < 5; i++) {
             avg1.add(i);
@@ -94,7 +94,7 @@ public class AverageAccumulatorTest {
     }
 
     @Test
-    public void testMergeFailed() {
+    void testMergeFailed() {
         AverageAccumulator average = new AverageAccumulator();
         Accumulator<Double, Double> averageNew = null;
         average.add(1);
@@ -113,7 +113,7 @@ public class AverageAccumulatorTest {
     }
 
     @Test
-    public void testClone() {
+    void testClone() {
         AverageAccumulator average = new AverageAccumulator();
         average.add(1);
         AverageAccumulator averageNew = average.clone();

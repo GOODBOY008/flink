@@ -21,16 +21,16 @@ package org.apache.flink.api.common.accumulators;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class LongMaximumTest {
+class LongMaximumTest {
 
     @Test
-    public void testGet() {
+    void testGet() {
         LongMaximum max = new LongMaximum();
         Assertions.assertEquals(Long.MIN_VALUE, max.getLocalValue().longValue());
     }
 
     @Test
-    public void testResetLocal() {
+    void testResetLocal() {
         LongMaximum max = new LongMaximum();
         long value = 9876543210L;
 
@@ -42,7 +42,7 @@ public class LongMaximumTest {
     }
 
     @Test
-    public void testAdd() {
+    void testAdd() {
         LongMaximum max = new LongMaximum();
 
         max.add(1234567890);
@@ -54,7 +54,7 @@ public class LongMaximumTest {
     }
 
     @Test
-    public void testMerge() {
+    void testMerge() {
         LongMaximum max1 = new LongMaximum();
         max1.add(1234567890987654321L);
 
@@ -69,7 +69,7 @@ public class LongMaximumTest {
     }
 
     @Test
-    public void testClone() {
+    void testClone() {
         LongMaximum max = new LongMaximum();
         long value = 4242424242424242L;
 

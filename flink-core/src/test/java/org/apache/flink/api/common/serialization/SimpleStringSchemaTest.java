@@ -30,7 +30,7 @@ import java.nio.charset.StandardCharsets;
 public class SimpleStringSchemaTest {
 
     @Test
-    public void testSerializationWithAnotherCharset() {
+    void testSerializationWithAnotherCharset() {
         final Charset charset = StandardCharsets.UTF_16BE;
         final String string = "之掃描古籍版實乃姚鼐的";
         final byte[] bytes = string.getBytes(charset);
@@ -40,7 +40,7 @@ public class SimpleStringSchemaTest {
     }
 
     @Test
-    public void testSerializability() throws Exception {
+    void testSerializability() throws Exception {
         final SimpleStringSchema schema = new SimpleStringSchema(StandardCharsets.UTF_16LE);
         final SimpleStringSchema copy = CommonTestUtils.createCopySerializable(schema);
 

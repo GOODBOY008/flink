@@ -30,10 +30,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 
 /** Tests for the {@link WatermarkOutputMultiplexer}. */
-public class WatermarkOutputMultiplexerTest {
+class WatermarkOutputMultiplexerTest {
 
     @Test
-    public void singleImmediateWatermark() {
+    void singleImmediateWatermark() {
         TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -47,7 +47,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void singleImmediateIdleness() {
+    void singleImmediateIdleness() {
         TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -61,7 +61,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void singleImmediateWatermarkAfterIdleness() {
+    void singleImmediateWatermarkAfterIdleness() {
         TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -78,7 +78,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void multipleImmediateWatermark() {
+    void multipleImmediateWatermark() {
         TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -96,7 +96,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void whenImmediateOutputBecomesIdleWatermarkAdvances() {
+    void whenImmediateOutputBecomesIdleWatermarkAdvances() {
         TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -115,7 +115,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void combinedWatermarkDoesNotRegressWhenIdleOutputRegresses() {
+    void combinedWatermarkDoesNotRegressWhenIdleOutputRegresses() {
         TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -143,7 +143,7 @@ public class WatermarkOutputMultiplexerTest {
      * when there are no splits assigned and the combined watermark is at its initial value.
      */
     @Test
-    public void noCombinedDeferredUpdateWhenWeHaveZeroOutputs() {
+    void noCombinedDeferredUpdateWhenWeHaveZeroOutputs() {
         TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -155,7 +155,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void deferredOutputDoesNotImmediatelyAdvanceWatermark() {
+    void deferredOutputDoesNotImmediatelyAdvanceWatermark() {
         TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -174,7 +174,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void singleDeferredWatermark() {
+    void singleDeferredWatermark() {
         TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -189,7 +189,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void singleDeferredIdleness() {
+    void singleDeferredIdleness() {
         TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -204,7 +204,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void singleDeferredWatermarkAfterIdleness() {
+    void singleDeferredWatermarkAfterIdleness() {
         TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -224,7 +224,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void multipleDeferredWatermark() {
+    void multipleDeferredWatermark() {
         TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -244,7 +244,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void immediateUpdatesTakeDeferredUpdatesIntoAccount() {
+    void immediateUpdatesTakeDeferredUpdatesIntoAccount() {
         TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -262,7 +262,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void immediateUpdateOnSameOutputAsDeferredUpdateDoesNotRegress() {
+    void immediateUpdateOnSameOutputAsDeferredUpdateDoesNotRegress() {
         TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -286,7 +286,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void lowerImmediateUpdateOnSameOutputDoesNotEmitCombinedUpdate() {
+    void lowerImmediateUpdateOnSameOutputDoesNotEmitCombinedUpdate() {
         TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -303,7 +303,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void testRemoveUnblocksWatermarks() {
+    void testRemoveUnblocksWatermarks() {
         final TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         final WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -322,7 +322,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void testRemoveOfLowestDoesNotImmediatelyAdvanceWatermark() {
+    void testRemoveOfLowestDoesNotImmediatelyAdvanceWatermark() {
         final TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         final WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -341,7 +341,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void testRemoveOfHighestDoesNotRetractWatermark() {
+    void testRemoveOfHighestDoesNotRetractWatermark() {
         final TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         final WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -360,7 +360,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void testRemoveRegisteredReturnValue() {
+    void testRemoveRegisteredReturnValue() {
         final TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         final WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -372,7 +372,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void testRemoveNotRegisteredReturnValue() {
+    void testRemoveNotRegisteredReturnValue() {
         final TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         final WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);
@@ -383,7 +383,7 @@ public class WatermarkOutputMultiplexerTest {
     }
 
     @Test
-    public void testNotEmittingIdleAfterAllSplitsRemoved() {
+    void testNotEmittingIdleAfterAllSplitsRemoved() {
         final TestingWatermarkOutput underlyingWatermarkOutput = createTestingWatermarkOutput();
         final WatermarkOutputMultiplexer multiplexer =
                 new WatermarkOutputMultiplexer(underlyingWatermarkOutput);

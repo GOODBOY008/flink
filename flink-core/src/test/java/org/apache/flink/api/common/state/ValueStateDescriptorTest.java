@@ -26,16 +26,14 @@ import org.apache.flink.configuration.ConfigConstants;
 import org.apache.flink.core.testutils.CommonTestUtils;
 import org.apache.flink.util.TestLogger;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the {@link ValueStateDescriptor}. */
 public class ValueStateDescriptorTest extends TestLogger {
 
     @Test
-    public void testHashCodeEquals() throws Exception {
+    void testHashCodeEquals() throws Exception {
         final String name = "testName";
 
         ValueStateDescriptor<String> original = new ValueStateDescriptor<>(name, String.class);
@@ -45,26 +43,26 @@ public class ValueStateDescriptorTest extends TestLogger {
 
         // test that hashCode() works on state descriptors with initialized and uninitialized
         // serializers
-        assertEquals(original.hashCode(), same.hashCode());
-        assertEquals(original.hashCode(), sameBySerializer.hashCode());
+        Assertions.assertEquals(original.hashCode(), same.hashCode());
+        Assertions.assertEquals(original.hashCode(), sameBySerializer.hashCode());
 
-        assertEquals(original, same);
-        assertEquals(original, sameBySerializer);
+        Assertions.assertEquals(original, same);
+        Assertions.assertEquals(original, sameBySerializer);
 
         // equality with a clone
         ValueStateDescriptor<String> clone = CommonTestUtils.createCopySerializable(original);
-        assertEquals(original, clone);
+        Assertions.assertEquals(original, clone);
 
         // equality with an initialized
         clone.initializeSerializerUnlessSet(new ExecutionConfig());
-        assertEquals(original, clone);
+        Assertions.assertEquals(original, clone);
 
         original.initializeSerializerUnlessSet(new ExecutionConfig());
-        assertEquals(original, same);
+        Assertions.assertEquals(original, same);
     }
 
     @Test
-    public void testVeryLargeDefaultValue() throws Exception {
+    void testVeryLargeDefaultValue() throws Exception {
         // ensure that we correctly read very large data when deserializing the default value
 
         TypeSerializer<String> serializer =
@@ -80,16 +78,16 @@ public class ValueStateDescriptorTest extends TestLogger {
         ValueStateDescriptor<String> descr =
                 new ValueStateDescriptor<>("testName", serializer, defaultValue);
 
-        assertEquals("testName", descr.getName());
-        assertEquals(defaultValue, descr.getDefaultValue());
-        assertNotNull(descr.getSerializer());
-        assertEquals(serializer, descr.getSerializer());
+        Assertions.assertEquals("testName", descr.getName());
+        Assertions.assertEquals(defaultValue, descr.getDefaultValue());
+        Assertions.assertNotNull(descr.getSerializer());
+        Assertions.assertEquals(serializer, descr.getSerializer());
 
         ValueStateDescriptor<String> copy = CommonTestUtils.createCopySerializable(descr);
 
-        assertEquals("testName", copy.getName());
-        assertEquals(defaultValue, copy.getDefaultValue());
-        assertNotNull(copy.getSerializer());
-        assertEquals(serializer, copy.getSerializer());
+        Assertions.assertEquals("testName", copy.getName());
+        Assertions.assertEquals(defaultValue, copy.getDefaultValue());
+        Assertions.assertNotNull(copy.getSerializer());
+        Assertions.assertEquals(serializer, copy.getSerializer());
     }
 }

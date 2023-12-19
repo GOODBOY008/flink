@@ -21,16 +21,16 @@ package org.apache.flink.api.common.accumulators;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class IntMinimumTest {
+class IntMinimumTest {
 
     @Test
-    public void testGet() {
+    void testGet() {
         IntMinimum min = new IntMinimum();
         Assertions.assertEquals(Integer.MAX_VALUE, min.getLocalValue().intValue());
     }
 
     @Test
-    public void testResetLocal() {
+    void testResetLocal() {
         IntMinimum min = new IntMinimum();
         int value = 13;
 
@@ -42,7 +42,7 @@ public class IntMinimumTest {
     }
 
     @Test
-    public void testAdd() {
+    void testAdd() {
         IntMinimum min = new IntMinimum();
 
         min.add(1234);
@@ -54,7 +54,7 @@ public class IntMinimumTest {
     }
 
     @Test
-    public void testMerge() {
+    void testMerge() {
         IntMinimum min1 = new IntMinimum();
         min1.add(1234);
 
@@ -69,7 +69,7 @@ public class IntMinimumTest {
     }
 
     @Test
-    public void testClone() {
+    void testClone() {
         IntMinimum min = new IntMinimum();
         int value = 42;
 

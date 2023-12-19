@@ -83,7 +83,7 @@ public abstract class TypeInformationTestBase<T extends TypeInformation<?>> {
     }
 
     @Test
-    public void testSerialization() {
+    void testSerialization() {
         final T[] testData = getTestData();
 
         for (T typeInfo : testData) {
@@ -109,12 +109,12 @@ public abstract class TypeInformationTestBase<T extends TypeInformation<?>> {
     }
 
     @Test
-    public void testGetTotalFields() {
+    void testGetTotalFields() {
         final T[] testData = getTestData();
         for (T typeInfo : testData) {
             assertThat(typeInfo.getTotalFields())
                     .as("Number of total fields must be at least 1")
-                    .isGreaterThan(0);
+                    .isPositive();
         }
     }
 

@@ -43,13 +43,13 @@ import static java.util.Arrays.asList;
 public class GenericDataSourceBaseTest implements java.io.Serializable {
 
     @Test
-    public void testDataSourcePlain() {
+    void testDataSourcePlain() {
         try {
             TestNonRichInputFormat in = new TestNonRichInputFormat();
             GenericDataSourceBase<String, TestNonRichInputFormat> source =
-                    new GenericDataSourceBase<String, TestNonRichInputFormat>(
+                    new GenericDataSourceBase<>(
                             in,
-                            new OperatorInformation<String>(BasicTypeInfo.STRING_TYPE_INFO),
+                            new OperatorInformation<>(BasicTypeInfo.STRING_TYPE_INFO),
                             "testSource");
 
             ExecutionConfig executionConfig = new ExecutionConfig();
@@ -68,24 +68,24 @@ public class GenericDataSourceBaseTest implements java.io.Serializable {
     }
 
     @Test
-    public void testDataSourceWithRuntimeContext() {
+    void testDataSourceWithRuntimeContext() {
         try {
             TestRichInputFormat in = new TestRichInputFormat();
             GenericDataSourceBase<String, TestRichInputFormat> source =
-                    new GenericDataSourceBase<String, TestRichInputFormat>(
+                    new GenericDataSourceBase<>(
                             in,
-                            new OperatorInformation<String>(BasicTypeInfo.STRING_TYPE_INFO),
+                            new OperatorInformation<>(BasicTypeInfo.STRING_TYPE_INFO),
                             "testSource");
 
             final HashMap<String, Accumulator<?, ?>> accumulatorMap =
-                    new HashMap<String, Accumulator<?, ?>>();
+                    new HashMap<>();
             final HashMap<String, Future<Path>> cpTasks = new HashMap<>();
             final TaskInfo taskInfo = new TaskInfo("test_source", 1, 0, 1, 0);
 
             ExecutionConfig executionConfig = new ExecutionConfig();
             executionConfig.disableObjectReuse();
-            Assertions.assertEquals(false, in.hasBeenClosed());
-            Assertions.assertEquals(false, in.hasBeenOpened());
+            Assertions.assertFalse(in.hasBeenClosed());
+            Assertions.assertFalse(in.hasBeenOpened());
 
             List<String> resultMutableSafe =
                     source.executeOnCollections(
@@ -98,13 +98,13 @@ public class GenericDataSourceBaseTest implements java.io.Serializable {
                                     UnregisteredMetricsGroup.createOperatorMetricGroup()),
                             executionConfig);
 
-            Assertions.assertEquals(true, in.hasBeenClosed());
-            Assertions.assertEquals(true, in.hasBeenOpened());
+            Assertions.assertTrue(in.hasBeenClosed());
+            Assertions.assertTrue(in.hasBeenOpened());
 
             in.reset();
             executionConfig.enableObjectReuse();
-            Assertions.assertEquals(false, in.hasBeenClosed());
-            Assertions.assertEquals(false, in.hasBeenOpened());
+            Assertions.assertFalse(in.hasBeenClosed());
+            Assertions.assertFalse(in.hasBeenOpened());
 
             List<String> resultRegular =
                     source.executeOnCollections(
@@ -117,8 +117,8 @@ public class GenericDataSourceBaseTest implements java.io.Serializable {
                                     UnregisteredMetricsGroup.createOperatorMetricGroup()),
                             executionConfig);
 
-            Assertions.assertEquals(true, in.hasBeenClosed());
-            Assertions.assertEquals(true, in.hasBeenOpened());
+            Assertions.assertTrue(in.hasBeenClosed());
+            Assertions.assertTrue(in.hasBeenOpened());
 
             Assertions.assertEquals(asList(TestIOData.RICH_NAMES), resultMutableSafe);
             Assertions.assertEquals(asList(TestIOData.RICH_NAMES), resultRegular);

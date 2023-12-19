@@ -24,13 +24,13 @@ import org.junit.jupiter.api.Test;
 public class DoubleMinimumTest {
 
     @Test
-    public void testGet() {
+    void testGet() {
         DoubleMinimum min = new DoubleMinimum();
         Assertions.assertEquals(Double.POSITIVE_INFINITY, min.getLocalValue(), 0.0);
     }
 
     @Test
-    public void testResetLocal() {
+    void testResetLocal() {
         DoubleMinimum min = new DoubleMinimum();
         double value = 13.57902468;
 
@@ -42,7 +42,7 @@ public class DoubleMinimumTest {
     }
 
     @Test
-    public void testAdd() {
+    void testAdd() {
         DoubleMinimum min = new DoubleMinimum();
 
         min.add(1234.5768);
@@ -54,7 +54,7 @@ public class DoubleMinimumTest {
     }
 
     @Test
-    public void testMerge() {
+    void testMerge() {
         DoubleMinimum min1 = new DoubleMinimum();
         min1.add(1234.5768);
 
@@ -69,7 +69,7 @@ public class DoubleMinimumTest {
     }
 
     @Test
-    public void testClone() {
+    void testClone() {
         DoubleMinimum min = new DoubleMinimum();
         double value = 3.14159265359;
 

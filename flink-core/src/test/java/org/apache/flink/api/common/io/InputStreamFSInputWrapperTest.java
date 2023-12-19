@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class InputStreamFSInputWrapperTest {
 
     @Test
-    public void testClose() throws Exception {
+    void testClose() throws Exception {
         final AtomicBoolean closeCalled = new AtomicBoolean(false);
         InputStream mockedInputStream =
                 new InputStream() {

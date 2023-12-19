@@ -46,7 +46,7 @@ import java.util.Random;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class ExecutionConfigTest {
+class ExecutionConfigTest {
 
     @Test
     void testDoubleTypeRegistration() {
@@ -64,7 +64,7 @@ public class ExecutionConfigTest {
             assertThat(tpe).isEqualTo(expectedTypes.get(counter++));
         }
 
-        assertThat(expectedTypes.size()).isEqualTo(counter);
+        assertThat(expectedTypes).hasSize(counter);
     }
 
     @Test
@@ -87,11 +87,11 @@ public class ExecutionConfigTest {
     @Test
     void testDisableGenericTypes() {
         ExecutionConfig conf = new ExecutionConfig();
-        TypeInformation<Object> typeInfo = new GenericTypeInfo<Object>(Object.class);
+        TypeInformation<Object> typeInfo = new GenericTypeInfo<>(Object.class);
 
         // by default, generic types are supported
         TypeSerializer<Object> serializer = typeInfo.createSerializer(conf);
-        assertThat(serializer instanceof KryoSerializer).isTrue();
+        assertThat(serializer).isInstanceOf(KryoSerializer.class);
 
         // expect an exception when generic types are disabled
         conf.disableGenericTypes();
@@ -273,7 +273,7 @@ public class ExecutionConfigTest {
     }
 
     @Test
-    public void testLoadingSchedulerTypeFromConfiguration() {
+    void testLoadingSchedulerTypeFromConfiguration() {
         testLoadingSchedulerTypeFromConfiguration(JobManagerOptions.SchedulerType.AdaptiveBatch);
         testLoadingSchedulerTypeFromConfiguration(JobManagerOptions.SchedulerType.Default);
         testLoadingSchedulerTypeFromConfiguration(JobManagerOptions.SchedulerType.Adaptive);

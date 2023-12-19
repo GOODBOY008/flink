@@ -26,16 +26,14 @@ import org.apache.flink.api.java.typeutils.runtime.kryo.KryoSerializer;
 import org.apache.flink.core.testutils.CommonTestUtils;
 import org.apache.flink.util.TestLogger;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the {@link ReducingStateDescriptor}. */
 public class ReducingStateDescriptorTest extends TestLogger {
 
     @Test
-    public void testReducingStateDescriptor() throws Exception {
+    void testReducingStateDescriptor() throws Exception {
 
         ReduceFunction<String> reducer = (a, b) -> a;
 
@@ -45,20 +43,20 @@ public class ReducingStateDescriptorTest extends TestLogger {
         ReducingStateDescriptor<String> descr =
                 new ReducingStateDescriptor<>("testName", reducer, serializer);
 
-        assertEquals("testName", descr.getName());
-        assertNotNull(descr.getSerializer());
-        assertEquals(serializer, descr.getSerializer());
-        assertEquals(reducer, descr.getReduceFunction());
+        Assertions.assertEquals("testName", descr.getName());
+        Assertions.assertNotNull(descr.getSerializer());
+        Assertions.assertEquals(serializer, descr.getSerializer());
+        Assertions.assertEquals(reducer, descr.getReduceFunction());
 
         ReducingStateDescriptor<String> copy = CommonTestUtils.createCopySerializable(descr);
 
-        assertEquals("testName", copy.getName());
-        assertNotNull(copy.getSerializer());
-        assertEquals(serializer, copy.getSerializer());
+        Assertions.assertEquals("testName", copy.getName());
+        Assertions.assertNotNull(copy.getSerializer());
+        Assertions.assertEquals(serializer, copy.getSerializer());
     }
 
     @Test
-    public void testHashCodeEquals() throws Exception {
+    void testHashCodeEquals() throws Exception {
         final String name = "testName";
         final ReduceFunction<String> reducer = (a, b) -> a;
 
@@ -71,21 +69,21 @@ public class ReducingStateDescriptorTest extends TestLogger {
 
         // test that hashCode() works on state descriptors with initialized and uninitialized
         // serializers
-        assertEquals(original.hashCode(), same.hashCode());
-        assertEquals(original.hashCode(), sameBySerializer.hashCode());
+        Assertions.assertEquals(original.hashCode(), same.hashCode());
+        Assertions.assertEquals(original.hashCode(), sameBySerializer.hashCode());
 
-        assertEquals(original, same);
-        assertEquals(original, sameBySerializer);
+        Assertions.assertEquals(original, same);
+        Assertions.assertEquals(original, sameBySerializer);
 
         // equality with a clone
         ReducingStateDescriptor<String> clone = CommonTestUtils.createCopySerializable(original);
-        assertEquals(original, clone);
+        Assertions.assertEquals(original, clone);
 
         // equality with an initialized
         clone.initializeSerializerUnlessSet(new ExecutionConfig());
-        assertEquals(original, clone);
+        Assertions.assertEquals(original, clone);
 
         original.initializeSerializerUnlessSet(new ExecutionConfig());
-        assertEquals(original, same);
+        Assertions.assertEquals(original, same);
     }
 }

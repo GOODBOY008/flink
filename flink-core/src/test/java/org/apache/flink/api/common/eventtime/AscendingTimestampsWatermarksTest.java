@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /** Tests for the {@link AscendingTimestampsWatermarks} class. */
-public class AscendingTimestampsWatermarksTest {
+class AscendingTimestampsWatermarksTest {
 
     @Test
-    public void testWatermarkBeforeRecords() {
+    void testWatermarkBeforeRecords() {
         final TestingWatermarkOutput output = new TestingWatermarkOutput();
         final AscendingTimestampsWatermarks<Object> watermarks =
                 new AscendingTimestampsWatermarks<>();
@@ -36,7 +36,7 @@ public class AscendingTimestampsWatermarksTest {
     }
 
     @Test
-    public void testWatermarkAfterEvent() {
+    void testWatermarkAfterEvent() {
         final TestingWatermarkOutput output = new TestingWatermarkOutput();
         final AscendingTimestampsWatermarks<Object> watermarks =
                 new AscendingTimestampsWatermarks<>();
@@ -48,7 +48,7 @@ public class AscendingTimestampsWatermarksTest {
     }
 
     @Test
-    public void testWatermarkAfterEventWithLowerTimestamp() {
+    void testWatermarkAfterEventWithLowerTimestamp() {
         final TestingWatermarkOutput output = new TestingWatermarkOutput();
         final AscendingTimestampsWatermarks<Object> watermarks =
                 new AscendingTimestampsWatermarks<>();

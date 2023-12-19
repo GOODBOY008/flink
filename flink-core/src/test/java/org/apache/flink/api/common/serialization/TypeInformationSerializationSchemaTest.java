@@ -35,12 +35,12 @@ import java.util.List;
 public class TypeInformationSerializationSchemaTest {
 
     @Test
-    public void testDeSerialization() {
+    void testDeSerialization() {
         try {
             TypeInformation<MyPOJO> info = TypeExtractor.getForClass(MyPOJO.class);
 
             TypeInformationSerializationSchema<MyPOJO> schema =
-                    new TypeInformationSerializationSchema<MyPOJO>(info, new ExecutionConfig());
+                    new TypeInformationSerializationSchema<>(info, new ExecutionConfig());
 
             MyPOJO[] types = {
                 new MyPOJO(72, new Date(763784523L), new Date(88234L)),
@@ -61,11 +61,11 @@ public class TypeInformationSerializationSchemaTest {
     }
 
     @Test
-    public void testSerializability() {
+    void testSerializability() {
         try {
             TypeInformation<MyPOJO> info = TypeExtractor.getForClass(MyPOJO.class);
             TypeInformationSerializationSchema<MyPOJO> schema =
-                    new TypeInformationSerializationSchema<MyPOJO>(info, new ExecutionConfig());
+                    new TypeInformationSerializationSchema<>(info, new ExecutionConfig());
 
             // this needs to succeed
             CommonTestUtils.createCopySerializable(schema);

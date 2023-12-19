@@ -29,15 +29,15 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 /** Tests for the {@link TypeInformation} class. */
-public class TypeInformationTest {
+class TypeInformationTest {
 
     @Test
-    public void testOfClass() {
+    void testOfClass() {
         Assertions.assertEquals(BasicTypeInfo.STRING_TYPE_INFO, TypeInformation.of(String.class));
     }
 
     @Test
-    public void testOfGenericClassForFlink() {
+    void testOfGenericClassForFlink() {
         try {
             TypeInformation.of(Tuple3.class);
             Assertions.fail("should fail with an exception");
@@ -48,12 +48,12 @@ public class TypeInformationTest {
     }
 
     @Test
-    public void testOfGenericClassForGenericType() {
+    void testOfGenericClassForGenericType() {
         Assertions.assertEquals(new GenericTypeInfo<>(List.class), TypeInformation.of(List.class));
     }
 
     @Test
-    public void testOfTypeHint() {
+    void testOfTypeHint() {
         Assertions.assertEquals(BasicTypeInfo.STRING_TYPE_INFO, TypeInformation.of(String.class));
         Assertions.assertEquals(
                 BasicTypeInfo.STRING_TYPE_INFO, TypeInformation.of(new TypeHint<String>() {}));

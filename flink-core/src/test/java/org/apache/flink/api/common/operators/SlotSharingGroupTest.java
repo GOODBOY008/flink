@@ -20,19 +20,18 @@ package org.apache.flink.api.common.operators;
 
 import org.apache.flink.configuration.MemorySize;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /** Tests for {@link SlotSharingGroup}. */
 public class SlotSharingGroupTest {
     @Test
-    public void testBuildSlotSharingGroupWithSpecificResource() {
+    void testBuildSlotSharingGroupWithSpecificResource() {
         final String name = "ssg";
         final MemorySize heap = MemorySize.ofMebiBytes(100);
         final MemorySize offHeap = MemorySize.ofMebiBytes(200);
@@ -56,16 +55,16 @@ public class SlotSharingGroupTest {
     }
 
     @Test
-    public void testBuildSlotSharingGroupWithUnknownResource() {
+    void testBuildSlotSharingGroupWithUnknownResource() {
         final String name = "ssg";
         final SlotSharingGroup slotSharingGroup = SlotSharingGroup.newBuilder(name).build();
 
         assertThat(slotSharingGroup.getName(), is(name));
-        assertFalse(slotSharingGroup.getCpuCores().isPresent());
-        assertFalse(slotSharingGroup.getTaskHeapMemory().isPresent());
-        assertFalse(slotSharingGroup.getManagedMemory().isPresent());
-        assertFalse(slotSharingGroup.getTaskOffHeapMemory().isPresent());
-        assertTrue(slotSharingGroup.getExternalResources().isEmpty());
+        Assertions.assertFalse(slotSharingGroup.getCpuCores().isPresent());
+        Assertions.assertFalse(slotSharingGroup.getTaskHeapMemory().isPresent());
+        Assertions.assertFalse(slotSharingGroup.getManagedMemory().isPresent());
+        Assertions.assertFalse(slotSharingGroup.getTaskOffHeapMemory().isPresent());
+        Assertions.assertTrue(slotSharingGroup.getExternalResources().isEmpty());
     }
 
     @Test(expected = IllegalArgumentException.class)

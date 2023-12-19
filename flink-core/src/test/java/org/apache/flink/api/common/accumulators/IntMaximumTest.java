@@ -21,16 +21,16 @@ package org.apache.flink.api.common.accumulators;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class IntMaximumTest {
+class IntMaximumTest {
 
     @Test
-    public void testGet() {
+    void testGet() {
         IntMaximum max = new IntMaximum();
         Assertions.assertEquals(Integer.MIN_VALUE, max.getLocalValue().intValue());
     }
 
     @Test
-    public void testResetLocal() {
+    void testResetLocal() {
         IntMaximum max = new IntMaximum();
         int value = 13;
 
@@ -42,7 +42,7 @@ public class IntMaximumTest {
     }
 
     @Test
-    public void testAdd() {
+    void testAdd() {
         IntMaximum max = new IntMaximum();
 
         max.add(1234);
@@ -54,7 +54,7 @@ public class IntMaximumTest {
     }
 
     @Test
-    public void testMerge() {
+    void testMerge() {
         IntMaximum max1 = new IntMaximum();
         max1.add(1234);
 
@@ -69,7 +69,7 @@ public class IntMaximumTest {
     }
 
     @Test
-    public void testClone() {
+    void testClone() {
         IntMaximum max = new IntMaximum();
         int value = 42;
 

@@ -25,11 +25,11 @@ import org.apache.flink.core.fs.Path;
 import org.apache.flink.testutils.TestFileUtils;
 import org.apache.flink.types.IntValue;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
@@ -43,13 +43,13 @@ public class EnumerateNestedFilesTest {
 
     private DummyFileInputFormat format;
 
-    @Before
+    @BeforeEach
     public void setup() {
         this.config = new Configuration();
         format = new DummyFileInputFormat();
     }
 
-    @After
+    @AfterEach
     public void setdown() throws Exception {
         if (this.format != null) {
             this.format.close();
@@ -58,7 +58,7 @@ public class EnumerateNestedFilesTest {
 
     /** Test without nested directory and recursive.file.enumeration = true */
     @Test
-    public void testNoNestedDirectoryTrue() {
+    void testNoNestedDirectoryTrue() {
         try {
             String filePath = TestFileUtils.createTempFile("foo");
 
@@ -67,16 +67,16 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             FileInputSplit[] splits = format.createInputSplits(1);
-            Assert.assertEquals(1, splits.length);
+            Assertions.assertEquals(1, splits.length);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail(ex.getMessage());
+            Assertions.fail(ex.getMessage());
         }
     }
 
     /** Test with one nested directory and recursive.file.enumeration = true */
     @Test
-    public void testOneNestedDirectoryTrue() {
+    void testOneNestedDirectoryTrue() {
         try {
             String firstLevelDir = TestFileUtils.randomFileName();
             String secondLevelDir = TestFileUtils.randomFileName();
@@ -94,16 +94,16 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             FileInputSplit[] splits = format.createInputSplits(1);
-            Assert.assertEquals(3, splits.length);
+            Assertions.assertEquals(3, splits.length);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail(ex.getMessage());
+            Assertions.fail(ex.getMessage());
         }
     }
 
     /** Test with one nested directory and recursive.file.enumeration = false */
     @Test
-    public void testOneNestedDirectoryFalse() {
+    void testOneNestedDirectoryFalse() {
         try {
             String firstLevelDir = TestFileUtils.randomFileName();
             String secondLevelDir = TestFileUtils.randomFileName();
@@ -121,16 +121,16 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             FileInputSplit[] splits = format.createInputSplits(1);
-            Assert.assertEquals(1, splits.length);
+            Assertions.assertEquals(1, splits.length);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail(ex.getMessage());
+            Assertions.fail(ex.getMessage());
         }
     }
 
     /** Test with two nested directories and recursive.file.enumeration = true */
     @Test
-    public void testTwoNestedDirectoriesTrue() {
+    void testTwoNestedDirectoriesTrue() {
         try {
             String firstLevelDir = TestFileUtils.randomFileName();
             String secondLevelDir = TestFileUtils.randomFileName();
@@ -153,16 +153,16 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             FileInputSplit[] splits = format.createInputSplits(1);
-            Assert.assertEquals(4, splits.length);
+            Assertions.assertEquals(4, splits.length);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail(ex.getMessage());
+            Assertions.fail(ex.getMessage());
         }
     }
 
     /** Tests if the recursion is invoked correctly in nested directories. */
     @Test
-    public void testOnlyLevel2NestedDirectories() {
+    void testOnlyLevel2NestedDirectories() {
         try {
             String rootDir = TestFileUtils.randomFileName();
             String nestedDir = TestFileUtils.randomFileName();
@@ -185,16 +185,16 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             FileInputSplit[] splits = format.createInputSplits(1);
-            Assert.assertEquals(4, splits.length);
+            Assertions.assertEquals(4, splits.length);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail(ex.getMessage());
+            Assertions.fail(ex.getMessage());
         }
     }
 
     /** Test with two nested directories and recursive.file.enumeration = true */
     @Test
-    public void testTwoNestedDirectoriesWithFilteredFilesTrue() {
+    void testTwoNestedDirectoriesWithFilteredFilesTrue() {
         try {
             String firstLevelDir = TestFileUtils.randomFileName();
             String secondLevelDir = TestFileUtils.randomFileName();
@@ -232,15 +232,15 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             FileInputSplit[] splits = format.createInputSplits(1);
-            Assert.assertEquals(4, splits.length);
+            Assertions.assertEquals(4, splits.length);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail(ex.getMessage());
+            Assertions.fail(ex.getMessage());
         }
     }
 
     @Test
-    public void testGetStatisticsOneFileInNestedDir() {
+    void testGetStatisticsOneFileInNestedDir() {
         try {
             final long SIZE = 1024 * 500;
             String firstLevelDir = TestFileUtils.randomFileName();
@@ -257,16 +257,18 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             BaseStatistics stats = format.getStatistics(null);
-            Assert.assertEquals(
-                    "The file size from the statistics is wrong.", SIZE, stats.getTotalInputSize());
+            Assertions.assertEquals(
+                    SIZE,
+                    stats.getTotalInputSize(),
+                    "The file size from the statistics is wrong.");
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail(ex.getMessage());
+            Assertions.fail(ex.getMessage());
         }
     }
 
     @Test
-    public void testGetStatisticsMultipleNestedFiles() {
+    void testGetStatisticsMultipleNestedFiles() {
         try {
             final long SIZE1 = 2077;
             final long SIZE2 = 31909;
@@ -293,25 +295,24 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             BaseStatistics stats = format.getStatistics(null);
-            Assert.assertEquals(
-                    "The file size from the statistics is wrong.",
+            Assertions.assertEquals(
                     TOTAL,
-                    stats.getTotalInputSize());
+                    stats.getTotalInputSize(),
+                    "The file size from the statistics is wrong.");
 
             /* Now invalidate the cache and check again */
             Thread.sleep(1000); // accuracy of file modification times is rather low
             TestFileUtils.createTempFileInDirectory(insideNestedDir.getAbsolutePath(), 42L);
 
             BaseStatistics stats2 = format.getStatistics(stats);
-            Assert.assertNotEquals(stats2, stats);
-            Assert.assertEquals(
-                    "The file size from the statistics is wrong.",
-                    TOTAL + 42L,
-                    stats2.getTotalInputSize());
+            Assertions.assertNotEquals(stats2, stats);
+            Assertions.assertEquals(TOTAL + 42L,
+                    stats2.getTotalInputSize(),
+                    "The file size from the statistics is wrong.");
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail(ex.getMessage());
+            Assertions.fail(ex.getMessage());
         }
     }
 
@@ -321,12 +322,12 @@ public class EnumerateNestedFilesTest {
         private static final long serialVersionUID = 1L;
 
         @Override
-        public boolean reachedEnd() throws IOException {
+        public boolean reachedEnd() {
             return true;
         }
 
         @Override
-        public IntValue nextRecord(IntValue reuse) throws IOException {
+        public IntValue nextRecord(IntValue reuse) {
             return null;
         }
     }

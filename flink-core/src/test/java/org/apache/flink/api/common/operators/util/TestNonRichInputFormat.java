@@ -32,12 +32,12 @@ public class TestNonRichInputFormat extends NonRichGenericInputFormat<String>
     private int count = 0;
 
     @Override
-    public boolean reachedEnd() throws IOException {
+    public boolean reachedEnd() {
         return count >= NUM;
     }
 
     @Override
-    public String nextRecord(String reuse) throws IOException {
+    public String nextRecord(String reuse) {
         count++;
         return NAMES[count - 1];
     }

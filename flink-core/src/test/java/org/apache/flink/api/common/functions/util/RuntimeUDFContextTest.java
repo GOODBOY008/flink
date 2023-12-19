@@ -32,12 +32,12 @@ import java.util.HashMap;
 import java.util.List;
 
 /** Test for the {@link RuntimeUDFContext}. */
-public class RuntimeUDFContextTest {
+class RuntimeUDFContextTest {
 
     private final TaskInfo taskInfo = new TaskInfo("test name", 3, 1, 3, 0);
 
     @Test
-    public void testBroadcastVariableNotFound() {
+    void testBroadcastVariableNotFound() {
         try {
             RuntimeUDFContext ctx =
                     new RuntimeUDFContext(
@@ -58,13 +58,7 @@ public class RuntimeUDFContextTest {
             }
 
             try {
-                ctx.getBroadcastVariableWithInitializer(
-                        "some name",
-                        new BroadcastVariableInitializer<Object, Object>() {
-                            public Object initializeBroadcastVariable(Iterable<Object> data) {
-                                return null;
-                            }
-                        });
+                ctx.getBroadcastVariableWithInitializer("some name", data -> null);
 
                 Assertions.fail("should throw an exception");
             } catch (IllegalArgumentException e) {
@@ -77,7 +71,7 @@ public class RuntimeUDFContextTest {
     }
 
     @Test
-    public void testBroadcastVariableSimple() {
+    void testBroadcastVariableSimple() {
         try {
             RuntimeUDFContext ctx =
                     new RuntimeUDFContext(
@@ -120,7 +114,7 @@ public class RuntimeUDFContextTest {
     }
 
     @Test
-    public void testBroadcastVariableWithInitializer() {
+    void testBroadcastVariableWithInitializer() {
         try {
             RuntimeUDFContext ctx =
                     new RuntimeUDFContext(
@@ -154,7 +148,7 @@ public class RuntimeUDFContextTest {
     }
 
     @Test
-    public void testResetBroadcastVariableWithInitializer() {
+    void testResetBroadcastVariableWithInitializer() {
         try {
             RuntimeUDFContext ctx =
                     new RuntimeUDFContext(
@@ -185,7 +179,7 @@ public class RuntimeUDFContextTest {
     }
 
     @Test
-    public void testBroadcastVariableWithInitializerAndMismatch() {
+    void testBroadcastVariableWithInitializerAndMismatch() {
         try {
             RuntimeUDFContext ctx =
                     new RuntimeUDFContext(

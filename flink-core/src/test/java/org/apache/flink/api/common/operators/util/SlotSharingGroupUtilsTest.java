@@ -30,7 +30,7 @@ import static org.hamcrest.Matchers.is;
 /** Tests for {@link SlotSharingGroupUtils}. */
 public class SlotSharingGroupUtilsTest {
     @Test
-    public void testCovertToResourceSpec() {
+    void testCovertToResourceSpec() {
         final ExternalResource gpu = new ExternalResource("gpu", 1);
         final ResourceSpec resourceSpec =
                 ResourceSpec.newBuilder(1.0, 100)

@@ -27,7 +27,7 @@ import java.util.Iterator;
 public class FieldSetTest {
 
     @Test
-    public void testFieldSetConstructors() {
+    void testFieldSetConstructors() {
         check(new FieldSet());
         check(FieldSet.EMPTY_SET);
         check(new FieldSet(14), 14);
@@ -37,7 +37,7 @@ public class FieldSetTest {
     }
 
     @Test
-    public void testFieldSetAdds() {
+    void testFieldSetAdds() {
         check(new FieldSet().addField(1).addField(2), 1, 2);
         check(FieldSet.EMPTY_SET.addField(3).addField(2), 3, 2);
         check(new FieldSet(13).addFields(new FieldSet(17, 31, 42)), 17, 13, 42, 31);
@@ -49,7 +49,7 @@ public class FieldSetTest {
     }
 
     @Test
-    public void testImmutability() {
+    void testImmutability() {
         FieldSet s1 = new FieldSet();
         FieldSet s2 = new FieldSet(5);
         FieldSet s3 = new FieldSet(Integer.valueOf(7));
@@ -69,7 +69,7 @@ public class FieldSetTest {
     }
 
     @Test
-    public void testAddListToSet() {
+    void testAddListToSet() {
         check(new FieldSet().addField(1).addFields(new FieldList(14, 3, 1)), 1, 3, 14);
     }
 
@@ -92,7 +92,7 @@ public class FieldSetTest {
         {
             int[] arr = set.toArray();
             Arrays.sort(arr);
-            Assertions.assertTrue(Arrays.equals(arr, elements));
+            Assertions.assertArrayEquals(arr, elements);
         }
 
         {
@@ -104,7 +104,7 @@ public class FieldSetTest {
             }
             Assertions.assertFalse(iter.hasNext());
             Arrays.sort(fromIter);
-            Assertions.assertTrue(Arrays.equals(fromIter, elements));
+            Assertions.assertArrayEquals(fromIter, elements);
         }
     }
 }

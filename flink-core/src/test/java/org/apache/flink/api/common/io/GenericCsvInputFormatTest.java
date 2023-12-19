@@ -40,7 +40,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -66,7 +65,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void testSparseFieldArray() {
+    void testSparseFieldArray() {
 
         @SuppressWarnings("unchecked")
         Class<? extends Value>[] originalTypes =
@@ -78,11 +77,11 @@ public class GenericCsvInputFormatTest {
         Assertions.assertEquals(3, format.getNumberOfNonNullFields());
         Assertions.assertEquals(6, format.getNumberOfFieldsTotal());
 
-        Assertions.assertTrue(Arrays.equals(originalTypes, format.getGenericFieldTypes()));
+        Assertions.assertArrayEquals(originalTypes, format.getGenericFieldTypes());
     }
 
     @Test
-    public void testReadNoPosAll() throws IOException {
+    void testReadNoPosAll() {
         try {
             final String fileContent = "111|222|333|444|555\n666|777|888|999|000|";
             final FileInputSplit split = createTempFile(fileContent);
@@ -126,7 +125,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void testReadNoPosAllDeflate() throws IOException {
+    void testReadNoPosAllDeflate() {
         try {
             final String fileContent = "111|222|333|444|555\n666|777|888|999|000|";
             final FileInputSplit split = createTempDeflateFile(fileContent);
@@ -170,7 +169,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void testReadNoPosAllGzip() throws IOException {
+    void testReadNoPosAllGzip() {
         try {
             final String fileContent = "111|222|333|444|555\n666|777|888|999|000|";
             final FileInputSplit split = createTempGzipFile(fileContent);
@@ -214,7 +213,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void testReadNoPosAllZStandard() throws IOException {
+    void testReadNoPosAllZStandard() {
         try {
             final String fileContent = "111|222|333|444|555\n666|777|888|999|000|";
             final FileInputSplit split = createTempZStandardFile(fileContent);
@@ -258,7 +257,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void testReadNoPosFirstN() throws IOException {
+    void testReadNoPosFirstN() {
         try {
             final String fileContent = "111|222|333|444|555|\n666|777|888|999|000|";
             final FileInputSplit split = createTempFile(fileContent);
@@ -296,7 +295,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void testSparseParse() {
+    void testSparseParse() {
         try {
             final String fileContent =
                     "111|222|333|444|555|666|777|888|999|000|\n"
@@ -336,7 +335,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void testLongLongLong() {
+    void testLongLongLong() {
         try {
             final String fileContent = "1,2,3\n3,2,1";
             final FileInputSplit split = createTempFile(fileContent);
@@ -373,7 +372,7 @@ public class GenericCsvInputFormatTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testSparseParseWithIndices() {
+    void testSparseParseWithIndices() {
         try {
             final String fileContent =
                     "111|222|333|444|555|666|777|888|999|000|\n000|999|888|777|666|555|444|333|222|111|";
@@ -414,7 +413,7 @@ public class GenericCsvInputFormatTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testSparseParseWithIndicesMultiCharDelimiter() {
+    void testSparseParseWithIndicesMultiCharDelimiter() {
         try {
             final String fileContent =
                     "111|-|222|-|333|-|444|-|555|-|666|-|777|-|888|-|999|-|000|-|\n"
@@ -470,7 +469,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void testReadTooShortInput() throws IOException {
+    void testReadTooShortInput() {
         try {
             final String fileContent = "111|222|333|444\n666|777|888|999";
             final FileInputSplit split = createTempFile(fileContent);
@@ -501,7 +500,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void testReadTooShortInputLenient() throws IOException {
+    void testReadTooShortInputLenient() {
         try {
             final String fileContent = "666|777|888|999|555\n111|222|333|444\n666|777|888|999|555";
             final FileInputSplit split = createTempFile(fileContent);
@@ -530,7 +529,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void testReadInvalidContents() throws IOException {
+    void testReadInvalidContents() {
         try {
             final String fileContent = "abc|222|def|444\nkkz|777|888|hhg";
             final FileInputSplit split = createTempFile(fileContent);
@@ -566,7 +565,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void testReadInvalidContentsLenient() {
+    void testReadInvalidContentsLenient() {
         try {
             final String fileContent = "abc|222|def|444\nkkz|777|888|hhg";
             final FileInputSplit split = createTempFile(fileContent);
@@ -598,7 +597,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void testReadInvalidContentsLenientWithSkipping() {
+    void testReadInvalidContentsLenientWithSkipping() {
         try {
             final String fileContent =
                     "abc|dfgsdf|777|444\n"
@@ -635,7 +634,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void testReadWithCharset() throws IOException {
+    void testReadWithCharset() throws IOException {
         // Unicode row fragments
         String[] records = new String[] {"\u020e\u021f", "Flink", "\u020b\u020f"};
 
@@ -649,8 +648,7 @@ public class GenericCsvInputFormatTest {
                 new GenericCsvInputFormat<String[]>() {
                     @Override
                     public String[] readRecord(
-                            String[] target, byte[] bytes, int offset, int numBytes)
-                            throws IOException {
+                            String[] target, byte[] bytes, int offset, int numBytes) {
                         return parseRecord(target, bytes, offset, numBytes) ? target : null;
                     }
                 };
@@ -698,7 +696,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void readWithEmptyField() {
+    void readWithEmptyField() {
         try {
             final String fileContent = "abc|def|ghijk\nabc||hhg\n|||";
             final FileInputSplit split = createTempFile(fileContent);
@@ -741,7 +739,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void readWithParseQuotedStrings() {
+    void readWithParseQuotedStrings() {
         try {
             final String fileContent = "\"ab\\\"c\"|\"def\"\n\"ghijk\"|\"abc\"";
             final FileInputSplit split = createTempFile(fileContent);
@@ -777,7 +775,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void readWithHeaderLine() {
+    void readWithHeaderLine() {
         try {
             final String fileContent =
                     "colname-1|colname-2|some name 3|column four|\n"
@@ -816,7 +814,7 @@ public class GenericCsvInputFormatTest {
     }
 
     @Test
-    public void readWithHeaderLineAndInvalidIntermediate() {
+    void readWithHeaderLineAndInvalidIntermediate() {
         try {
             final String fileContent =
                     "colname-1|colname-2|some name 3|column four|\n"
