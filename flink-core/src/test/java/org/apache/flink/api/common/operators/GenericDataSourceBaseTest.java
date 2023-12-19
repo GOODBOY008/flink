@@ -29,15 +29,14 @@ import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
 import org.apache.flink.core.fs.Path;
 import org.apache.flink.metrics.groups.UnregisteredMetricsGroup;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Future;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /** Checks the GenericDataSourceBase operator for both Rich and non-Rich input formats. */
 @SuppressWarnings("serial")
@@ -60,11 +59,11 @@ public class GenericDataSourceBaseTest implements java.io.Serializable {
             in.reset();
             executionConfig.enableObjectReuse();
             List<String> resultRegular = source.executeOnCollections(null, executionConfig);
-            assertEquals(asList(TestIOData.NAMES), resultMutableSafe);
-            assertEquals(asList(TestIOData.NAMES), resultRegular);
+            Assertions.assertEquals(asList(TestIOData.NAMES), resultMutableSafe);
+            Assertions.assertEquals(asList(TestIOData.NAMES), resultRegular);
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 
@@ -85,8 +84,8 @@ public class GenericDataSourceBaseTest implements java.io.Serializable {
 
             ExecutionConfig executionConfig = new ExecutionConfig();
             executionConfig.disableObjectReuse();
-            assertEquals(false, in.hasBeenClosed());
-            assertEquals(false, in.hasBeenOpened());
+            Assertions.assertEquals(false, in.hasBeenClosed());
+            Assertions.assertEquals(false, in.hasBeenOpened());
 
             List<String> resultMutableSafe =
                     source.executeOnCollections(
@@ -99,13 +98,13 @@ public class GenericDataSourceBaseTest implements java.io.Serializable {
                                     UnregisteredMetricsGroup.createOperatorMetricGroup()),
                             executionConfig);
 
-            assertEquals(true, in.hasBeenClosed());
-            assertEquals(true, in.hasBeenOpened());
+            Assertions.assertEquals(true, in.hasBeenClosed());
+            Assertions.assertEquals(true, in.hasBeenOpened());
 
             in.reset();
             executionConfig.enableObjectReuse();
-            assertEquals(false, in.hasBeenClosed());
-            assertEquals(false, in.hasBeenOpened());
+            Assertions.assertEquals(false, in.hasBeenClosed());
+            Assertions.assertEquals(false, in.hasBeenOpened());
 
             List<String> resultRegular =
                     source.executeOnCollections(
@@ -118,14 +117,14 @@ public class GenericDataSourceBaseTest implements java.io.Serializable {
                                     UnregisteredMetricsGroup.createOperatorMetricGroup()),
                             executionConfig);
 
-            assertEquals(true, in.hasBeenClosed());
-            assertEquals(true, in.hasBeenOpened());
+            Assertions.assertEquals(true, in.hasBeenClosed());
+            Assertions.assertEquals(true, in.hasBeenOpened());
 
-            assertEquals(asList(TestIOData.RICH_NAMES), resultMutableSafe);
-            assertEquals(asList(TestIOData.RICH_NAMES), resultRegular);
+            Assertions.assertEquals(asList(TestIOData.RICH_NAMES), resultMutableSafe);
+            Assertions.assertEquals(asList(TestIOData.RICH_NAMES), resultRegular);
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 }

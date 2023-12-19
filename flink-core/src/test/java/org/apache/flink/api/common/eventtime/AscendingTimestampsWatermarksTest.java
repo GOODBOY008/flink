@@ -18,9 +18,8 @@
 
 package org.apache.flink.api.common.eventtime;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the {@link AscendingTimestampsWatermarks} class. */
 public class AscendingTimestampsWatermarksTest {
@@ -33,7 +32,7 @@ public class AscendingTimestampsWatermarksTest {
 
         watermarks.onPeriodicEmit(output);
 
-        assertEquals(Long.MIN_VALUE, output.lastWatermark().getTimestamp());
+        Assertions.assertEquals(Long.MIN_VALUE, output.lastWatermark().getTimestamp());
     }
 
     @Test
@@ -45,7 +44,7 @@ public class AscendingTimestampsWatermarksTest {
         watermarks.onEvent(new Object(), 1337L, output);
         watermarks.onPeriodicEmit(output);
 
-        assertEquals(1336L, output.lastWatermark().getTimestamp());
+        Assertions.assertEquals(1336L, output.lastWatermark().getTimestamp());
     }
 
     @Test
@@ -58,6 +57,6 @@ public class AscendingTimestampsWatermarksTest {
         watermarks.onEvent(new Object(), 12340L, output);
         watermarks.onPeriodicEmit(output);
 
-        assertEquals(12344L, output.lastWatermark().getTimestamp());
+        Assertions.assertEquals(12344L, output.lastWatermark().getTimestamp());
     }
 }

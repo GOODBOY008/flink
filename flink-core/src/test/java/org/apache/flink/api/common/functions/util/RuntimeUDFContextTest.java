@@ -23,17 +23,13 @@ import org.apache.flink.api.common.TaskInfo;
 import org.apache.flink.api.common.functions.BroadcastVariableInitializer;
 import org.apache.flink.metrics.groups.UnregisteredMetricsGroup;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /** Test for the {@link RuntimeUDFContext}. */
 public class RuntimeUDFContextTest {
@@ -52,11 +48,11 @@ public class RuntimeUDFContextTest {
                             new HashMap<>(),
                             UnregisteredMetricsGroup.createOperatorMetricGroup());
 
-            assertFalse(ctx.hasBroadcastVariable("some name"));
+            Assertions.assertFalse(ctx.hasBroadcastVariable("some name"));
 
             try {
                 ctx.getBroadcastVariable("some name");
-                fail("should throw an exception");
+                Assertions.fail("should throw an exception");
             } catch (IllegalArgumentException e) {
                 // expected
             }
@@ -70,13 +66,13 @@ public class RuntimeUDFContextTest {
                             }
                         });
 
-                fail("should throw an exception");
+                Assertions.fail("should throw an exception");
             } catch (IllegalArgumentException e) {
                 // expected
             }
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 
@@ -95,31 +91,31 @@ public class RuntimeUDFContextTest {
             ctx.setBroadcastVariable("name1", Arrays.asList(1, 2, 3, 4));
             ctx.setBroadcastVariable("name2", Arrays.asList(1.0, 2.0, 3.0, 4.0));
 
-            assertTrue(ctx.hasBroadcastVariable("name1"));
-            assertTrue(ctx.hasBroadcastVariable("name2"));
+            Assertions.assertTrue(ctx.hasBroadcastVariable("name1"));
+            Assertions.assertTrue(ctx.hasBroadcastVariable("name2"));
 
             List<Integer> list1 = ctx.getBroadcastVariable("name1");
             List<Double> list2 = ctx.getBroadcastVariable("name2");
 
-            assertEquals(Arrays.asList(1, 2, 3, 4), list1);
-            assertEquals(Arrays.asList(1.0, 2.0, 3.0, 4.0), list2);
+            Assertions.assertEquals(Arrays.asList(1, 2, 3, 4), list1);
+            Assertions.assertEquals(Arrays.asList(1.0, 2.0, 3.0, 4.0), list2);
 
             // access again
             List<Integer> list3 = ctx.getBroadcastVariable("name1");
             List<Double> list4 = ctx.getBroadcastVariable("name2");
 
-            assertEquals(Arrays.asList(1, 2, 3, 4), list3);
-            assertEquals(Arrays.asList(1.0, 2.0, 3.0, 4.0), list4);
+            Assertions.assertEquals(Arrays.asList(1, 2, 3, 4), list3);
+            Assertions.assertEquals(Arrays.asList(1.0, 2.0, 3.0, 4.0), list4);
 
             // and again ;-)
             List<Integer> list5 = ctx.getBroadcastVariable("name1");
             List<Double> list6 = ctx.getBroadcastVariable("name2");
 
-            assertEquals(Arrays.asList(1, 2, 3, 4), list5);
-            assertEquals(Arrays.asList(1.0, 2.0, 3.0, 4.0), list6);
+            Assertions.assertEquals(Arrays.asList(1, 2, 3, 4), list5);
+            Assertions.assertEquals(Arrays.asList(1.0, 2.0, 3.0, 4.0), list6);
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 
@@ -140,20 +136,20 @@ public class RuntimeUDFContextTest {
             // access it the first time with an initializer
             List<Double> list =
                     ctx.getBroadcastVariableWithInitializer("name", new ConvertingInitializer());
-            assertEquals(Arrays.asList(1.0, 2.0, 3.0, 4.0), list);
+            Assertions.assertEquals(Arrays.asList(1.0, 2.0, 3.0, 4.0), list);
 
             // access it the second time with an initializer (which might not get executed)
             List<Double> list2 =
                     ctx.getBroadcastVariableWithInitializer("name", new ConvertingInitializer());
-            assertEquals(Arrays.asList(1.0, 2.0, 3.0, 4.0), list2);
+            Assertions.assertEquals(Arrays.asList(1.0, 2.0, 3.0, 4.0), list2);
 
             // access it the third time without an initializer (should work by "chance", because the
             // result is a list)
             List<Double> list3 = ctx.getBroadcastVariable("name");
-            assertEquals(Arrays.asList(1.0, 2.0, 3.0, 4.0), list3);
+            Assertions.assertEquals(Arrays.asList(1.0, 2.0, 3.0, 4.0), list3);
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 
@@ -174,17 +170,17 @@ public class RuntimeUDFContextTest {
             // access it the first time with an initializer
             List<Double> list =
                     ctx.getBroadcastVariableWithInitializer("name", new ConvertingInitializer());
-            assertEquals(Arrays.asList(1.0, 2.0, 3.0, 4.0), list);
+            Assertions.assertEquals(Arrays.asList(1.0, 2.0, 3.0, 4.0), list);
 
             // set it again to something different
             ctx.setBroadcastVariable("name", Arrays.asList(2, 3, 4, 5));
 
             List<Double> list2 =
                     ctx.getBroadcastVariableWithInitializer("name", new ConvertingInitializer());
-            assertEquals(Arrays.asList(2.0, 3.0, 4.0, 5.0), list2);
+            Assertions.assertEquals(Arrays.asList(2.0, 3.0, 4.0, 5.0), list2);
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 
@@ -204,18 +200,18 @@ public class RuntimeUDFContextTest {
 
             // access it the first time with an initializer
             int sum = ctx.getBroadcastVariableWithInitializer("name", new SumInitializer());
-            assertEquals(10, sum);
+            Assertions.assertEquals(10, sum);
 
             // access it the second time with no initializer -> should fail due to type mismatch
             try {
                 ctx.getBroadcastVariable("name");
-                fail("should throw an exception");
+                Assertions.fail("should throw an exception");
             } catch (IllegalStateException e) {
                 // expected
             }
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 

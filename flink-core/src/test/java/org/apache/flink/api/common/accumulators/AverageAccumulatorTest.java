@@ -18,19 +18,15 @@
 
 package org.apache.flink.api.common.accumulators;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class AverageAccumulatorTest {
 
     @Test
     public void testGet() {
         AverageAccumulator average = new AverageAccumulator();
-        assertEquals(0.0, average.getLocalValue(), 0.0);
+        Assertions.assertEquals(0.0, average.getLocalValue(), 0.0);
     }
 
     @Test
@@ -40,45 +36,45 @@ public class AverageAccumulatorTest {
         for (i1 = 0; i1 < 10; i1++) {
             average.add(i1);
         }
-        assertEquals(4.5, average.getLocalValue(), 0.0);
+        Assertions.assertEquals(4.5, average.getLocalValue(), 0.0);
         average.resetLocal();
 
         Integer i2;
         for (i2 = 0; i2 < 10; i2++) {
             average.add(i2);
         }
-        assertEquals(4.5, average.getLocalValue(), 0.0);
+        Assertions.assertEquals(4.5, average.getLocalValue(), 0.0);
         average.resetLocal();
 
         long i3;
         for (i3 = 0; i3 < 10; i3++) {
             average.add(i3);
         }
-        assertEquals(4.5, average.getLocalValue(), 0.0);
+        Assertions.assertEquals(4.5, average.getLocalValue(), 0.0);
         average.resetLocal();
 
         Long i4;
         for (i4 = 0L; i4 < 10; i4++) {
             average.add(i4);
         }
-        assertEquals(4.5, average.getLocalValue(), 0.0);
+        Assertions.assertEquals(4.5, average.getLocalValue(), 0.0);
         average.resetLocal();
 
         double i5;
         for (i5 = 0; i5 < 10; i5++) {
             average.add(i5);
         }
-        assertEquals(4.5, average.getLocalValue(), 0.0);
+        Assertions.assertEquals(4.5, average.getLocalValue(), 0.0);
         average.resetLocal();
 
         Double i6;
         for (i6 = 0.0; i6 < 10; i6++) {
             average.add(i6);
         }
-        assertEquals(4.5, average.getLocalValue(), 0.0);
+        Assertions.assertEquals(4.5, average.getLocalValue(), 0.0);
         average.resetLocal();
 
-        assertEquals(0.0, average.getLocalValue(), 0.0);
+        Assertions.assertEquals(0.0, average.getLocalValue(), 0.0);
     }
 
     @Test
@@ -94,7 +90,7 @@ public class AverageAccumulatorTest {
         }
 
         avg1.merge(avg2);
-        assertEquals(4.5, avg1.getLocalValue(), 0.0);
+        Assertions.assertEquals(4.5, avg1.getLocalValue(), 0.0);
     }
 
     @Test
@@ -104,13 +100,13 @@ public class AverageAccumulatorTest {
         average.add(1);
         try {
             average.merge(averageNew);
-            fail("should fail with an exception");
+            Assertions.fail("should fail with an exception");
         } catch (IllegalArgumentException e) {
-            assertNotNull(e.getMessage());
-            assertTrue(
+            Assertions.assertNotNull(e.getMessage());
+            Assertions.assertTrue(
                     e.getMessage().contains("The merged accumulator must be AverageAccumulator."));
         } catch (Throwable t) {
-            fail(
+            Assertions.fail(
                     "wrong exception; expected IllegalArgumentException but found "
                             + t.getClass().getName());
         }
@@ -121,6 +117,6 @@ public class AverageAccumulatorTest {
         AverageAccumulator average = new AverageAccumulator();
         average.add(1);
         AverageAccumulator averageNew = average.clone();
-        assertEquals(1, averageNew.getLocalValue(), 0.0);
+        Assertions.assertEquals(1, averageNew.getLocalValue(), 0.0);
     }
 }

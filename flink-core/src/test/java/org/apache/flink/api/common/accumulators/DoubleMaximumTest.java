@@ -18,16 +18,15 @@
 
 package org.apache.flink.api.common.accumulators;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DoubleMaximumTest {
 
     @Test
     public void testGet() {
         DoubleMaximum max = new DoubleMaximum();
-        assertEquals(Double.NEGATIVE_INFINITY, max.getLocalValue(), 0.0);
+        Assertions.assertEquals(Double.NEGATIVE_INFINITY, max.getLocalValue(), 0.0);
     }
 
     @Test
@@ -36,10 +35,10 @@ public class DoubleMaximumTest {
         double value = 13.57902468;
 
         max.add(value);
-        assertEquals(value, max.getLocalValue(), 0.0);
+        Assertions.assertEquals(value, max.getLocalValue(), 0.0);
 
         max.resetLocal();
-        assertEquals(Double.NEGATIVE_INFINITY, max.getLocalValue(), 0.0);
+        Assertions.assertEquals(Double.NEGATIVE_INFINITY, max.getLocalValue(), 0.0);
     }
 
     @Test
@@ -51,7 +50,7 @@ public class DoubleMaximumTest {
         max.add(-987.6543);
         max.add(-123.4567);
 
-        assertEquals(9876.5432, max.getLocalValue(), 0.0);
+        Assertions.assertEquals(9876.5432, max.getLocalValue(), 0.0);
     }
 
     @Test
@@ -63,10 +62,10 @@ public class DoubleMaximumTest {
         max2.add(5678.9012);
 
         max2.merge(max1);
-        assertEquals(5678.9012, max2.getLocalValue(), 0.0);
+        Assertions.assertEquals(5678.9012, max2.getLocalValue(), 0.0);
 
         max1.merge(max2);
-        assertEquals(5678.9012, max1.getLocalValue(), 0.0);
+        Assertions.assertEquals(5678.9012, max1.getLocalValue(), 0.0);
     }
 
     @Test
@@ -77,6 +76,6 @@ public class DoubleMaximumTest {
         max.add(value);
 
         DoubleMaximum clone = max.clone();
-        assertEquals(value, clone.getLocalValue(), 0.0);
+        Assertions.assertEquals(value, clone.getLocalValue(), 0.0);
     }
 }

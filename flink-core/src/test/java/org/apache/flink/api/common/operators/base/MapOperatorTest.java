@@ -31,7 +31,8 @@ import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
 import org.apache.flink.core.fs.Path;
 import org.apache.flink.metrics.groups.UnregisteredMetricsGroup;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,9 +41,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @SuppressWarnings("serial")
 public class MapOperatorTest implements java.io.Serializable {
@@ -73,11 +71,11 @@ public class MapOperatorTest implements java.io.Serializable {
             executionConfig.enableObjectReuse();
             List<Integer> resultRegular = op.executeOnCollections(input, null, executionConfig);
 
-            assertEquals(asList(1, 2, 3, 4, 5, 6), resultMutableSafe);
-            assertEquals(asList(1, 2, 3, 4, 5, 6), resultRegular);
+            Assertions.assertEquals(asList(1, 2, 3, 4, 5, 6), resultMutableSafe);
+            Assertions.assertEquals(asList(1, 2, 3, 4, 5, 6), resultRegular);
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 
@@ -95,9 +93,9 @@ public class MapOperatorTest implements java.io.Serializable {
                         public void open(OpenContext openContext) throws Exception {
                             opened.set(true);
                             RuntimeContext ctx = getRuntimeContext();
-                            assertEquals(0, ctx.getIndexOfThisSubtask());
-                            assertEquals(1, ctx.getNumberOfParallelSubtasks());
-                            assertEquals(taskName, ctx.getTaskName());
+                            Assertions.assertEquals(0, ctx.getIndexOfThisSubtask());
+                            Assertions.assertEquals(1, ctx.getNumberOfParallelSubtasks());
+                            Assertions.assertEquals(taskName, ctx.getTaskName());
                         }
 
                         @Override
@@ -151,14 +149,14 @@ public class MapOperatorTest implements java.io.Serializable {
                                     UnregisteredMetricsGroup.createOperatorMetricGroup()),
                             executionConfig);
 
-            assertEquals(asList(1, 2, 3, 4, 5, 6), resultMutableSafe);
-            assertEquals(asList(1, 2, 3, 4, 5, 6), resultRegular);
+            Assertions.assertEquals(asList(1, 2, 3, 4, 5, 6), resultMutableSafe);
+            Assertions.assertEquals(asList(1, 2, 3, 4, 5, 6), resultRegular);
 
-            assertTrue(opened.get());
-            assertTrue(closed.get());
+            Assertions.assertTrue(opened.get());
+            Assertions.assertTrue(closed.get());
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 }

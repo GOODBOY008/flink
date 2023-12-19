@@ -23,42 +23,40 @@ import org.apache.flink.api.java.typeutils.GenericTypeInfo;
 import org.apache.flink.api.java.typeutils.TupleTypeInfo;
 import org.apache.flink.util.FlinkRuntimeException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
 
 /** Tests for the {@link TypeInformation} class. */
 public class TypeInformationTest {
 
     @Test
     public void testOfClass() {
-        assertEquals(BasicTypeInfo.STRING_TYPE_INFO, TypeInformation.of(String.class));
+        Assertions.assertEquals(BasicTypeInfo.STRING_TYPE_INFO, TypeInformation.of(String.class));
     }
 
     @Test
     public void testOfGenericClassForFlink() {
         try {
             TypeInformation.of(Tuple3.class);
-            fail("should fail with an exception");
+            Assertions.fail("should fail with an exception");
         } catch (FlinkRuntimeException e) {
             // check that the error message mentions the TypeHint
-            assertNotEquals(-1, e.getMessage().indexOf("TypeHint"));
+            Assertions.assertNotEquals(-1, e.getMessage().indexOf("TypeHint"));
         }
     }
 
     @Test
     public void testOfGenericClassForGenericType() {
-        assertEquals(new GenericTypeInfo<>(List.class), TypeInformation.of(List.class));
+        Assertions.assertEquals(new GenericTypeInfo<>(List.class), TypeInformation.of(List.class));
     }
 
     @Test
     public void testOfTypeHint() {
-        assertEquals(BasicTypeInfo.STRING_TYPE_INFO, TypeInformation.of(String.class));
-        assertEquals(BasicTypeInfo.STRING_TYPE_INFO, TypeInformation.of(new TypeHint<String>() {}));
+        Assertions.assertEquals(BasicTypeInfo.STRING_TYPE_INFO, TypeInformation.of(String.class));
+        Assertions.assertEquals(
+                BasicTypeInfo.STRING_TYPE_INFO, TypeInformation.of(new TypeHint<String>() {}));
 
         TypeInformation<Tuple3<String, Double, Boolean>> tupleInfo =
                 new TupleTypeInfo<>(
@@ -66,7 +64,7 @@ public class TypeInformationTest {
                         BasicTypeInfo.DOUBLE_TYPE_INFO,
                         BasicTypeInfo.BOOLEAN_TYPE_INFO);
 
-        assertEquals(
+        Assertions.assertEquals(
                 tupleInfo, TypeInformation.of(new TypeHint<Tuple3<String, Double, Boolean>>() {}));
     }
 }
