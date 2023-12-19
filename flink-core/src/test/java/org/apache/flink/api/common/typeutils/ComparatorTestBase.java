@@ -68,7 +68,7 @@ public abstract class ComparatorTestBase<T> {
     // -------------------------------- test duplication ------------------------------------------
 
     @Test
-    public void testDuplicate() {
+    void testDuplicate() {
         try {
             boolean ascending = isAscending(getTestedOrder()[0]);
             TypeComparator<T> comparator = getComparator(ascending);
@@ -92,7 +92,7 @@ public abstract class ComparatorTestBase<T> {
     // --------------------------------- equality tests -------------------------------------------
 
     @Test
-    public void testEquality() {
+    void testEquality() {
         for (Order order : getTestedOrder()) {
             boolean ascending = isAscending(order);
             testEquals(ascending);
@@ -131,7 +131,7 @@ public abstract class ComparatorTestBase<T> {
     }
 
     @Test
-    public void testEqualityWithReference() {
+    void testEqualityWithReference() {
         try {
             TypeSerializer<T> serializer = createSerializer();
             boolean ascending = isAscending(getTestedOrder()[0]);
@@ -157,7 +157,7 @@ public abstract class ComparatorTestBase<T> {
 
     // --------------------------------- inequality tests ----------------------------------------
     @Test
-    public void testInequality() {
+    void testInequality() {
         for (Order order : getTestedOrder()) {
             boolean ascending = isAscending(order);
             testGreatSmallAscDesc(ascending, true);
@@ -209,7 +209,7 @@ public abstract class ComparatorTestBase<T> {
     }
 
     @Test
-    public void testInequalityWithReference() {
+    void testInequalityWithReference() {
         for (Order order : getTestedOrder()) {
             boolean ascending = isAscending(order);
             testGreatSmallAscDescWithReference(ascending, true);
@@ -271,8 +271,7 @@ public abstract class ComparatorTestBase<T> {
 
     // Help Function which return a normalizedKeyLength, either as done in the NormalizedKeySorter
     // or it's half
-    private int getNormKeyLen(boolean halfLength, T[] data, TypeComparator<T> comparator)
-            throws Exception {
+    private int getNormKeyLen(boolean halfLength, T[] data, TypeComparator<T> comparator) {
         // Same as in the NormalizedKeySorter
         int keyLen = Math.min(comparator.getNormalizeKeyLen(), DEFAULT_MAX_NORMALIZED_KEY_LEN);
         if (keyLen < comparator.getNormalizeKeyLen()) {
@@ -287,7 +286,7 @@ public abstract class ComparatorTestBase<T> {
     }
 
     @Test
-    public void testNormalizedKeysEqualsFullLength() {
+    void testNormalizedKeysEqualsFullLength() {
         // Ascending or descending does not matter in this case
         boolean ascending = isAscending(getTestedOrder()[0]);
         TypeComparator<T> comparator = getComparator(ascending);
@@ -298,7 +297,7 @@ public abstract class ComparatorTestBase<T> {
     }
 
     @Test
-    public void testNormalizedKeysEqualsHalfLength() {
+    void testNormalizedKeysEqualsHalfLength() {
         boolean ascending = isAscending(getTestedOrder()[0]);
         TypeComparator<T> comparator = getComparator(ascending);
         if (!comparator.supportsNormalizedKey()) {
@@ -329,7 +328,7 @@ public abstract class ComparatorTestBase<T> {
     }
 
     @Test
-    public void testNormalizedKeysGreatSmallFullLength() {
+    void testNormalizedKeysGreatSmallFullLength() {
         // ascending/descending in comparator doesn't matter for normalized keys
         boolean ascending = isAscending(getTestedOrder()[0]);
         TypeComparator<T> comparator = getComparator(ascending);
@@ -341,7 +340,7 @@ public abstract class ComparatorTestBase<T> {
     }
 
     @Test
-    public void testNormalizedKeysGreatSmallAscDescHalfLength() {
+    void testNormalizedKeysGreatSmallAscDescHalfLength() {
         // ascending/descending in comparator doesn't matter for normalized keys
         boolean ascending = isAscending(getTestedOrder()[0]);
         TypeComparator<T> comparator = getComparator(ascending);
@@ -398,7 +397,7 @@ public abstract class ComparatorTestBase<T> {
     }
 
     @Test
-    public void testNormalizedKeyReadWriter() {
+    void testNormalizedKeyReadWriter() {
         try {
             T[] data = getSortedData();
             T reuse = getSortedData()[0];

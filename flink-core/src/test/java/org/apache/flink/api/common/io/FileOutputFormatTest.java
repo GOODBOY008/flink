@@ -33,7 +33,7 @@ import java.io.IOException;
 public class FileOutputFormatTest {
 
     @Test
-    public void testCreateNonParallelLocalFS() throws IOException {
+    void testCreateNonParallelLocalFS() throws IOException {
 
         File tmpOutPath = File.createTempFile("fileOutputFormatTest", "Test1");
         File tmpOutFile = new File(tmpOutPath.getAbsolutePath() + "/1");
@@ -233,10 +233,10 @@ public class FileOutputFormatTest {
     }
 
     @Test
-    public void testCreateParallelLocalFS() throws IOException {
+    void testCreateParallelLocalFS() throws IOException {
 
-        File tmpOutPath = null;
-        File tmpOutFile = null;
+        File tmpOutPath;
+        File tmpOutFile;
 
         tmpOutPath = File.createTempFile("fileOutputFormatTest", "Test1");
         tmpOutFile = new File(tmpOutPath.getAbsolutePath() + "/1");
@@ -342,10 +342,10 @@ public class FileOutputFormatTest {
     }
 
     @Test
-    public void testOverwriteNonParallelLocalFS() throws IOException {
+    void testOverwriteNonParallelLocalFS() throws IOException {
 
-        File tmpOutPath = null;
-        File tmpOutFile = null;
+        File tmpOutPath;
+        File tmpOutFile;
 
         tmpOutPath = File.createTempFile("fileOutputFormatTest", "Test1");
         tmpOutFile = new File(tmpOutPath.getAbsolutePath() + "/1");
@@ -529,10 +529,10 @@ public class FileOutputFormatTest {
     }
 
     @Test
-    public void testOverwriteParallelLocalFS() throws IOException {
+    void testOverwriteParallelLocalFS() throws IOException {
 
-        File tmpOutPath = null;
-        File tmpOutFile = null;
+        File tmpOutPath;
+        File tmpOutFile;
 
         tmpOutPath = File.createTempFile("fileOutputFormatTest", "Test1");
         tmpOutFile = new File(tmpOutPath.getAbsolutePath() + "/1");
@@ -648,7 +648,7 @@ public class FileOutputFormatTest {
         public boolean testFileName = false;
 
         @Override
-        public void writeRecord(IntValue record) throws IOException {
+        public void writeRecord(IntValue record) {
             // DO NOTHING
         }
 

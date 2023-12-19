@@ -42,28 +42,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.Arrays.asList;
 
-@SuppressWarnings("serial")
-public class MapOperatorTest implements java.io.Serializable {
+class MapOperatorTest implements java.io.Serializable {
 
     @Test
-    public void testMapPlain() {
+    void testMapPlain() {
         try {
             final MapFunction<String, Integer> parser =
-                    new MapFunction<String, Integer>() {
-                        @Override
-                        public Integer map(String value) {
-                            return Integer.parseInt(value);
-                        }
-                    };
+                    Integer::parseInt;
 
             MapOperatorBase<String, Integer, MapFunction<String, Integer>> op =
-                    new MapOperatorBase<String, Integer, MapFunction<String, Integer>>(
+                    new MapOperatorBase<>(
                             parser,
-                            new UnaryOperatorInformation<String, Integer>(
+                            new UnaryOperatorInformation<>(
                                     BasicTypeInfo.STRING_TYPE_INFO, BasicTypeInfo.INT_TYPE_INFO),
                             "TestMapper");
 
-            List<String> input = new ArrayList<String>(asList("1", "2", "3", "4", "5", "6"));
+            List<String> input = new ArrayList<>(asList("1", "2", "3", "4", "5", "6"));
 
             ExecutionConfig executionConfig = new ExecutionConfig();
             executionConfig.disableObjectReuse();
@@ -80,7 +74,7 @@ public class MapOperatorTest implements java.io.Serializable {
     }
 
     @Test
-    public void testMapWithRuntimeContext() {
+    void testMapWithRuntimeContext() {
         try {
             final String taskName = "Test Task";
             final AtomicBoolean opened = new AtomicBoolean();
@@ -90,7 +84,7 @@ public class MapOperatorTest implements java.io.Serializable {
                     new RichMapFunction<String, Integer>() {
 
                         @Override
-                        public void open(OpenContext openContext) throws Exception {
+                        public void open(OpenContext openContext) {
                             opened.set(true);
                             RuntimeContext ctx = getRuntimeContext();
                             Assertions.assertEquals(0, ctx.getIndexOfThisSubtask());
@@ -104,21 +98,21 @@ public class MapOperatorTest implements java.io.Serializable {
                         }
 
                         @Override
-                        public void close() throws Exception {
+                        public void close() {
                             closed.set(true);
                         }
                     };
 
             MapOperatorBase<String, Integer, MapFunction<String, Integer>> op =
-                    new MapOperatorBase<String, Integer, MapFunction<String, Integer>>(
+                    new MapOperatorBase<>(
                             parser,
-                            new UnaryOperatorInformation<String, Integer>(
+                            new UnaryOperatorInformation<>(
                                     BasicTypeInfo.STRING_TYPE_INFO, BasicTypeInfo.INT_TYPE_INFO),
                             taskName);
 
-            List<String> input = new ArrayList<String>(asList("1", "2", "3", "4", "5", "6"));
+            List<String> input = new ArrayList<>(asList("1", "2", "3", "4", "5", "6"));
             final HashMap<String, Accumulator<?, ?>> accumulatorMap =
-                    new HashMap<String, Accumulator<?, ?>>();
+                    new HashMap<>();
             final HashMap<String, Future<Path>> cpTasks = new HashMap<>();
             final TaskInfo taskInfo = new TaskInfo(taskName, 1, 0, 1, 0);
             ExecutionConfig executionConfig = new ExecutionConfig();

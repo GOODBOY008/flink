@@ -38,35 +38,35 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 /** Tests for the common/shared functionality of {@link StateDescriptor}. */
-public class StateDescriptorTest {
+class StateDescriptorTest {
 
     // ------------------------------------------------------------------------
     //  Tests for serializer initialization
     // ------------------------------------------------------------------------
 
     @Test
-    public void testInitializeWithSerializer() throws Exception {
+    void testInitializeWithSerializer() throws Exception {
         final TypeSerializer<String> serializer = StringSerializer.INSTANCE;
         final TestStateDescriptor<String> descr = new TestStateDescriptor<>("test", serializer);
 
         Assertions.assertTrue(descr.isSerializerInitialized());
         Assertions.assertNotNull(descr.getSerializer());
-        Assertions.assertTrue(descr.getSerializer() instanceof StringSerializer);
+        Assertions.assertInstanceOf(StringSerializer.class, descr.getSerializer());
 
         // this should not have any effect
         descr.initializeSerializerUnlessSet(new ExecutionConfig());
         Assertions.assertTrue(descr.isSerializerInitialized());
         Assertions.assertNotNull(descr.getSerializer());
-        Assertions.assertTrue(descr.getSerializer() instanceof StringSerializer);
+        Assertions.assertInstanceOf(StringSerializer.class, descr.getSerializer());
 
         TestStateDescriptor<String> clone = CommonTestUtils.createCopySerializable(descr);
         Assertions.assertTrue(clone.isSerializerInitialized());
         Assertions.assertNotNull(clone.getSerializer());
-        Assertions.assertTrue(clone.getSerializer() instanceof StringSerializer);
+        Assertions.assertInstanceOf(StringSerializer.class, clone.getSerializer());
     }
 
     @Test
-    public void testInitializeSerializerBeforeSerialization() throws Exception {
+    void testInitializeSerializerBeforeSerialization() throws Exception {
         final TestStateDescriptor<String> descr = new TestStateDescriptor<>("test", String.class);
 
         Assertions.assertFalse(descr.isSerializerInitialized());
@@ -80,17 +80,17 @@ public class StateDescriptorTest {
 
         Assertions.assertTrue(descr.isSerializerInitialized());
         Assertions.assertNotNull(descr.getSerializer());
-        Assertions.assertTrue(descr.getSerializer() instanceof StringSerializer);
+        Assertions.assertInstanceOf(StringSerializer.class, descr.getSerializer());
 
         TestStateDescriptor<String> clone = CommonTestUtils.createCopySerializable(descr);
 
         Assertions.assertTrue(clone.isSerializerInitialized());
         Assertions.assertNotNull(clone.getSerializer());
-        Assertions.assertTrue(clone.getSerializer() instanceof StringSerializer);
+        Assertions.assertInstanceOf(StringSerializer.class, clone.getSerializer());
     }
 
     @Test
-    public void testInitializeSerializerAfterSerialization() throws Exception {
+    void testInitializeSerializerAfterSerialization() throws Exception {
         final TestStateDescriptor<String> descr = new TestStateDescriptor<>("test", String.class);
 
         Assertions.assertFalse(descr.isSerializerInitialized());
@@ -113,11 +113,11 @@ public class StateDescriptorTest {
 
         Assertions.assertTrue(clone.isSerializerInitialized());
         Assertions.assertNotNull(clone.getSerializer());
-        Assertions.assertTrue(clone.getSerializer() instanceof StringSerializer);
+        Assertions.assertInstanceOf(StringSerializer.class, clone.getSerializer());
     }
 
     @Test
-    public void testInitializeSerializerAfterSerializationWithCustomConfig() throws Exception {
+    void testInitializeSerializerAfterSerializationWithCustomConfig() throws Exception {
         // guard our test assumptions.
         Assertions.assertEquals(
                 -1,
@@ -153,7 +153,7 @@ public class StateDescriptorTest {
      * descriptor across threads.
      */
     @Test
-    public void testSerializerDuplication() throws Exception {
+    void testSerializerDuplication() {
         // we need a serializer that actually duplicates for testing (a stateful one)
         // we use Kryo here, because it meets these conditions
         TypeSerializer<String> statefulSerializer =
@@ -173,7 +173,7 @@ public class StateDescriptorTest {
     // ------------------------------------------------------------------------
 
     @Test
-    public void testHashCodeAndEquals() throws Exception {
+    void testHashCodeAndEquals() throws Exception {
         final String name = "testName";
 
         TestStateDescriptor<String> original = new TestStateDescriptor<>(name, String.class);
@@ -202,7 +202,7 @@ public class StateDescriptorTest {
     }
 
     @Test
-    public void testEqualsSameNameAndTypeDifferentClass() throws Exception {
+    void testEqualsSameNameAndTypeDifferentClass() {
         final String name = "test name";
 
         final TestStateDescriptor<String> descr1 = new TestStateDescriptor<>(name, String.class);
@@ -213,7 +213,7 @@ public class StateDescriptorTest {
     }
 
     @Test
-    public void testSerializerLazyInitializeInParallel() throws Exception {
+    void testSerializerLazyInitializeInParallel() throws Exception {
         final String name = "testSerializerLazyInitializeInParallel";
         // use PojoTypeInfo which will create a new serializer when createSerializer is invoked.
         final TestStateDescriptor<String> desc =
@@ -247,7 +247,7 @@ public class StateDescriptorTest {
     }
 
     @Test
-    public void testStateTTlConfig() {
+    void testStateTTlConfig() {
         ValueStateDescriptor<Integer> stateDescriptor =
                 new ValueStateDescriptor<>("test-state", IntSerializer.INSTANCE);
         stateDescriptor.enableTimeToLive(StateTtlConfig.newBuilder(Time.minutes(60)).build());

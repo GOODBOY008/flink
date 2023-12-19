@@ -67,7 +67,7 @@ public class DelimitedInputFormatTest {
     // --------------------------------------------------------------------------------------------
     // --------------------------------------------------------------------------------------------
     @Test
-    public void testConfigure() {
+    void testConfigure() {
         Configuration cfg = new Configuration();
         cfg.setString("delimited-format.delimiter", "\n");
 
@@ -80,7 +80,7 @@ public class DelimitedInputFormatTest {
     }
 
     @Test
-    public void testSerialization() throws Exception {
+    void testSerialization() throws Exception {
         final byte[] DELIMITER = new byte[] {1, 2, 3, 4};
         final int NUM_LINE_SAMPLES = 7;
         final int LINE_LENGTH_LIMIT = 12345;
@@ -109,7 +109,7 @@ public class DelimitedInputFormatTest {
     }
 
     @Test
-    public void testOpen() throws IOException {
+    void testOpen() throws IOException {
         final String myString = "my mocked line 1\nmy mocked line 2\n";
         final FileInputSplit split = createTempFile(myString);
 
@@ -122,7 +122,7 @@ public class DelimitedInputFormatTest {
     }
 
     @Test
-    public void testReadWithoutTrailingDelimiter() throws IOException {
+    void testReadWithoutTrailingDelimiter() throws IOException {
         // 2. test case
         final String myString = "my key|my val$$$my key2\n$$ctd.$$|my value2";
         final FileInputSplit split = createTempFile(myString);
@@ -147,7 +147,7 @@ public class DelimitedInputFormatTest {
     }
 
     @Test
-    public void testReadWithTrailingDelimiter() throws IOException {
+    void testReadWithTrailingDelimiter() throws IOException {
         // 2. test case
         final String myString = "my key|my val$$$my key2\n$$ctd.$$|my value2\n";
         final FileInputSplit split = createTempFile(myString);
@@ -172,7 +172,7 @@ public class DelimitedInputFormatTest {
     }
 
     @Test
-    public void testReadCustomDelimiter() throws IOException {
+    void testReadCustomDelimiter() throws IOException {
         final String myString = "my key|my val$$$my key2\n$$ctd.$$|my value2";
         final FileInputSplit split = createTempFile(myString);
 
@@ -195,7 +195,7 @@ public class DelimitedInputFormatTest {
     }
 
     @Test
-    public void testMultiCharDelimiter() throws IOException {
+    void testMultiCharDelimiter() throws IOException {
         final String myString = "www112xx1123yyy11123zzzzz1123";
         final FileInputSplit split = createTempFile(myString);
 
@@ -222,7 +222,7 @@ public class DelimitedInputFormatTest {
     }
 
     @Test
-    public void testReadCustomDelimiterWithCharset() throws IOException {
+    void testReadCustomDelimiterWithCharset() throws IOException {
         // Unicode row fragments
         String[] records =
                 new String[] {
@@ -271,7 +271,7 @@ public class DelimitedInputFormatTest {
      * record.
      */
     @Test
-    public void testReadOverSplitBoundariesUnaligned() throws IOException {
+    void testReadOverSplitBoundariesUnaligned() throws IOException {
         final String myString = "value1\nvalue2\nvalue3";
         final FileInputSplit split = createTempFile(myString);
 
@@ -311,7 +311,7 @@ public class DelimitedInputFormatTest {
      * record boundary.
      */
     @Test
-    public void testReadWithBufferSizeIsMultiple() throws IOException {
+    void testReadWithBufferSizeIsMultiple() throws IOException {
         final String myString = "aaaaaaa\nbbbbbbb\nccccccc\nddddddd\n";
         final FileInputSplit split = createTempFile(myString);
 
@@ -361,7 +361,7 @@ public class DelimitedInputFormatTest {
     }
 
     @Test
-    public void testReadExactlyBufferSize() throws IOException {
+    void testReadExactlyBufferSize() throws IOException {
         final String myString = "aaaaaaa\nbbbbbbb\nccccccc\nddddddd\n";
 
         final FileInputSplit split = createTempFile(myString);
@@ -386,7 +386,7 @@ public class DelimitedInputFormatTest {
     }
 
     @Test
-    public void testReadRecordsLargerThanBuffer() throws IOException {
+    void testReadRecordsLargerThanBuffer() throws IOException {
         final String myString =
                 "aaaaaaaaaaaaaaaaaaaaa\n"
                         + "bbbbbbbbbbbbbbbbbbbbbbbbb\n"
@@ -411,7 +411,7 @@ public class DelimitedInputFormatTest {
         format.configure(parameters);
 
         String next;
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         format.open(split1);
         while ((next = format.nextRecord(null)) != null) {
@@ -434,13 +434,13 @@ public class DelimitedInputFormatTest {
     }
 
     @Test
-    public void testDelimiterOnBufferBoundary() throws IOException {
+    void testDelimiterOnBufferBoundary() throws IOException {
 
-        testDelimiterOnBufferBoundary(fileContent -> createTempFile(fileContent));
+        testDelimiterOnBufferBoundary(DelimitedInputFormatTest::createTempFile);
     }
 
     @Test
-    public void testDelimiterOnBufferBoundaryWithWholeFileSplit() throws IOException {
+    void testDelimiterOnBufferBoundaryWithWholeFileSplit() throws IOException {
 
         testDelimiterOnBufferBoundary(
                 fileContent -> {
@@ -481,7 +481,7 @@ public class DelimitedInputFormatTest {
     // -- Statistics --//
 
     @Test
-    public void testGetStatistics() throws IOException {
+    void testGetStatistics() throws IOException {
         final String myString = "my mocked line 1\nmy mocked line 2\n";
         final long size = myString.length();
         final Path filePath = createTempFilePath(myString);
@@ -504,7 +504,7 @@ public class DelimitedInputFormatTest {
     }
 
     @Test
-    public void testGetStatisticsFileDoesNotExist() throws IOException {
+    void testGetStatisticsFileDoesNotExist() throws IOException {
         DelimitedInputFormat<String> format = new MyTextInputFormat();
         format.setFilePaths(
                 "file:///path/does/not/really/exist", "file:///another/path/that/does/not/exist");
@@ -514,7 +514,7 @@ public class DelimitedInputFormatTest {
     }
 
     @Test
-    public void testGetStatisticsSingleFileWithCachedVersion() throws IOException {
+    void testGetStatisticsSingleFileWithCachedVersion() throws IOException {
         final String myString = "my mocked line 1\nmy mocked line 2\n";
         final Path tempFile = createTempFilePath(myString);
         final long size = myString.length();

@@ -34,12 +34,12 @@ public class TestRichInputFormat extends GenericInputFormat<String> implements N
     private boolean closeCalled = false;
 
     @Override
-    public boolean reachedEnd() throws IOException {
+    public boolean reachedEnd() {
         return count >= NUM;
     }
 
     @Override
-    public String nextRecord(String reuse) throws IOException {
+    public String nextRecord(String reuse) {
         count++;
         return NAMES[count - 1]
                 + getRuntimeContext().getIndexOfThisSubtask()

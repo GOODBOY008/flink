@@ -21,13 +21,12 @@ package org.apache.flink.api.common.operators.util;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Iterator;
 
 public class FieldListTest {
 
     @Test
-    public void testFieldListConstructors() {
+    void testFieldListConstructors() {
         check(new FieldList());
         check(FieldList.EMPTY_LIST);
         check(new FieldList(14), 14);
@@ -37,7 +36,7 @@ public class FieldListTest {
     }
 
     @Test
-    public void testFieldListAdds() {
+    void testFieldListAdds() {
         check(new FieldList().addField(1).addField(2), 1, 2);
         check(FieldList.EMPTY_LIST.addField(3).addField(2), 3, 2);
         check(new FieldList(13).addFields(new FieldList(17, 31, 42)), 13, 17, 31, 42);
@@ -46,7 +45,7 @@ public class FieldListTest {
     }
 
     @Test
-    public void testImmutability() {
+    void testImmutability() {
         FieldList s1 = new FieldList();
         FieldList s2 = new FieldList(5);
         FieldList s3 = new FieldList(Integer.valueOf(7));
@@ -66,7 +65,7 @@ public class FieldListTest {
     }
 
     @Test
-    public void testAddSetToList() {
+    void testAddSetToList() {
         check(new FieldList().addFields(new FieldSet(1)).addFields(2), 1, 2);
         check(new FieldList().addFields(1).addFields(new FieldSet(2)), 1, 2);
         check(new FieldList().addFields(new FieldSet(2)), 2);
@@ -88,7 +87,7 @@ public class FieldListTest {
         // test to array
         {
             int[] arr = set.toArray();
-            Assertions.assertTrue(Arrays.equals(arr, elements));
+            Assertions.assertArrayEquals(arr, elements);
         }
 
         {
@@ -99,7 +98,7 @@ public class FieldListTest {
                 fromIter[i] = iter.next();
             }
             Assertions.assertFalse(iter.hasNext());
-            Assertions.assertTrue(Arrays.equals(fromIter, elements));
+            Assertions.assertArrayEquals(fromIter, elements);
         }
     }
 }

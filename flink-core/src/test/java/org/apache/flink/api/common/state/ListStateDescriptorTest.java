@@ -31,10 +31,10 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 /** Tests for the {@link ListStateDescriptor}. */
-public class ListStateDescriptorTest {
+class ListStateDescriptorTest {
 
     @Test
-    public void testListStateDescriptor() throws Exception {
+    void testListStateDescriptor() throws Exception {
 
         TypeSerializer<String> serializer =
                 new KryoSerializer<>(String.class, new ExecutionConfig());
@@ -43,7 +43,7 @@ public class ListStateDescriptorTest {
 
         Assertions.assertEquals("testName", descr.getName());
         Assertions.assertNotNull(descr.getSerializer());
-        Assertions.assertTrue(descr.getSerializer() instanceof ListSerializer);
+        Assertions.assertInstanceOf(ListSerializer.class, descr.getSerializer());
         Assertions.assertNotNull(descr.getElementSerializer());
         Assertions.assertEquals(serializer, descr.getElementSerializer());
 
@@ -51,14 +51,14 @@ public class ListStateDescriptorTest {
 
         Assertions.assertEquals("testName", copy.getName());
         Assertions.assertNotNull(copy.getSerializer());
-        Assertions.assertTrue(copy.getSerializer() instanceof ListSerializer);
+        Assertions.assertInstanceOf(ListSerializer.class, copy.getSerializer());
 
         Assertions.assertNotNull(copy.getElementSerializer());
         Assertions.assertEquals(serializer, copy.getElementSerializer());
     }
 
     @Test
-    public void testHashCodeEquals() throws Exception {
+    void testHashCodeEquals() throws Exception {
         final String name = "testName";
 
         ListStateDescriptor<String> original = new ListStateDescriptor<>(name, String.class);
@@ -93,7 +93,7 @@ public class ListStateDescriptorTest {
      * descriptor.
      */
     @Test
-    public void testSerializerDuplication() {
+    void testSerializerDuplication() {
         // we need a serializer that actually duplicates for testing (a stateful one)
         // we use Kryo here, because it meets these conditions
         TypeSerializer<String> statefulSerializer =

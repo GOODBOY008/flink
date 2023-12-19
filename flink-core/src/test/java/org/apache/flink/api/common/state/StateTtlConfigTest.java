@@ -34,10 +34,10 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
 /** Tests for the {@link StateTtlConfig}. */
-public class StateTtlConfigTest {
+class StateTtlConfigTest {
 
     @Test
-    public void testStateTtlConfigBuildWithoutCleanupInBackground() {
+    void testStateTtlConfigBuildWithoutCleanupInBackground() {
         StateTtlConfig ttlConfig =
                 StateTtlConfig.newBuilder(Time.seconds(1)).disableCleanupInBackground().build();
 
@@ -56,7 +56,7 @@ public class StateTtlConfigTest {
     }
 
     @Test
-    public void testStateTtlConfigBuildWithCleanupInBackground() {
+    void testStateTtlConfigBuildWithCleanupInBackground() {
         StateTtlConfig ttlConfig = StateTtlConfig.newBuilder(Time.seconds(1)).build();
 
         MatcherAssert.assertThat(ttlConfig.getCleanupStrategies(), notNullValue());
@@ -79,7 +79,7 @@ public class StateTtlConfigTest {
     }
 
     @Test
-    public void testStateTtlConfigBuildWithNonPositiveCleanupIncrementalSize() {
+    void testStateTtlConfigBuildWithNonPositiveCleanupIncrementalSize() {
         List<Integer> illegalCleanUpSizes = Arrays.asList(0, -2);
 
         for (Integer illegalCleanUpSize : illegalCleanUpSizes) {

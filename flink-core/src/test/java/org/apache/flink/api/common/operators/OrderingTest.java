@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 public class OrderingTest {
 
     @Test
-    public void testNewOrdering() {
+    void testNewOrdering() {
         Ordering ordering = new Ordering();
 
         // add a field

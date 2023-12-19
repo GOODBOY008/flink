@@ -21,16 +21,16 @@ package org.apache.flink.api.common.accumulators;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class DoubleMaximumTest {
+class DoubleMaximumTest {
 
     @Test
-    public void testGet() {
+    void testGet() {
         DoubleMaximum max = new DoubleMaximum();
         Assertions.assertEquals(Double.NEGATIVE_INFINITY, max.getLocalValue(), 0.0);
     }
 
     @Test
-    public void testResetLocal() {
+    void testResetLocal() {
         DoubleMaximum max = new DoubleMaximum();
         double value = 13.57902468;
 
@@ -42,7 +42,7 @@ public class DoubleMaximumTest {
     }
 
     @Test
-    public void testAdd() {
+    void testAdd() {
         DoubleMaximum max = new DoubleMaximum();
 
         max.add(1234.5768);
@@ -54,7 +54,7 @@ public class DoubleMaximumTest {
     }
 
     @Test
-    public void testMerge() {
+    void testMerge() {
         DoubleMaximum max1 = new DoubleMaximum();
         max1.add(1234.5768);
 
@@ -69,7 +69,7 @@ public class DoubleMaximumTest {
     }
 
     @Test
-    public void testClone() {
+    void testClone() {
         DoubleMaximum max = new DoubleMaximum();
         double value = 3.14159265359;
 

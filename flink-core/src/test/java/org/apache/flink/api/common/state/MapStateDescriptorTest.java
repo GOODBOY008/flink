@@ -31,10 +31,10 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 /** Tests for the {@link MapStateDescriptor}. */
-public class MapStateDescriptorTest {
+class MapStateDescriptorTest {
 
     @Test
-    public void testMapStateDescriptor() throws Exception {
+    void testMapStateDescriptor() throws Exception {
 
         TypeSerializer<Integer> keySerializer =
                 new KryoSerializer<>(Integer.class, new ExecutionConfig());
@@ -46,7 +46,7 @@ public class MapStateDescriptorTest {
 
         Assertions.assertEquals("testName", descr.getName());
         Assertions.assertNotNull(descr.getSerializer());
-        Assertions.assertTrue(descr.getSerializer() instanceof MapSerializer);
+        Assertions.assertInstanceOf(MapSerializer.class, descr.getSerializer());
         Assertions.assertNotNull(descr.getKeySerializer());
         Assertions.assertEquals(keySerializer, descr.getKeySerializer());
         Assertions.assertNotNull(descr.getValueSerializer());
@@ -56,7 +56,7 @@ public class MapStateDescriptorTest {
 
         Assertions.assertEquals("testName", copy.getName());
         Assertions.assertNotNull(copy.getSerializer());
-        Assertions.assertTrue(copy.getSerializer() instanceof MapSerializer);
+        Assertions.assertInstanceOf(MapSerializer.class, copy.getSerializer());
 
         Assertions.assertNotNull(copy.getKeySerializer());
         Assertions.assertEquals(keySerializer, copy.getKeySerializer());
@@ -65,7 +65,7 @@ public class MapStateDescriptorTest {
     }
 
     @Test
-    public void testHashCodeEquals() throws Exception {
+    void testHashCodeEquals() throws Exception {
         final String name = "testName";
 
         MapStateDescriptor<String, String> original =
@@ -103,7 +103,7 @@ public class MapStateDescriptorTest {
      * descriptor.
      */
     @Test
-    public void testSerializerDuplication() {
+    void testSerializerDuplication() {
         // we need a serializer that actually duplicates for testing (a stateful one)
         // we use Kryo here, because it meets these conditions
         TypeSerializer<String> keySerializer =

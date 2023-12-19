@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 public class SelectorFunctionKeysTest {
 
     @Test
-    public void testAreCompatible1() throws Keys.IncompatibleKeysException {
+    void testAreCompatible1() throws Keys.IncompatibleKeysException {
         TypeInformation<Pojo2> t1 = TypeExtractor.getForClass(Pojo2.class);
         TypeInformation<Tuple2<Integer, String>> t2 =
                 new TupleTypeInfo<>(BasicTypeInfo.INT_TYPE_INFO, BasicTypeInfo.STRING_TYPE_INFO);
@@ -52,7 +52,7 @@ public class SelectorFunctionKeysTest {
     }
 
     @Test
-    public void testAreCompatible2() throws Keys.IncompatibleKeysException {
+    void testAreCompatible2() throws Keys.IncompatibleKeysException {
         TypeInformation<PojoWithMultiplePojos> t1 =
                 TypeExtractor.getForClass(PojoWithMultiplePojos.class);
         TypeInformation<Tuple3<Long, Pojo1, Integer>> t2 =
@@ -73,7 +73,7 @@ public class SelectorFunctionKeysTest {
     }
 
     @Test
-    public void testAreCompatible3() throws Keys.IncompatibleKeysException {
+    void testAreCompatible3() throws Keys.IncompatibleKeysException {
         TypeInformation<String> t1 = BasicTypeInfo.STRING_TYPE_INFO;
         TypeInformation<Pojo2> t2 = TypeExtractor.getForClass(Pojo2.class);
 
@@ -86,7 +86,7 @@ public class SelectorFunctionKeysTest {
     }
 
     @Test
-    public void testAreCompatible4() throws Keys.IncompatibleKeysException {
+    void testAreCompatible4() throws Keys.IncompatibleKeysException {
         TypeInformation<Tuple3<String, Long, Integer>> t1 =
                 new TupleTypeInfo<>(
                         BasicTypeInfo.STRING_TYPE_INFO,
@@ -101,14 +101,14 @@ public class SelectorFunctionKeysTest {
                 new Keys.SelectorFunctionKeys<>(
                         new KeySelector3(),
                         t2,
-                        new TupleTypeInfo<Tuple2<Integer, String>>(
+                        new TupleTypeInfo<>(
                                 BasicTypeInfo.INT_TYPE_INFO, BasicTypeInfo.STRING_TYPE_INFO));
 
         Assertions.assertTrue(sk2.areCompatible(ek1));
     }
 
     @Test
-    public void testOriginalTypes1() throws Keys.IncompatibleKeysException {
+    void testOriginalTypes1() {
         TypeInformation<Tuple2<Integer, String>> t2 =
                 new TupleTypeInfo<>(BasicTypeInfo.INT_TYPE_INFO, BasicTypeInfo.STRING_TYPE_INFO);
 
@@ -122,7 +122,7 @@ public class SelectorFunctionKeysTest {
     }
 
     @Test
-    public void testOriginalTypes2() throws Exception {
+    void testOriginalTypes2() {
         final TupleTypeInfo<Tuple2<Integer, String>> t1 =
                 new TupleTypeInfo<>(BasicTypeInfo.INT_TYPE_INFO, BasicTypeInfo.STRING_TYPE_INFO);
         TypeInformation<PojoWithMultiplePojos> t2 =
@@ -138,7 +138,7 @@ public class SelectorFunctionKeysTest {
     public static class KeySelector1 implements KeySelector<Pojo2, String> {
 
         @Override
-        public String getKey(Pojo2 v) throws Exception {
+        public String getKey(Pojo2 v) {
             return v.b2;
         }
     }
@@ -147,7 +147,7 @@ public class SelectorFunctionKeysTest {
     public static class KeySelector2 implements KeySelector<Tuple2<Integer, String>, String> {
 
         @Override
-        public String getKey(Tuple2<Integer, String> v) throws Exception {
+        public String getKey(Tuple2<Integer, String> v) {
             return v.f1;
         }
     }
@@ -157,7 +157,7 @@ public class SelectorFunctionKeysTest {
             implements KeySelector<PojoWithMultiplePojos, Tuple2<Integer, String>> {
 
         @Override
-        public Tuple2<Integer, String> getKey(PojoWithMultiplePojos v) throws Exception {
+        public Tuple2<Integer, String> getKey(PojoWithMultiplePojos v) {
             return new Tuple2<>(v.i0, v.p1.b);
         }
     }
@@ -167,7 +167,7 @@ public class SelectorFunctionKeysTest {
             implements KeySelector<Tuple3<Long, Pojo1, Integer>, Tuple2<Integer, String>> {
 
         @Override
-        public Tuple2<Integer, String> getKey(Tuple3<Long, Pojo1, Integer> v) throws Exception {
+        public Tuple2<Integer, String> getKey(Tuple3<Long, Pojo1, Integer> v) {
             return new Tuple2<>(v.f2, v.f1.a);
         }
     }

@@ -40,7 +40,7 @@ public class CompositeTypeSerializerSnapshotTest {
     // ------------------------------------------------------------------------------------------------
 
     @Test
-    public void testIncompatiblePrecedence() throws IOException {
+    void testIncompatiblePrecedence() throws IOException {
         final TypeSerializer<?>[] testNestedSerializers = {
             new NestedSerializer(TargetCompatibility.COMPATIBLE_AS_IS),
             new NestedSerializer(TargetCompatibility.COMPATIBLE_AFTER_MIGRATION),
@@ -58,7 +58,7 @@ public class CompositeTypeSerializerSnapshotTest {
     }
 
     @Test
-    public void testCompatibleAfterMigrationPrecedence() throws IOException {
+    void testCompatibleAfterMigrationPrecedence() throws IOException {
         TypeSerializer<?>[] testNestedSerializers = {
             new NestedSerializer(TargetCompatibility.COMPATIBLE_AS_IS),
             new NestedSerializer(TargetCompatibility.COMPATIBLE_AFTER_MIGRATION),
@@ -76,7 +76,7 @@ public class CompositeTypeSerializerSnapshotTest {
     }
 
     @Test
-    public void testCompatibleWithReconfiguredSerializerPrecedence() throws IOException {
+    void testCompatibleWithReconfiguredSerializerPrecedence() throws IOException {
         TypeSerializer<?>[] testNestedSerializers = {
             new NestedSerializer(TargetCompatibility.COMPATIBLE_AS_IS),
             new NestedSerializer(TargetCompatibility.COMPATIBLE_WITH_RECONFIGURED_SERIALIZER),
@@ -96,16 +96,13 @@ public class CompositeTypeSerializerSnapshotTest {
         TypeSerializer<?>[] reconfiguredNestedSerializers =
                 reconfiguredSerializer.getNestedSerializers();
         // nested serializer at index 1 should strictly be a ReconfiguredNestedSerializer
-        Assertions.assertTrue(
-                reconfiguredNestedSerializers[0].getClass() == NestedSerializer.class);
-        Assertions.assertTrue(
-                reconfiguredNestedSerializers[1].getClass() == ReconfiguredNestedSerializer.class);
-        Assertions.assertTrue(
-                reconfiguredNestedSerializers[2].getClass() == NestedSerializer.class);
+        Assertions.assertSame(reconfiguredNestedSerializers[0].getClass(), NestedSerializer.class);
+        Assertions.assertSame(reconfiguredNestedSerializers[1].getClass(), ReconfiguredNestedSerializer.class);
+        Assertions.assertSame(reconfiguredNestedSerializers[2].getClass(), NestedSerializer.class);
     }
 
     @Test
-    public void testCompatibleAsIsPrecedence() throws IOException {
+    void testCompatibleAsIsPrecedence() throws IOException {
         TypeSerializer<?>[] testNestedSerializers = {
             new NestedSerializer(TargetCompatibility.COMPATIBLE_AS_IS),
             new NestedSerializer(TargetCompatibility.COMPATIBLE_AS_IS),
@@ -121,7 +118,7 @@ public class CompositeTypeSerializerSnapshotTest {
     }
 
     @Test
-    public void testOuterSnapshotIncompatiblePrecedence() throws IOException {
+    void testOuterSnapshotIncompatiblePrecedence() throws IOException {
         TypeSerializer<?>[] testNestedSerializers = {
             new NestedSerializer(TargetCompatibility.COMPATIBLE_AS_IS),
         };
@@ -138,7 +135,7 @@ public class CompositeTypeSerializerSnapshotTest {
     }
 
     @Test
-    public void testOuterSnapshotRequiresMigrationPrecedence() throws IOException {
+    void testOuterSnapshotRequiresMigrationPrecedence() throws IOException {
         TypeSerializer<?>[] testNestedSerializers = {
             new NestedSerializer(TargetCompatibility.COMPATIBLE_WITH_RECONFIGURED_SERIALIZER),
         };
@@ -155,7 +152,7 @@ public class CompositeTypeSerializerSnapshotTest {
     }
 
     @Test
-    public void testNestedFieldSerializerArityMismatchPrecedence() throws IOException {
+    void testNestedFieldSerializerArityMismatchPrecedence() throws IOException {
         final TypeSerializer<?>[] initialNestedSerializers = {
             new NestedSerializer(TargetCompatibility.COMPATIBLE_AS_IS),
         };
@@ -207,7 +204,7 @@ public class CompositeTypeSerializerSnapshotTest {
     // ------------------------------------------------------------------------------------------------
 
     @Test
-    public void testRestoreCompositeTypeSerializer() throws IOException {
+    void testRestoreCompositeTypeSerializer() throws IOException {
         // the target compatibilities of the nested serializers doesn't matter,
         // because we're only testing the restore serializer
         TypeSerializer<?>[] testNestedSerializers = {
@@ -233,15 +230,9 @@ public class CompositeTypeSerializerSnapshotTest {
         // now, restore the composite type serializer;
         // the restored nested serializer should be a RestoredNestedSerializer
         testSerializer = (TestCompositeTypeSerializer) testSerializerSnapshot.restoreSerializer();
-        Assertions.assertTrue(
-                testSerializer.getNestedSerializers()[0].getClass()
-                        == RestoredNestedSerializer.class);
-        Assertions.assertTrue(
-                testSerializer.getNestedSerializers()[1].getClass()
-                        == RestoredNestedSerializer.class);
-        Assertions.assertTrue(
-                testSerializer.getNestedSerializers()[2].getClass()
-                        == RestoredNestedSerializer.class);
+        Assertions.assertSame(testSerializer.getNestedSerializers()[0].getClass(), RestoredNestedSerializer.class);
+        Assertions.assertSame(testSerializer.getNestedSerializers()[1].getClass(), RestoredNestedSerializer.class);
+        Assertions.assertSame(testSerializer.getNestedSerializers()[2].getClass(), RestoredNestedSerializer.class);
     }
 
     // ------------------------------------------------------------------------------------------------

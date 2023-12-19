@@ -32,13 +32,13 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 
 public class GlobFilePathFilterTest {
     @Test
-    public void testDefaultConstructorCreateMatchAllFilter() {
+    void testDefaultConstructorCreateMatchAllFilter() {
         GlobFilePathFilter matcher = new GlobFilePathFilter();
         assertThat(matcher.filterPath(new Path("dir/file.txt"))).isFalse();
     }
 
     @Test
-    public void testMatchAllFilesByDefault() {
+    void testMatchAllFilesByDefault() {
         GlobFilePathFilter matcher =
                 new GlobFilePathFilter(
                         Collections.<String>emptyList(), Collections.<String>emptyList());
@@ -47,7 +47,7 @@ public class GlobFilePathFilterTest {
     }
 
     @Test
-    public void testExcludeFilesNotInIncludePatterns() {
+    void testExcludeFilesNotInIncludePatterns() {
         GlobFilePathFilter matcher =
                 new GlobFilePathFilter(
                         Collections.singletonList("dir/*"), Collections.<String>emptyList());
@@ -57,7 +57,7 @@ public class GlobFilePathFilterTest {
     }
 
     @Test
-    public void testExcludeFilesIfMatchesExclude() {
+    void testExcludeFilesIfMatchesExclude() {
         GlobFilePathFilter matcher =
                 new GlobFilePathFilter(
                         Collections.singletonList("dir/*"),
@@ -67,7 +67,7 @@ public class GlobFilePathFilterTest {
     }
 
     @Test
-    public void testIncludeFileWithAnyCharacterMatcher() {
+    void testIncludeFileWithAnyCharacterMatcher() {
         GlobFilePathFilter matcher =
                 new GlobFilePathFilter(
                         Collections.singletonList("dir/?.txt"), Collections.<String>emptyList());
@@ -77,7 +77,7 @@ public class GlobFilePathFilterTest {
     }
 
     @Test
-    public void testIncludeFileWithCharacterSetMatcher() {
+    void testIncludeFileWithCharacterSetMatcher() {
         GlobFilePathFilter matcher =
                 new GlobFilePathFilter(
                         Collections.singletonList("dir/[acd].txt"),
@@ -90,7 +90,7 @@ public class GlobFilePathFilterTest {
     }
 
     @Test
-    public void testIncludeFileWithCharacterRangeMatcher() {
+    void testIncludeFileWithCharacterRangeMatcher() {
         GlobFilePathFilter matcher =
                 new GlobFilePathFilter(
                         Collections.singletonList("dir/[a-d].txt"),
@@ -104,7 +104,7 @@ public class GlobFilePathFilterTest {
     }
 
     @Test
-    public void testExcludeHDFSFile() {
+    void testExcludeHDFSFile() {
         GlobFilePathFilter matcher =
                 new GlobFilePathFilter(
                         Collections.singletonList("**"),
@@ -116,7 +116,7 @@ public class GlobFilePathFilterTest {
     }
 
     @Test
-    public void testExcludeFilenameWithStart() {
+    void testExcludeFilenameWithStart() {
         assumeThat(OperatingSystem.isWindows())
                 .as("Windows does not allow asterisks in file names.")
                 .isFalse();
@@ -131,7 +131,7 @@ public class GlobFilePathFilterTest {
     }
 
     @Test
-    public void testSingleStarPattern() {
+    void testSingleStarPattern() {
         GlobFilePathFilter matcher =
                 new GlobFilePathFilter(
                         Collections.singletonList("*"), Collections.<String>emptyList());
@@ -142,7 +142,7 @@ public class GlobFilePathFilterTest {
     }
 
     @Test
-    public void testDoubleStarPattern() {
+    void testDoubleStarPattern() {
         GlobFilePathFilter matcher =
                 new GlobFilePathFilter(
                         Collections.singletonList("**"), Collections.<String>emptyList());
@@ -153,21 +153,21 @@ public class GlobFilePathFilterTest {
     }
 
     @Test
-    public void testIncluePatternIsNull() {
+    void testIncluePatternIsNull() {
         Assertions.assertThatThrownBy(
                         () -> new GlobFilePathFilter(null, Collections.<String>emptyList()))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @Test
-    public void testExcludePatternIsNull() {
+    void testExcludePatternIsNull() {
         Assertions.assertThatThrownBy(
                         () -> new GlobFilePathFilter(Collections.singletonList("**"), null))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @Test
-    public void testGlobFilterSerializable() throws IOException {
+    void testGlobFilterSerializable() throws IOException {
         GlobFilePathFilter matcher =
                 new GlobFilePathFilter(
                         Collections.singletonList("**"), Collections.<String>emptyList());

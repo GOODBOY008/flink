@@ -28,10 +28,10 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 /** Tests for the {@link TypeHint}. */
-public class TypeHintTest {
+class TypeHintTest {
 
     @Test
-    public void testTypeInfoDirect() {
+    void testTypeInfoDirect() {
 
         // simple (non-generic case)
         TypeHint<String> stringInfo1 = new TypeHint<String>() {};
@@ -39,9 +39,9 @@ public class TypeHintTest {
 
         Assertions.assertEquals(BasicTypeInfo.STRING_TYPE_INFO, stringInfo1.getTypeInfo());
 
-        Assertions.assertTrue(stringInfo1.hashCode() == stringInfo2.hashCode());
-        Assertions.assertTrue(stringInfo1.equals(stringInfo2));
-        Assertions.assertTrue(stringInfo1.toString().equals(stringInfo2.toString()));
+        Assertions.assertEquals(stringInfo1.hashCode(), stringInfo2.hashCode());
+        Assertions.assertEquals(stringInfo1, stringInfo2);
+        Assertions.assertEquals(stringInfo1.toString(), stringInfo2.toString());
 
         // generic case
         TypeHint<Tuple3<String, Double, Boolean>> generic =
@@ -57,7 +57,7 @@ public class TypeHintTest {
     }
 
     @Test
-    public <T> void testWithGenericParameter() {
+    <T> void testWithGenericParameter() {
         try {
             new TypeHint<T>() {};
             Assertions.fail();

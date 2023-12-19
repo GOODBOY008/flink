@@ -42,20 +42,14 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@SuppressWarnings("serial")
-public class InnerJoinOperatorBaseTest implements Serializable {
+class InnerJoinOperatorBaseTest implements Serializable {
 
     @Test
-    public void testJoinPlain() {
+    void testJoinPlain() {
         final FlatJoinFunction<String, String, Integer> joiner =
-                new FlatJoinFunction<String, String, Integer>() {
-
-                    @Override
-                    public void join(String first, String second, Collector<Integer> out)
-                            throws Exception {
-                        out.collect(first.length());
-                        out.collect(second.length());
-                    }
+                (first, second, out) -> {
+                    out.collect(first.length());
+                    out.collect(second.length());
                 };
 
         @SuppressWarnings({"rawtypes", "unchecked"})
@@ -71,9 +65,9 @@ public class InnerJoinOperatorBaseTest implements Serializable {
                                 new int[0],
                                 "TestJoiner");
 
-        List<String> inputData1 = new ArrayList<String>(Arrays.asList("foo", "bar", "foobar"));
-        List<String> inputData2 = new ArrayList<String>(Arrays.asList("foobar", "foo"));
-        List<Integer> expected = new ArrayList<Integer>(Arrays.asList(3, 3, 6, 6));
+        List<String> inputData1 = new ArrayList<>(Arrays.asList("foo", "bar", "foobar"));
+        List<String> inputData2 = new ArrayList<>(Arrays.asList("foobar", "foo"));
+        List<Integer> expected = new ArrayList<>(Arrays.asList(3, 3, 6, 6));
 
         try {
             ExecutionConfig executionConfig = new ExecutionConfig();
@@ -93,7 +87,7 @@ public class InnerJoinOperatorBaseTest implements Serializable {
     }
 
     @Test
-    public void testJoinRich() {
+    void testJoinRich() {
         final AtomicBoolean opened = new AtomicBoolean(false);
         final AtomicBoolean closed = new AtomicBoolean(false);
         final String taskName = "Test rich join function";
@@ -101,7 +95,7 @@ public class InnerJoinOperatorBaseTest implements Serializable {
         final RichFlatJoinFunction<String, String, Integer> joiner =
                 new RichFlatJoinFunction<String, String, Integer>() {
                     @Override
-                    public void open(OpenContext openContext) throws Exception {
+                    public void open(OpenContext openContext) {
                         opened.compareAndSet(false, true);
                         Assertions.assertEquals(0, getRuntimeContext().getIndexOfThisSubtask());
                         Assertions.assertEquals(
@@ -109,13 +103,12 @@ public class InnerJoinOperatorBaseTest implements Serializable {
                     }
 
                     @Override
-                    public void close() throws Exception {
+                    public void close() {
                         closed.compareAndSet(false, true);
                     }
 
                     @Override
-                    public void join(String first, String second, Collector<Integer> out)
-                            throws Exception {
+                    public void join(String first, String second, Collector<Integer> out) {
                         out.collect(first.length());
                         out.collect(second.length());
                     }
@@ -124,29 +117,25 @@ public class InnerJoinOperatorBaseTest implements Serializable {
         InnerJoinOperatorBase<
                         String, String, Integer, RichFlatJoinFunction<String, String, Integer>>
                 base =
-                        new InnerJoinOperatorBase<
-                                String,
-                                String,
-                                Integer,
-                                RichFlatJoinFunction<String, String, Integer>>(
-                                joiner,
-                                new BinaryOperatorInformation<String, String, Integer>(
-                                        BasicTypeInfo.STRING_TYPE_INFO,
-                                        BasicTypeInfo.STRING_TYPE_INFO,
-                                        BasicTypeInfo.INT_TYPE_INFO),
-                                new int[0],
-                                new int[0],
-                                taskName);
+                new InnerJoinOperatorBase<>(
+                        joiner,
+                        new BinaryOperatorInformation<>(
+                                BasicTypeInfo.STRING_TYPE_INFO,
+                                BasicTypeInfo.STRING_TYPE_INFO,
+                                BasicTypeInfo.INT_TYPE_INFO),
+                        new int[0],
+                        new int[0],
+                        taskName);
 
         final List<String> inputData1 =
-                new ArrayList<String>(Arrays.asList("foo", "bar", "foobar"));
-        final List<String> inputData2 = new ArrayList<String>(Arrays.asList("foobar", "foo"));
-        final List<Integer> expected = new ArrayList<Integer>(Arrays.asList(3, 3, 6, 6));
+                new ArrayList<>(Arrays.asList("foo", "bar", "foobar"));
+        final List<String> inputData2 = new ArrayList<>(Arrays.asList("foobar", "foo"));
+        final List<Integer> expected = new ArrayList<>(Arrays.asList(3, 3, 6, 6));
 
         try {
             final TaskInfo taskInfo = new TaskInfo(taskName, 1, 0, 1, 0);
             final HashMap<String, Accumulator<?, ?>> accumulatorMap =
-                    new HashMap<String, Accumulator<?, ?>>();
+                    new HashMap<>();
             final HashMap<String, Future<Path>> cpTasks = new HashMap<>();
 
             ExecutionConfig executionConfig = new ExecutionConfig();

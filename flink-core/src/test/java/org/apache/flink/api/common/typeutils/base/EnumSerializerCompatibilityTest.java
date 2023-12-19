@@ -26,9 +26,9 @@ import org.apache.flink.core.memory.DataOutputViewStreamWrapper;
 import org.apache.flink.testutils.ClassLoaderUtils;
 import org.apache.flink.util.TestLogger;
 
-import org.junit.Assert;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.ByteArrayInputStream;
@@ -48,28 +48,26 @@ public class EnumSerializerCompatibilityTest extends TestLogger {
 
     /** Check that identical enums don't require migration */
     @Test
-    public void checkIndenticalEnums() throws Exception {
-        Assert.assertTrue(checkCompatibility(ENUM_A, ENUM_A).isCompatibleAsIs());
+    void checkIndenticalEnums() throws Exception {
+        Assertions.assertTrue(checkCompatibility(ENUM_A, ENUM_A).isCompatibleAsIs());
     }
 
     /** Check that appending fields to the enum does not require migration */
     @Test
-    public void checkAppendedField() throws Exception {
-        Assert.assertTrue(
-                checkCompatibility(ENUM_A, ENUM_B).isCompatibleWithReconfiguredSerializer());
+    void checkAppendedField() throws Exception {
+        Assertions.assertTrue(checkCompatibility(ENUM_A, ENUM_B).isCompatibleWithReconfiguredSerializer());
     }
 
     /** Check that removing enum fields makes the snapshot incompatible */
     @Test(expected = IllegalStateException.class)
     public void removingFieldShouldBeIncompatible() throws Exception {
-        Assert.assertTrue(checkCompatibility(ENUM_A, ENUM_C).isIncompatible());
+        Assertions.assertTrue(checkCompatibility(ENUM_A, ENUM_C).isIncompatible());
     }
 
     /** Check that changing the enum field order don't require migration */
     @Test
-    public void checkDifferentFieldOrder() throws Exception {
-        Assert.assertTrue(
-                checkCompatibility(ENUM_A, ENUM_D).isCompatibleWithReconfiguredSerializer());
+    void checkDifferentFieldOrder() throws Exception {
+        Assertions.assertTrue(checkCompatibility(ENUM_A, ENUM_D).isCompatibleWithReconfiguredSerializer());
     }
 
     @SuppressWarnings("unchecked")

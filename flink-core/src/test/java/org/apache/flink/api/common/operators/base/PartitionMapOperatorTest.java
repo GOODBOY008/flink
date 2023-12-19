@@ -20,7 +20,6 @@ package org.apache.flink.api.common.operators.base;
 
 import org.apache.flink.api.common.ExecutionConfig;
 import org.apache.flink.api.common.TaskInfo;
-import org.apache.flink.api.common.accumulators.Accumulator;
 import org.apache.flink.api.common.functions.MapPartitionFunction;
 import org.apache.flink.api.common.functions.OpenContext;
 import org.apache.flink.api.common.functions.RichMapPartitionFunction;
@@ -28,7 +27,6 @@ import org.apache.flink.api.common.functions.RuntimeContext;
 import org.apache.flink.api.common.functions.util.RuntimeUDFContext;
 import org.apache.flink.api.common.operators.UnaryOperatorInformation;
 import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
-import org.apache.flink.core.fs.Path;
 import org.apache.flink.metrics.groups.UnregisteredMetricsGroup;
 import org.apache.flink.util.Collector;
 
@@ -38,16 +36,14 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.Arrays.asList;
 
-@SuppressWarnings("serial")
-public class PartitionMapOperatorTest implements java.io.Serializable {
+class PartitionMapOperatorTest implements java.io.Serializable {
 
     @Test
-    public void testMapPartitionWithRuntimeContext() {
+    void testMapPartitionWithRuntimeContext() {
         try {
             final String taskName = "Test Task";
             final AtomicBoolean opened = new AtomicBoolean();
@@ -57,7 +53,7 @@ public class PartitionMapOperatorTest implements java.io.Serializable {
                     new RichMapPartitionFunction<String, Integer>() {
 
                         @Override
-                        public void open(OpenContext openContext) throws Exception {
+                        public void open(OpenContext openContext) {
                             opened.set(true);
                             RuntimeContext ctx = getRuntimeContext();
                             Assertions.assertEquals(0, ctx.getIndexOfThisSubtask());
@@ -73,20 +69,19 @@ public class PartitionMapOperatorTest implements java.io.Serializable {
                         }
 
                         @Override
-                        public void close() throws Exception {
+                        public void close() {
                             closed.set(true);
                         }
                     };
 
             MapPartitionOperatorBase<String, Integer, MapPartitionFunction<String, Integer>> op =
-                    new MapPartitionOperatorBase<
-                            String, Integer, MapPartitionFunction<String, Integer>>(
+                    new MapPartitionOperatorBase<>(
                             parser,
-                            new UnaryOperatorInformation<String, Integer>(
+                            new UnaryOperatorInformation<>(
                                     BasicTypeInfo.STRING_TYPE_INFO, BasicTypeInfo.INT_TYPE_INFO),
                             taskName);
 
-            List<String> input = new ArrayList<String>(asList("1", "2", "3", "4", "5", "6"));
+            List<String> input = new ArrayList<>(asList("1", "2", "3", "4", "5", "6"));
 
             final TaskInfo taskInfo = new TaskInfo(taskName, 1, 0, 1, 0);
 
@@ -100,8 +95,8 @@ public class PartitionMapOperatorTest implements java.io.Serializable {
                                     taskInfo,
                                     null,
                                     executionConfig,
-                                    new HashMap<String, Future<Path>>(),
-                                    new HashMap<String, Accumulator<?, ?>>(),
+                                    new HashMap<>(),
+                                    new HashMap<>(),
                                     UnregisteredMetricsGroup.createOperatorMetricGroup()),
                             executionConfig);
 
@@ -113,8 +108,8 @@ public class PartitionMapOperatorTest implements java.io.Serializable {
                                     taskInfo,
                                     null,
                                     executionConfig,
-                                    new HashMap<String, Future<Path>>(),
-                                    new HashMap<String, Accumulator<?, ?>>(),
+                                    new HashMap<>(),
+                                    new HashMap<>(),
                                     UnregisteredMetricsGroup.createOperatorMetricGroup()),
                             executionConfig);
 
