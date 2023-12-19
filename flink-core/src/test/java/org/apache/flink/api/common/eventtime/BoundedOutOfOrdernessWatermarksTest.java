@@ -18,12 +18,10 @@
 
 package org.apache.flink.api.common.eventtime;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /** Tests for the {@link AscendingTimestampsWatermarks} class. */
 public class BoundedOutOfOrdernessWatermarksTest {
@@ -36,8 +34,8 @@ public class BoundedOutOfOrdernessWatermarksTest {
 
         watermarks.onPeriodicEmit(output);
 
-        assertNotNull(output.lastWatermark());
-        assertEquals(Long.MIN_VALUE, output.lastWatermark().getTimestamp());
+        Assertions.assertNotNull(output.lastWatermark());
+        Assertions.assertEquals(Long.MIN_VALUE, output.lastWatermark().getTimestamp());
     }
 
     @Test
@@ -49,7 +47,7 @@ public class BoundedOutOfOrdernessWatermarksTest {
         watermarks.onEvent(new Object(), 1337L, output);
         watermarks.onPeriodicEmit(output);
 
-        assertEquals(1326L, output.lastWatermark().getTimestamp());
+        Assertions.assertEquals(1326L, output.lastWatermark().getTimestamp());
     }
 
     @Test
@@ -64,7 +62,7 @@ public class BoundedOutOfOrdernessWatermarksTest {
         watermarks.onEvent(new Object(), 12280L, output);
         watermarks.onPeriodicEmit(output);
 
-        assertEquals(12334L, output.lastWatermark().getTimestamp());
+        Assertions.assertEquals(12334L, output.lastWatermark().getTimestamp());
     }
 
     @Test
@@ -78,6 +76,6 @@ public class BoundedOutOfOrdernessWatermarksTest {
 
         watermarks.onPeriodicEmit(output);
 
-        assertEquals(723445L, output.lastWatermark().getTimestamp());
+        Assertions.assertEquals(723445L, output.lastWatermark().getTimestamp());
     }
 }

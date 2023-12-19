@@ -18,10 +18,8 @@
 
 package org.apache.flink.api.common.operators;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class OrderingTest {
 
@@ -31,19 +29,20 @@ public class OrderingTest {
 
         // add a field
         ordering.appendOrdering(3, Integer.class, Order.ASCENDING);
-        assertEquals(1, ordering.getNumberOfFields());
+        Assertions.assertEquals(1, ordering.getNumberOfFields());
 
         // add a second field
         ordering.appendOrdering(1, Long.class, Order.DESCENDING);
-        assertEquals(2, ordering.getNumberOfFields());
+        Assertions.assertEquals(2, ordering.getNumberOfFields());
 
         // duplicate field index does not change Ordering
         ordering.appendOrdering(1, String.class, Order.ASCENDING);
-        assertEquals(2, ordering.getNumberOfFields());
+        Assertions.assertEquals(2, ordering.getNumberOfFields());
 
         // verify field positions, types, and orderings
-        assertArrayEquals(new int[] {3, 1}, ordering.getFieldPositions());
-        assertArrayEquals(new Class[] {Integer.class, Long.class}, ordering.getTypes());
-        assertArrayEquals(new boolean[] {true, false}, ordering.getFieldSortDirections());
+        Assertions.assertArrayEquals(new int[] {3, 1}, ordering.getFieldPositions());
+        Assertions.assertArrayEquals(new Class[] {Integer.class, Long.class}, ordering.getTypes());
+        Assertions.assertArrayEquals(
+                new boolean[] {true, false}, ordering.getFieldSortDirections());
     }
 }

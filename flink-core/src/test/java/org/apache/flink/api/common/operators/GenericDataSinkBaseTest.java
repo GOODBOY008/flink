@@ -31,14 +31,13 @@ import org.apache.flink.core.fs.Path;
 import org.apache.flink.metrics.groups.UnregisteredMetricsGroup;
 import org.apache.flink.types.Nothing;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.concurrent.Future;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /** Checks the GenericDataSinkBase operator for both Rich and non-Rich output formats. */
 @SuppressWarnings("serial")
@@ -68,16 +67,16 @@ public class GenericDataSinkBaseTest implements java.io.Serializable {
             executionConfig.disableObjectReuse();
             in.reset();
             sink.executeOnCollections(asList(TestIOData.NAMES), null, executionConfig);
-            assertEquals(out.output, asList(TestIOData.NAMES));
+            Assertions.assertEquals(out.output, asList(TestIOData.NAMES));
 
             executionConfig.enableObjectReuse();
             out.clear();
             in.reset();
             sink.executeOnCollections(asList(TestIOData.NAMES), null, executionConfig);
-            assertEquals(out.output, asList(TestIOData.NAMES));
+            Assertions.assertEquals(out.output, asList(TestIOData.NAMES));
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 
@@ -113,7 +112,7 @@ public class GenericDataSinkBaseTest implements java.io.Serializable {
                             UnregisteredMetricsGroup.createOperatorMetricGroup()),
                     executionConfig);
 
-            assertEquals(out.output, asList(TestIOData.RICH_NAMES));
+            Assertions.assertEquals(out.output, asList(TestIOData.RICH_NAMES));
 
             executionConfig.enableObjectReuse();
             out.clear();
@@ -129,10 +128,10 @@ public class GenericDataSinkBaseTest implements java.io.Serializable {
                             accumulatorMap,
                             UnregisteredMetricsGroup.createOperatorMetricGroup()),
                     executionConfig);
-            assertEquals(out.output, asList(TestIOData.RICH_NAMES));
+            Assertions.assertEquals(out.output, asList(TestIOData.RICH_NAMES));
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 }

@@ -29,9 +29,10 @@ import org.apache.flink.types.Value;
 
 import org.apache.commons.compress.compressors.zstandard.ZstdCompressorOutputStream;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -44,11 +45,6 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
 
 import static org.apache.flink.api.common.io.DelimitedInputFormatTest.createTempFile;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class GenericCsvInputFormatTest {
 
@@ -56,13 +52,13 @@ public class GenericCsvInputFormatTest {
 
     // --------------------------------------------------------------------------------------------
 
-    @Before
+    @BeforeEach
     public void setup() {
         format = new TestCsvInputFormat();
         format.setFilePath("file:///some/file/that/will/not/be/read");
     }
 
-    @After
+    @AfterEach
     public void setdown() throws Exception {
         if (this.format != null) {
             this.format.close();
@@ -79,10 +75,10 @@ public class GenericCsvInputFormatTest {
                 };
 
         format.setFieldTypesGeneric(originalTypes);
-        assertEquals(3, format.getNumberOfNonNullFields());
-        assertEquals(6, format.getNumberOfFieldsTotal());
+        Assertions.assertEquals(3, format.getNumberOfNonNullFields());
+        Assertions.assertEquals(6, format.getNumberOfFieldsTotal());
 
-        assertTrue(Arrays.equals(originalTypes, format.getGenericFieldTypes()));
+        Assertions.assertTrue(Arrays.equals(originalTypes, format.getGenericFieldTypes()));
     }
 
     @Test
@@ -103,25 +99,29 @@ public class GenericCsvInputFormatTest {
             Value[] values = createIntValues(5);
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(111, ((IntValue) values[0]).getValue());
-            assertEquals(222, ((IntValue) values[1]).getValue());
-            assertEquals(333, ((IntValue) values[2]).getValue());
-            assertEquals(444, ((IntValue) values[3]).getValue());
-            assertEquals(555, ((IntValue) values[4]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(111, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(222, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(333, ((IntValue) values[2]).getValue());
+            Assertions.assertEquals(444, ((IntValue) values[3]).getValue());
+            Assertions.assertEquals(555, ((IntValue) values[4]).getValue());
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(666, ((IntValue) values[0]).getValue());
-            assertEquals(777, ((IntValue) values[1]).getValue());
-            assertEquals(888, ((IntValue) values[2]).getValue());
-            assertEquals(999, ((IntValue) values[3]).getValue());
-            assertEquals(000, ((IntValue) values[4]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(666, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(777, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(888, ((IntValue) values[2]).getValue());
+            Assertions.assertEquals(999, ((IntValue) values[3]).getValue());
+            Assertions.assertEquals(000, ((IntValue) values[4]).getValue());
 
-            assertNull(format.nextRecord(values));
-            assertTrue(format.reachedEnd());
+            Assertions.assertNull(format.nextRecord(values));
+            Assertions.assertTrue(format.reachedEnd());
         } catch (Exception ex) {
-            fail("Test failed due to a " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            Assertions.fail(
+                    "Test failed due to a "
+                            + ex.getClass().getSimpleName()
+                            + ": "
+                            + ex.getMessage());
         }
     }
 
@@ -143,25 +143,29 @@ public class GenericCsvInputFormatTest {
             Value[] values = createIntValues(5);
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(111, ((IntValue) values[0]).getValue());
-            assertEquals(222, ((IntValue) values[1]).getValue());
-            assertEquals(333, ((IntValue) values[2]).getValue());
-            assertEquals(444, ((IntValue) values[3]).getValue());
-            assertEquals(555, ((IntValue) values[4]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(111, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(222, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(333, ((IntValue) values[2]).getValue());
+            Assertions.assertEquals(444, ((IntValue) values[3]).getValue());
+            Assertions.assertEquals(555, ((IntValue) values[4]).getValue());
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(666, ((IntValue) values[0]).getValue());
-            assertEquals(777, ((IntValue) values[1]).getValue());
-            assertEquals(888, ((IntValue) values[2]).getValue());
-            assertEquals(999, ((IntValue) values[3]).getValue());
-            assertEquals(000, ((IntValue) values[4]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(666, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(777, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(888, ((IntValue) values[2]).getValue());
+            Assertions.assertEquals(999, ((IntValue) values[3]).getValue());
+            Assertions.assertEquals(000, ((IntValue) values[4]).getValue());
 
-            assertNull(format.nextRecord(values));
-            assertTrue(format.reachedEnd());
+            Assertions.assertNull(format.nextRecord(values));
+            Assertions.assertTrue(format.reachedEnd());
         } catch (Exception ex) {
-            fail("Test failed due to a " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            Assertions.fail(
+                    "Test failed due to a "
+                            + ex.getClass().getSimpleName()
+                            + ": "
+                            + ex.getMessage());
         }
     }
 
@@ -183,25 +187,29 @@ public class GenericCsvInputFormatTest {
             Value[] values = createIntValues(5);
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(111, ((IntValue) values[0]).getValue());
-            assertEquals(222, ((IntValue) values[1]).getValue());
-            assertEquals(333, ((IntValue) values[2]).getValue());
-            assertEquals(444, ((IntValue) values[3]).getValue());
-            assertEquals(555, ((IntValue) values[4]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(111, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(222, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(333, ((IntValue) values[2]).getValue());
+            Assertions.assertEquals(444, ((IntValue) values[3]).getValue());
+            Assertions.assertEquals(555, ((IntValue) values[4]).getValue());
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(666, ((IntValue) values[0]).getValue());
-            assertEquals(777, ((IntValue) values[1]).getValue());
-            assertEquals(888, ((IntValue) values[2]).getValue());
-            assertEquals(999, ((IntValue) values[3]).getValue());
-            assertEquals(000, ((IntValue) values[4]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(666, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(777, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(888, ((IntValue) values[2]).getValue());
+            Assertions.assertEquals(999, ((IntValue) values[3]).getValue());
+            Assertions.assertEquals(000, ((IntValue) values[4]).getValue());
 
-            assertNull(format.nextRecord(values));
-            assertTrue(format.reachedEnd());
+            Assertions.assertNull(format.nextRecord(values));
+            Assertions.assertTrue(format.reachedEnd());
         } catch (Exception ex) {
-            fail("Test failed due to a " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            Assertions.fail(
+                    "Test failed due to a "
+                            + ex.getClass().getSimpleName()
+                            + ": "
+                            + ex.getMessage());
         }
     }
 
@@ -223,25 +231,29 @@ public class GenericCsvInputFormatTest {
             Value[] values = createIntValues(5);
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(111, ((IntValue) values[0]).getValue());
-            assertEquals(222, ((IntValue) values[1]).getValue());
-            assertEquals(333, ((IntValue) values[2]).getValue());
-            assertEquals(444, ((IntValue) values[3]).getValue());
-            assertEquals(555, ((IntValue) values[4]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(111, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(222, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(333, ((IntValue) values[2]).getValue());
+            Assertions.assertEquals(444, ((IntValue) values[3]).getValue());
+            Assertions.assertEquals(555, ((IntValue) values[4]).getValue());
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(666, ((IntValue) values[0]).getValue());
-            assertEquals(777, ((IntValue) values[1]).getValue());
-            assertEquals(888, ((IntValue) values[2]).getValue());
-            assertEquals(999, ((IntValue) values[3]).getValue());
-            assertEquals(000, ((IntValue) values[4]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(666, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(777, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(888, ((IntValue) values[2]).getValue());
+            Assertions.assertEquals(999, ((IntValue) values[3]).getValue());
+            Assertions.assertEquals(000, ((IntValue) values[4]).getValue());
 
-            assertNull(format.nextRecord(values));
-            assertTrue(format.reachedEnd());
+            Assertions.assertNull(format.nextRecord(values));
+            Assertions.assertTrue(format.reachedEnd());
         } catch (Exception ex) {
-            fail("Test failed due to a " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            Assertions.fail(
+                    "Test failed due to a "
+                            + ex.getClass().getSimpleName()
+                            + ": "
+                            + ex.getMessage());
         }
     }
 
@@ -263,19 +275,23 @@ public class GenericCsvInputFormatTest {
 
             // if this would parse all, we would get an index out of bounds exception
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(111, ((IntValue) values[0]).getValue());
-            assertEquals(222, ((IntValue) values[1]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(111, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(222, ((IntValue) values[1]).getValue());
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(666, ((IntValue) values[0]).getValue());
-            assertEquals(777, ((IntValue) values[1]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(666, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(777, ((IntValue) values[1]).getValue());
 
-            assertNull(format.nextRecord(values));
-            assertTrue(format.reachedEnd());
+            Assertions.assertNull(format.nextRecord(values));
+            Assertions.assertTrue(format.reachedEnd());
         } catch (Exception ex) {
-            fail("Test failed due to a " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            Assertions.fail(
+                    "Test failed due to a "
+                            + ex.getClass().getSimpleName()
+                            + ": "
+                            + ex.getMessage());
         }
     }
 
@@ -299,23 +315,23 @@ public class GenericCsvInputFormatTest {
             Value[] values = createIntValues(3);
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(111, ((IntValue) values[0]).getValue());
-            assertEquals(444, ((IntValue) values[1]).getValue());
-            assertEquals(888, ((IntValue) values[2]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(111, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(444, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(888, ((IntValue) values[2]).getValue());
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(000, ((IntValue) values[0]).getValue());
-            assertEquals(777, ((IntValue) values[1]).getValue());
-            assertEquals(333, ((IntValue) values[2]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(000, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(777, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(333, ((IntValue) values[2]).getValue());
 
-            assertNull(format.nextRecord(values));
-            assertTrue(format.reachedEnd());
+            Assertions.assertNull(format.nextRecord(values));
+            Assertions.assertTrue(format.reachedEnd());
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
             ex.printStackTrace();
-            fail("Test erroneous");
+            Assertions.fail("Test erroneous");
         }
     }
 
@@ -335,23 +351,23 @@ public class GenericCsvInputFormatTest {
             Value[] values = createLongValues(3);
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(1L, ((LongValue) values[0]).getValue());
-            assertEquals(2L, ((LongValue) values[1]).getValue());
-            assertEquals(3L, ((LongValue) values[2]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(1L, ((LongValue) values[0]).getValue());
+            Assertions.assertEquals(2L, ((LongValue) values[1]).getValue());
+            Assertions.assertEquals(3L, ((LongValue) values[2]).getValue());
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(3L, ((LongValue) values[0]).getValue());
-            assertEquals(2L, ((LongValue) values[1]).getValue());
-            assertEquals(1L, ((LongValue) values[2]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(3L, ((LongValue) values[0]).getValue());
+            Assertions.assertEquals(2L, ((LongValue) values[1]).getValue());
+            Assertions.assertEquals(1L, ((LongValue) values[2]).getValue());
 
-            assertNull(format.nextRecord(values));
-            assertTrue(format.reachedEnd());
+            Assertions.assertNull(format.nextRecord(values));
+            Assertions.assertTrue(format.reachedEnd());
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
             ex.printStackTrace();
-            fail("Test erroneous");
+            Assertions.fail("Test erroneous");
         }
     }
 
@@ -376,23 +392,23 @@ public class GenericCsvInputFormatTest {
             Value[] values = createIntValues(3);
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(111, ((IntValue) values[0]).getValue());
-            assertEquals(444, ((IntValue) values[1]).getValue());
-            assertEquals(888, ((IntValue) values[2]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(111, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(444, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(888, ((IntValue) values[2]).getValue());
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(000, ((IntValue) values[0]).getValue());
-            assertEquals(777, ((IntValue) values[1]).getValue());
-            assertEquals(333, ((IntValue) values[2]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(000, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(777, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(333, ((IntValue) values[2]).getValue());
 
-            assertNull(format.nextRecord(values));
-            assertTrue(format.reachedEnd());
+            Assertions.assertNull(format.nextRecord(values));
+            Assertions.assertTrue(format.reachedEnd());
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
             ex.printStackTrace();
-            fail("Test erroneous");
+            Assertions.fail("Test erroneous");
         }
     }
 
@@ -421,35 +437,35 @@ public class GenericCsvInputFormatTest {
             Value[] values = createIntValues(3);
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(111, ((IntValue) values[0]).getValue());
-            assertEquals(444, ((IntValue) values[1]).getValue());
-            assertEquals(888, ((IntValue) values[2]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(111, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(444, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(888, ((IntValue) values[2]).getValue());
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(000, ((IntValue) values[0]).getValue());
-            assertEquals(777, ((IntValue) values[1]).getValue());
-            assertEquals(333, ((IntValue) values[2]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(000, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(777, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(333, ((IntValue) values[2]).getValue());
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(555, ((IntValue) values[0]).getValue());
-            assertEquals(111, ((IntValue) values[1]).getValue());
-            assertEquals(777, ((IntValue) values[2]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(555, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(111, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(777, ((IntValue) values[2]).getValue());
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals(22222, ((IntValue) values[0]).getValue());
-            assertEquals(99999999, ((IntValue) values[1]).getValue());
-            assertEquals(8, ((IntValue) values[2]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals(22222, ((IntValue) values[0]).getValue());
+            Assertions.assertEquals(99999999, ((IntValue) values[1]).getValue());
+            Assertions.assertEquals(8, ((IntValue) values[2]).getValue());
 
-            assertNull(format.nextRecord(values));
-            assertTrue(format.reachedEnd());
+            Assertions.assertNull(format.nextRecord(values));
+            Assertions.assertTrue(format.reachedEnd());
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
             ex.printStackTrace();
-            fail("Test erroneous");
+            Assertions.fail("Test erroneous");
         }
     }
 
@@ -471,12 +487,16 @@ public class GenericCsvInputFormatTest {
 
             try {
                 format.nextRecord(values);
-                fail("Should have thrown a parse exception on too short input.");
+                Assertions.fail("Should have thrown a parse exception on too short input.");
             } catch (ParseException e) {
                 // all is well
             }
         } catch (Exception ex) {
-            fail("Test failed due to a " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            Assertions.fail(
+                    "Test failed due to a "
+                            + ex.getClass().getSimpleName()
+                            + ": "
+                            + ex.getMessage());
         }
     }
 
@@ -497,11 +517,15 @@ public class GenericCsvInputFormatTest {
 
             Value[] values = createIntValues(5);
 
-            assertNotNull(format.nextRecord(values)); // line okay
-            assertNull(format.nextRecord(values)); // line too short
-            assertNotNull(format.nextRecord(values)); // line okay
+            Assertions.assertNotNull(format.nextRecord(values)); // line okay
+            Assertions.assertNull(format.nextRecord(values)); // line too short
+            Assertions.assertNotNull(format.nextRecord(values)); // line okay
         } catch (Exception ex) {
-            fail("Test failed due to a " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            Assertions.fail(
+                    "Test failed due to a "
+                            + ex.getClass().getSimpleName()
+                            + ": "
+                            + ex.getMessage());
         }
     }
 
@@ -525,15 +549,19 @@ public class GenericCsvInputFormatTest {
                         new StringValue(), new IntValue(), new StringValue(), new IntValue()
                     };
 
-            assertNotNull(format.nextRecord(values));
+            Assertions.assertNotNull(format.nextRecord(values));
 
             try {
                 format.nextRecord(values);
-                fail("Input format accepted on invalid input.");
+                Assertions.fail("Input format accepted on invalid input.");
             } catch (ParseException ignored) {
             }
         } catch (Exception ex) {
-            fail("Test failed due to a " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            Assertions.fail(
+                    "Test failed due to a "
+                            + ex.getClass().getSimpleName()
+                            + ": "
+                            + ex.getMessage());
         }
     }
 
@@ -558,10 +586,14 @@ public class GenericCsvInputFormatTest {
                         new StringValue(), new IntValue(), new StringValue(), new IntValue()
                     };
 
-            assertNotNull(format.nextRecord(values));
-            assertNull(format.nextRecord(values));
+            Assertions.assertNotNull(format.nextRecord(values));
+            Assertions.assertNull(format.nextRecord(values));
         } catch (Exception ex) {
-            fail("Test failed due to a " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            Assertions.fail(
+                    "Test failed due to a "
+                            + ex.getClass().getSimpleName()
+                            + ": "
+                            + ex.getMessage());
         }
     }
 
@@ -589,12 +621,16 @@ public class GenericCsvInputFormatTest {
 
             Value[] values = new Value[] {new StringValue(), new IntValue()};
 
-            assertNotNull(format.nextRecord(values));
-            assertNull(format.nextRecord(values));
-            assertNull(format.nextRecord(values));
-            assertNotNull(format.nextRecord(values));
+            Assertions.assertNotNull(format.nextRecord(values));
+            Assertions.assertNull(format.nextRecord(values));
+            Assertions.assertNull(format.nextRecord(values));
+            Assertions.assertNotNull(format.nextRecord(values));
         } catch (Exception ex) {
-            fail("Test failed due to a " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            Assertions.fail(
+                    "Test failed due to a "
+                            + ex.getClass().getSimpleName()
+                            + ": "
+                            + ex.getMessage());
         }
     }
 
@@ -649,13 +685,13 @@ public class GenericCsvInputFormatTest {
             values = format.nextRecord(values);
 
             // validate results
-            assertNotNull(values);
+            Assertions.assertNotNull(values);
             for (int i = 0; i < records.length; i++) {
-                assertEquals(records[i], values[i]);
+                Assertions.assertEquals(records[i], values[i]);
             }
 
-            assertNull(format.nextRecord(values));
-            assertTrue(format.reachedEnd());
+            Assertions.assertNull(format.nextRecord(values));
+            Assertions.assertTrue(format.reachedEnd());
         }
 
         format.close();
@@ -678,25 +714,29 @@ public class GenericCsvInputFormatTest {
             Value[] values = new Value[] {new StringValue(), new StringValue(), new StringValue()};
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals("abc", ((StringValue) values[0]).getValue());
-            assertEquals("def", ((StringValue) values[1]).getValue());
-            assertEquals("ghijk", ((StringValue) values[2]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals("abc", ((StringValue) values[0]).getValue());
+            Assertions.assertEquals("def", ((StringValue) values[1]).getValue());
+            Assertions.assertEquals("ghijk", ((StringValue) values[2]).getValue());
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals("abc", ((StringValue) values[0]).getValue());
-            assertEquals("", ((StringValue) values[1]).getValue());
-            assertEquals("hhg", ((StringValue) values[2]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals("abc", ((StringValue) values[0]).getValue());
+            Assertions.assertEquals("", ((StringValue) values[1]).getValue());
+            Assertions.assertEquals("hhg", ((StringValue) values[2]).getValue());
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals("", ((StringValue) values[0]).getValue());
-            assertEquals("", ((StringValue) values[1]).getValue());
-            assertEquals("", ((StringValue) values[2]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals("", ((StringValue) values[0]).getValue());
+            Assertions.assertEquals("", ((StringValue) values[1]).getValue());
+            Assertions.assertEquals("", ((StringValue) values[2]).getValue());
 
         } catch (Exception ex) {
-            fail("Test failed due to a " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            Assertions.fail(
+                    "Test failed due to a "
+                            + ex.getClass().getSimpleName()
+                            + ": "
+                            + ex.getMessage());
         }
     }
 
@@ -718,17 +758,21 @@ public class GenericCsvInputFormatTest {
             Value[] values = new Value[] {new StringValue(), new StringValue()};
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals("ab\\\"c", ((StringValue) values[0]).getValue());
-            assertEquals("def", ((StringValue) values[1]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals("ab\\\"c", ((StringValue) values[0]).getValue());
+            Assertions.assertEquals("def", ((StringValue) values[1]).getValue());
 
             values = format.nextRecord(values);
-            assertNotNull(values);
-            assertEquals("ghijk", ((StringValue) values[0]).getValue());
-            assertEquals("abc", ((StringValue) values[1]).getValue());
+            Assertions.assertNotNull(values);
+            Assertions.assertEquals("ghijk", ((StringValue) values[0]).getValue());
+            Assertions.assertEquals("abc", ((StringValue) values[1]).getValue());
 
         } catch (Exception ex) {
-            fail("Test failed due to a " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            Assertions.fail(
+                    "Test failed due to a "
+                            + ex.getClass().getSimpleName()
+                            + ": "
+                            + ex.getMessage());
         }
     }
 
@@ -758,12 +802,16 @@ public class GenericCsvInputFormatTest {
                     };
 
             // first line is skipped as header
-            assertNotNull(format.nextRecord(values)); //  first row (= second line)
-            assertNotNull(format.nextRecord(values)); // second row (= third line)
-            assertNull(format.nextRecord(values)); // exhausted
-            assertTrue(format.reachedEnd()); // exhausted
+            Assertions.assertNotNull(format.nextRecord(values)); //  first row (= second line)
+            Assertions.assertNotNull(format.nextRecord(values)); // second row (= third line)
+            Assertions.assertNull(format.nextRecord(values)); // exhausted
+            Assertions.assertTrue(format.reachedEnd()); // exhausted
         } catch (Exception ex) {
-            fail("Test failed due to a " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            Assertions.fail(
+                    "Test failed due to a "
+                            + ex.getClass().getSimpleName()
+                            + ": "
+                            + ex.getMessage());
         }
     }
 
@@ -795,16 +843,20 @@ public class GenericCsvInputFormatTest {
                     };
 
             // first line is skipped as header
-            assertNotNull(format.nextRecord(values)); //  first row (= second line)
+            Assertions.assertNotNull(format.nextRecord(values)); //  first row (= second line)
 
             try {
                 format.nextRecord(values);
-                fail("Format accepted invalid line.");
+                Assertions.fail("Format accepted invalid line.");
             } catch (ParseException e) {
                 // as we expected
             }
         } catch (Exception ex) {
-            fail("Test failed due to a " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            Assertions.fail(
+                    "Test failed due to a "
+                            + ex.getClass().getSimpleName()
+                            + ": "
+                            + ex.getMessage());
         }
     }
 

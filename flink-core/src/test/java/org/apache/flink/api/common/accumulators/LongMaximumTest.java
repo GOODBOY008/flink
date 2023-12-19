@@ -18,16 +18,15 @@
 
 package org.apache.flink.api.common.accumulators;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class LongMaximumTest {
 
     @Test
     public void testGet() {
         LongMaximum max = new LongMaximum();
-        assertEquals(Long.MIN_VALUE, max.getLocalValue().longValue());
+        Assertions.assertEquals(Long.MIN_VALUE, max.getLocalValue().longValue());
     }
 
     @Test
@@ -36,10 +35,10 @@ public class LongMaximumTest {
         long value = 9876543210L;
 
         max.add(value);
-        assertEquals(value, max.getLocalValue().longValue());
+        Assertions.assertEquals(value, max.getLocalValue().longValue());
 
         max.resetLocal();
-        assertEquals(Long.MIN_VALUE, max.getLocalValue().longValue());
+        Assertions.assertEquals(Long.MIN_VALUE, max.getLocalValue().longValue());
     }
 
     @Test
@@ -51,7 +50,7 @@ public class LongMaximumTest {
         max.add(-9876543210L);
         max.add(-1234567890);
 
-        assertEquals(9876543210L, max.getLocalValue().longValue());
+        Assertions.assertEquals(9876543210L, max.getLocalValue().longValue());
     }
 
     @Test
@@ -63,10 +62,10 @@ public class LongMaximumTest {
         max2.add(5678909876543210123L);
 
         max2.merge(max1);
-        assertEquals(5678909876543210123L, max2.getLocalValue().longValue());
+        Assertions.assertEquals(5678909876543210123L, max2.getLocalValue().longValue());
 
         max1.merge(max2);
-        assertEquals(5678909876543210123L, max1.getLocalValue().longValue());
+        Assertions.assertEquals(5678909876543210123L, max1.getLocalValue().longValue());
     }
 
     @Test
@@ -77,6 +76,6 @@ public class LongMaximumTest {
         max.add(value);
 
         LongMaximum clone = max.clone();
-        assertEquals(value, clone.getLocalValue().longValue());
+        Assertions.assertEquals(value, clone.getLocalValue().longValue());
     }
 }

@@ -24,8 +24,8 @@ import org.apache.flink.core.memory.DataInputView;
 import org.apache.flink.core.memory.DataOutputSerializer;
 import org.apache.flink.core.memory.DataOutputView;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -54,7 +54,7 @@ public class CompositeTypeSerializerSnapshotTest {
                         testNestedSerializers,
                         OuterSchemaCompatibility.COMPATIBLE_AS_IS);
 
-        Assert.assertTrue(compatibility.isIncompatible());
+        Assertions.assertTrue(compatibility.isIncompatible());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class CompositeTypeSerializerSnapshotTest {
                         testNestedSerializers,
                         OuterSchemaCompatibility.COMPATIBLE_AS_IS);
 
-        Assert.assertTrue(compatibility.isCompatibleAfterMigration());
+        Assertions.assertTrue(compatibility.isCompatibleAfterMigration());
     }
 
     @Test
@@ -89,17 +89,19 @@ public class CompositeTypeSerializerSnapshotTest {
                         testNestedSerializers,
                         OuterSchemaCompatibility.COMPATIBLE_AS_IS);
 
-        Assert.assertTrue(compatibility.isCompatibleWithReconfiguredSerializer());
+        Assertions.assertTrue(compatibility.isCompatibleWithReconfiguredSerializer());
 
         TestCompositeTypeSerializer reconfiguredSerializer =
                 (TestCompositeTypeSerializer) compatibility.getReconfiguredSerializer();
         TypeSerializer<?>[] reconfiguredNestedSerializers =
                 reconfiguredSerializer.getNestedSerializers();
         // nested serializer at index 1 should strictly be a ReconfiguredNestedSerializer
-        Assert.assertTrue(reconfiguredNestedSerializers[0].getClass() == NestedSerializer.class);
-        Assert.assertTrue(
+        Assertions.assertTrue(
+                reconfiguredNestedSerializers[0].getClass() == NestedSerializer.class);
+        Assertions.assertTrue(
                 reconfiguredNestedSerializers[1].getClass() == ReconfiguredNestedSerializer.class);
-        Assert.assertTrue(reconfiguredNestedSerializers[2].getClass() == NestedSerializer.class);
+        Assertions.assertTrue(
+                reconfiguredNestedSerializers[2].getClass() == NestedSerializer.class);
     }
 
     @Test
@@ -115,7 +117,7 @@ public class CompositeTypeSerializerSnapshotTest {
                         testNestedSerializers,
                         OuterSchemaCompatibility.COMPATIBLE_AS_IS);
 
-        Assert.assertTrue(compatibility.isCompatibleAsIs());
+        Assertions.assertTrue(compatibility.isCompatibleAsIs());
     }
 
     @Test
@@ -132,7 +134,7 @@ public class CompositeTypeSerializerSnapshotTest {
 
         // even though nested serializers are compatible, incompatibility of the outer
         // snapshot should have higher precedence in the final result
-        Assert.assertTrue(compatibility.isIncompatible());
+        Assertions.assertTrue(compatibility.isIncompatible());
     }
 
     @Test
@@ -149,7 +151,7 @@ public class CompositeTypeSerializerSnapshotTest {
 
         // even though nested serializers can be compatible with reconfiguration, the outer
         // snapshot requiring migration should have higher precedence in the final result
-        Assert.assertTrue(compatibility.isCompatibleAfterMigration());
+        Assertions.assertTrue(compatibility.isCompatibleAfterMigration());
     }
 
     @Test
@@ -171,7 +173,7 @@ public class CompositeTypeSerializerSnapshotTest {
                         OuterSchemaCompatibility.COMPATIBLE_AS_IS);
 
         // arity mismatch in the nested serializers should return incompatible as the result
-        Assert.assertTrue(compatibility.isIncompatible());
+        Assertions.assertTrue(compatibility.isIncompatible());
     }
 
     private TypeSerializerSchemaCompatibility<String>
@@ -231,13 +233,13 @@ public class CompositeTypeSerializerSnapshotTest {
         // now, restore the composite type serializer;
         // the restored nested serializer should be a RestoredNestedSerializer
         testSerializer = (TestCompositeTypeSerializer) testSerializerSnapshot.restoreSerializer();
-        Assert.assertTrue(
+        Assertions.assertTrue(
                 testSerializer.getNestedSerializers()[0].getClass()
                         == RestoredNestedSerializer.class);
-        Assert.assertTrue(
+        Assertions.assertTrue(
                 testSerializer.getNestedSerializers()[1].getClass()
                         == RestoredNestedSerializer.class);
-        Assert.assertTrue(
+        Assertions.assertTrue(
                 testSerializer.getNestedSerializers()[2].getClass()
                         == RestoredNestedSerializer.class);
     }
@@ -391,7 +393,7 @@ public class CompositeTypeSerializerSnapshotTest {
         public void readOuterSnapshot(
                 int readOuterSnapshotVersion, DataInputView in, ClassLoader userCodeClassLoader)
                 throws IOException {
-            Assert.assertEquals(getCurrentOuterSnapshotVersion(), readOuterSnapshotVersion);
+            Assertions.assertEquals(getCurrentOuterSnapshotVersion(), readOuterSnapshotVersion);
             this.mockOuterSchemaCompatibility = OuterSchemaCompatibility.values()[in.readInt()];
         }
 
