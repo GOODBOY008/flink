@@ -21,28 +21,27 @@ package org.apache.flink.api.java.typeutils.runtime;
 import org.apache.flink.core.memory.DataInputView;
 import org.apache.flink.util.TestLogger;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.junit.Assert.assertEquals;
-
 /** Unit test for {@link DataInputViewStream}. */
 public class DataInputViewStreamTest extends TestLogger {
 
     @Test
-    public void testSkip() throws IOException {
+    void testSkip() throws IOException {
         final TestInputStream inputStream = new TestInputStream();
         try (TestDataInputView dataInputView = new TestDataInputView(inputStream)) {
             try (DataInputViewStream dataInputViewStream = new DataInputViewStream(dataInputView)) {
-                assertEquals(1, dataInputViewStream.skip(1));
-                assertEquals(1, inputStream.skipped);
+                Assertions.assertEquals(1, dataInputViewStream.skip(1));
+                Assertions.assertEquals(1, inputStream.skipped);
 
                 final long bigNumberToSkip = 1024L + 2L * Integer.MAX_VALUE;
-                assertEquals(bigNumberToSkip, dataInputViewStream.skip(bigNumberToSkip));
-                assertEquals(1 + bigNumberToSkip, inputStream.skipped);
+                Assertions.assertEquals(bigNumberToSkip, dataInputViewStream.skip(bigNumberToSkip));
+                Assertions.assertEquals(1 + bigNumberToSkip, inputStream.skipped);
             }
         }
     }
@@ -55,7 +54,7 @@ public class DataInputViewStreamTest extends TestLogger {
         }
 
         @Override
-        public void skipBytesToRead(int numBytes) throws IOException {
+        public void skipBytesToRead(int numBytes) {
             throw new UnsupportedOperationException("Not properly implemented.");
         }
     }
@@ -66,7 +65,7 @@ public class DataInputViewStreamTest extends TestLogger {
         long skipped = 0;
 
         @Override
-        public int read() throws IOException {
+        public int read() {
             return 0;
         }
 

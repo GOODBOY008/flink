@@ -29,7 +29,8 @@ import org.apache.flink.api.common.typeutils.TypeSerializer;
 import org.apache.flink.api.java.tuple.Tuple1;
 import org.apache.flink.api.java.tuple.Tuple2;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -41,8 +42,6 @@ import static org.apache.flink.api.common.typeinfo.BasicTypeInfo.FLOAT_TYPE_INFO
 import static org.apache.flink.api.common.typeinfo.BasicTypeInfo.INT_TYPE_INFO;
 import static org.apache.flink.api.common.typeinfo.BasicTypeInfo.LONG_TYPE_INFO;
 import static org.apache.flink.api.common.typeinfo.BasicTypeInfo.STRING_TYPE_INFO;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for extracting {@link org.apache.flink.api.common.typeinfo.TypeInformation} from types
@@ -51,70 +50,68 @@ import static org.junit.Assert.assertTrue;
 public class TypeInfoFactoryTest {
 
     @Test
-    public void testSimpleType() {
+    void testSimpleType() {
         TypeInformation<?> ti = TypeExtractor.createTypeInfo(IntLike.class);
-        assertEquals(INT_TYPE_INFO, ti);
+        Assertions.assertEquals(INT_TYPE_INFO, ti);
 
         ti = TypeExtractor.getForClass(IntLike.class);
-        assertEquals(INT_TYPE_INFO, ti);
+        Assertions.assertEquals(INT_TYPE_INFO, ti);
 
         ti = TypeExtractor.getForObject(new IntLike());
-        assertEquals(INT_TYPE_INFO, ti);
+        Assertions.assertEquals(INT_TYPE_INFO, ti);
     }
 
     @Test
-    public void testMyEitherGenericType() {
+    void testMyEitherGenericType() {
         MapFunction<Boolean, MyEither<Boolean, String>> f = new MyEitherMapper<>();
         TypeInformation<?> ti = TypeExtractor.getMapReturnTypes(f, BOOLEAN_TYPE_INFO);
-        assertTrue(ti instanceof EitherTypeInfo);
+      Assertions.assertInstanceOf(EitherTypeInfo.class, ti);
         EitherTypeInfo eti = (EitherTypeInfo) ti;
-        assertEquals(BOOLEAN_TYPE_INFO, eti.getLeftType());
-        assertEquals(STRING_TYPE_INFO, eti.getRightType());
+        Assertions.assertEquals(BOOLEAN_TYPE_INFO, eti.getLeftType());
+        Assertions.assertEquals(STRING_TYPE_INFO, eti.getRightType());
     }
 
     @Test
-    public void testMyOptionGenericType() {
+    void testMyOptionGenericType() {
         TypeInformation<MyOption<Tuple2<Boolean, String>>> inTypeInfo =
-                new MyOptionTypeInfo<>(
-                        new TupleTypeInfo<Tuple2<Boolean, String>>(
-                                BOOLEAN_TYPE_INFO, STRING_TYPE_INFO));
+                new MyOptionTypeInfo<>(new TupleTypeInfo<>(BOOLEAN_TYPE_INFO, STRING_TYPE_INFO));
         MapFunction<MyOption<Tuple2<Boolean, String>>, MyOption<Tuple2<Boolean, Boolean>>> f =
                 new MyOptionMapper<>();
         TypeInformation<?> ti = TypeExtractor.getMapReturnTypes(f, inTypeInfo);
-        assertTrue(ti instanceof MyOptionTypeInfo);
+      Assertions.assertInstanceOf(MyOptionTypeInfo.class, ti);
         MyOptionTypeInfo oti = (MyOptionTypeInfo) ti;
-        assertTrue(oti.getInnerType() instanceof TupleTypeInfo);
+      Assertions.assertInstanceOf(TupleTypeInfo.class, oti.getInnerType());
         TupleTypeInfo tti = (TupleTypeInfo) oti.getInnerType();
-        assertEquals(BOOLEAN_TYPE_INFO, tti.getTypeAt(0));
-        assertEquals(BOOLEAN_TYPE_INFO, tti.getTypeAt(1));
+        Assertions.assertEquals(BOOLEAN_TYPE_INFO, tti.getTypeAt(0));
+        Assertions.assertEquals(BOOLEAN_TYPE_INFO, tti.getTypeAt(1));
     }
 
     @Test
-    public void testMyTuple() {
+    void testMyTuple() {
         TypeInformation<Tuple1<MyTuple<Double, String>>> inTypeInfo =
-                new TupleTypeInfo<>(new MyTupleTypeInfo(DOUBLE_TYPE_INFO, STRING_TYPE_INFO));
+                new TupleTypeInfo<>(new MyTupleTypeInfo<>(DOUBLE_TYPE_INFO, STRING_TYPE_INFO));
         MapFunction<Tuple1<MyTuple<Double, String>>, Tuple1<MyTuple<Boolean, Double>>> f =
                 new MyTupleMapperL2<>();
         TypeInformation<?> ti = TypeExtractor.getMapReturnTypes(f, inTypeInfo);
-        assertTrue(ti instanceof TupleTypeInfo);
+      Assertions.assertInstanceOf(TupleTypeInfo.class, ti);
         TupleTypeInfo<?> tti = (TupleTypeInfo<?>) ti;
-        assertTrue(tti.getTypeAt(0) instanceof MyTupleTypeInfo);
+      Assertions.assertInstanceOf(MyTupleTypeInfo.class, tti.getTypeAt(0));
         MyTupleTypeInfo mtti = (MyTupleTypeInfo) tti.getTypeAt(0);
-        assertEquals(BOOLEAN_TYPE_INFO, mtti.getField0());
-        assertEquals(DOUBLE_TYPE_INFO, mtti.getField1());
+        Assertions.assertEquals(BOOLEAN_TYPE_INFO, mtti.getField0());
+        Assertions.assertEquals(DOUBLE_TYPE_INFO, mtti.getField1());
     }
 
     @Test
-    public void testMyTupleHierarchy() {
+    void testMyTupleHierarchy() {
         TypeInformation<?> ti = TypeExtractor.createTypeInfo(MyTuple2.class);
-        assertTrue(ti instanceof MyTupleTypeInfo);
+      Assertions.assertInstanceOf(MyTupleTypeInfo.class, ti);
         MyTupleTypeInfo<?, ?> mtti = (MyTupleTypeInfo) ti;
-        assertEquals(STRING_TYPE_INFO, mtti.getField0());
-        assertEquals(BOOLEAN_TYPE_INFO, mtti.getField1());
+        Assertions.assertEquals(STRING_TYPE_INFO, mtti.getField0());
+        Assertions.assertEquals(BOOLEAN_TYPE_INFO, mtti.getField1());
     }
 
     @Test
-    public void testMyTupleHierarchyWithInference() {
+    void testMyTupleHierarchyWithInference() {
         TypeInformation<Tuple1<MyTuple3<Tuple1<Float>>>> inTypeInfo =
                 new TupleTypeInfo<>(
                         new MyTupleTypeInfo<>(
@@ -123,46 +120,47 @@ public class TypeInfoFactoryTest {
         MapFunction<Tuple1<MyTuple3<Tuple1<Float>>>, Tuple1<MyTuple3<Tuple2<Float, String>>>> f =
                 new MyTuple3Mapper<>();
         TypeInformation ti = TypeExtractor.getMapReturnTypes(f, inTypeInfo);
-        assertTrue(ti instanceof TupleTypeInfo);
+      Assertions.assertInstanceOf(TupleTypeInfo.class, ti);
         TupleTypeInfo<?> tti = (TupleTypeInfo) ti;
-        assertTrue(tti.getTypeAt(0) instanceof MyTupleTypeInfo);
+      Assertions.assertInstanceOf(MyTupleTypeInfo.class, tti.getTypeAt(0));
         MyTupleTypeInfo mtti = (MyTupleTypeInfo) tti.getTypeAt(0);
-        assertEquals(new TupleTypeInfo<>(FLOAT_TYPE_INFO, STRING_TYPE_INFO), mtti.getField0());
-        assertEquals(BOOLEAN_TYPE_INFO, mtti.getField1());
+        Assertions.assertEquals(
+                new TupleTypeInfo<>(FLOAT_TYPE_INFO, STRING_TYPE_INFO), mtti.getField0());
+        Assertions.assertEquals(BOOLEAN_TYPE_INFO, mtti.getField1());
     }
 
     @Test
-    public void testWithFieldTypeInfoAnnotation() {
+    void testWithFieldTypeInfoAnnotation() {
         TypeInformation<WithFieldTypeInfoAnnotation<Double, String>> typeWithAnnotation =
                 TypeInformation.of(new TypeHint<WithFieldTypeInfoAnnotation<Double, String>>() {});
         TypeInformation<WithoutFieldTypeInfoAnnotation<Double, String>> typeWithoutAnnotation =
                 TypeInformation.of(
                         new TypeHint<WithoutFieldTypeInfoAnnotation<Double, String>>() {});
 
-        assertTrue(typeWithAnnotation instanceof PojoTypeInfo);
-        assertTrue(typeWithoutAnnotation instanceof PojoTypeInfo);
+      Assertions.assertInstanceOf(PojoTypeInfo.class, typeWithAnnotation);
+      Assertions.assertInstanceOf(PojoTypeInfo.class, typeWithoutAnnotation);
         PojoTypeInfo<?> pojoTypeWithAnnotation = (PojoTypeInfo<?>) typeWithAnnotation;
         PojoTypeInfo<?> pojoTypeWithoutAnnotation = (PojoTypeInfo<?>) typeWithoutAnnotation;
 
         // field outerEither
-        assertTrue(pojoTypeWithAnnotation.getTypeAt(1) instanceof EitherTypeInfo);
-        assertTrue(pojoTypeWithoutAnnotation.getTypeAt(1) instanceof GenericTypeInfo);
+      Assertions.assertInstanceOf(EitherTypeInfo.class, pojoTypeWithAnnotation.getTypeAt(1));
+      Assertions.assertInstanceOf(GenericTypeInfo.class, pojoTypeWithoutAnnotation.getTypeAt(1));
         // field id: type info from field annotation that overrides the class annotation:
-        assertEquals(LONG_TYPE_INFO, pojoTypeWithAnnotation.getTypeAt(0));
-        assertEquals(INT_TYPE_INFO, pojoTypeWithoutAnnotation.getTypeAt(0));
+        Assertions.assertEquals(LONG_TYPE_INFO, pojoTypeWithAnnotation.getTypeAt(0));
+        Assertions.assertEquals(INT_TYPE_INFO, pojoTypeWithoutAnnotation.getTypeAt(0));
 
         MapFunction<Boolean, WithFieldTypeInfoAnnotation<Boolean, String>> f =
                 new WithFieldTypeInfoAnnotationMapper<>();
         TypeInformation<?> ti = TypeExtractor.getMapReturnTypes(f, BOOLEAN_TYPE_INFO);
-        assertTrue(ti instanceof PojoTypeInfo);
+      Assertions.assertInstanceOf(PojoTypeInfo.class, ti);
         PojoTypeInfo<?> tiPojo = (PojoTypeInfo<?>) ti;
         // field outerEither
-        assertTrue(tiPojo.getTypeAt(1) instanceof EitherTypeInfo);
+      Assertions.assertInstanceOf(EitherTypeInfo.class, tiPojo.getTypeAt(1));
         EitherTypeInfo eti = (EitherTypeInfo) tiPojo.getTypeAt(1);
-        assertEquals(BOOLEAN_TYPE_INFO, eti.getLeftType());
-        assertEquals(STRING_TYPE_INFO, eti.getRightType());
+        Assertions.assertEquals(BOOLEAN_TYPE_INFO, eti.getLeftType());
+        Assertions.assertEquals(STRING_TYPE_INFO, eti.getRightType());
         // field id: type info from field annotation that overrides the class annotation:
-        assertEquals(LONG_TYPE_INFO, tiPojo.getTypeAt(0));
+        Assertions.assertEquals(LONG_TYPE_INFO, tiPojo.getTypeAt(0));
     }
 
     @Test(expected = InvalidTypesException.class)
@@ -185,8 +183,7 @@ public class TypeInfoFactoryTest {
             implements MapFunction<
                     Tuple1<MyTuple3<Tuple1<Y>>>, Tuple1<MyTuple3<Tuple2<Y, String>>>> {
         @Override
-        public Tuple1<MyTuple3<Tuple2<Y, String>>> map(Tuple1<MyTuple3<Tuple1<Y>>> value)
-                throws Exception {
+        public Tuple1<MyTuple3<Tuple2<Y, String>>> map(Tuple1<MyTuple3<Tuple1<Y>>> value) {
             return null;
         }
     }
@@ -201,14 +198,14 @@ public class TypeInfoFactoryTest {
 
     public static class MyFaultyMapper2<T> implements MapFunction<MyFaulty<T>, MyFaulty<T>> {
         @Override
-        public MyFaulty<T> map(MyFaulty<T> value) throws Exception {
+        public MyFaulty<T> map(MyFaulty<T> value) {
             return null;
         }
     }
 
     public static class MyFaultyMapper<T> implements MapFunction<T, MyFaulty<T>> {
         @Override
-        public MyFaulty<T> map(T value) throws Exception {
+        public MyFaulty<T> map(T value) {
             return null;
         }
     }
@@ -285,7 +282,7 @@ public class TypeInfoFactoryTest {
     public static class MyTupleMapperL1<A, B>
             implements MapFunction<Tuple1<MyTuple<A, String>>, Tuple1<MyTuple<B, A>>> {
         @Override
-        public Tuple1<MyTuple<B, A>> map(Tuple1<MyTuple<A, String>> value) throws Exception {
+        public Tuple1<MyTuple<B, A>> map(Tuple1<MyTuple<A, String>> value) {
             return null;
         }
     }
@@ -309,8 +306,8 @@ public class TypeInfoFactoryTest {
     }
 
     public static class MyTupleTypeInfo<T0, T1> extends TypeInformation<MyTuple<T0, T1>> {
-        private TypeInformation field0;
-        private TypeInformation field1;
+        private final TypeInformation field0;
+        private final TypeInformation field1;
 
         public TypeInformation getField0() {
             return field0;
@@ -392,7 +389,7 @@ public class TypeInfoFactoryTest {
     public static class MyOptionMapper<T>
             implements MapFunction<MyOption<Tuple2<T, String>>, MyOption<Tuple2<T, T>>> {
         @Override
-        public MyOption<Tuple2<T, T>> map(MyOption<Tuple2<T, String>> value) throws Exception {
+        public MyOption<Tuple2<T, T>> map(MyOption<Tuple2<T, String>> value) {
             return null;
         }
     }
@@ -488,7 +485,7 @@ public class TypeInfoFactoryTest {
 
     public static class MyEitherMapper<T> implements MapFunction<T, MyEither<T, String>> {
         @Override
-        public MyEither<T, String> map(T value) throws Exception {
+        public MyEither<T, String> map(T value) {
             return null;
         }
     }
@@ -551,7 +548,7 @@ public class TypeInfoFactoryTest {
     public static class WithFieldTypeInfoAnnotationMapper<T>
             implements MapFunction<T, WithFieldTypeInfoAnnotation<T, String>> {
         @Override
-        public WithFieldTypeInfoAnnotation<T, String> map(T value) throws Exception {
+        public WithFieldTypeInfoAnnotation<T, String> map(T value) {
             return null;
         }
     }

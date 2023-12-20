@@ -35,49 +35,29 @@ class TupleComparatorTTT1Test
         extends TupleComparatorTestBase<
                 Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>> {
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") final
     Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>[] dataISD =
             new Tuple3[] {
-                new Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>(
-                        new Tuple2<String, Double>("hello", 1.0),
-                        new Tuple2<Long, Long>(1L, 1L),
-                        new Tuple2<Integer, Long>(4, -10L)),
-                new Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>(
-                        new Tuple2<String, Double>("hello", 2.0),
-                        new Tuple2<Long, Long>(1L, 2L),
-                        new Tuple2<Integer, Long>(4, -5L)),
-                new Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>(
-                        new Tuple2<String, Double>("hello", 3.0),
-                        new Tuple2<Long, Long>(1L, 3L),
-                        new Tuple2<Integer, Long>(4, 0L)),
-                new Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>(
-                        new Tuple2<String, Double>("hello", 3.5),
-                        new Tuple2<Long, Long>(1L, 4L),
-                        new Tuple2<Integer, Long>(4, 5L)),
-                new Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>(
-                        new Tuple2<String, Double>("hello", 4325.12),
-                        new Tuple2<Long, Long>(1L, 5L),
-                        new Tuple2<Integer, Long>(4, 15L)),
-                new Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>(
-                        new Tuple2<String, Double>("world", 1.0),
-                        new Tuple2<Long, Long>(2L, 4L),
-                        new Tuple2<Integer, Long>(45, -5L)),
-                new Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>(
-                        new Tuple2<String, Double>("world", 2.0),
-                        new Tuple2<Long, Long>(2L, 6L),
-                        new Tuple2<Integer, Long>(45, 5L)),
-                new Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>(
-                        new Tuple2<String, Double>("world", 3.0),
-                        new Tuple2<Long, Long>(2L, 8L),
-                        new Tuple2<Integer, Long>(323, 2L)),
-                new Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>(
-                        new Tuple2<String, Double>("world", 3.5),
-                        new Tuple2<Long, Long>(2L, 9L),
-                        new Tuple2<Integer, Long>(323, 5L)),
-                new Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>(
-                        new Tuple2<String, Double>("world", 4325.12),
-                        new Tuple2<Long, Long>(2L, 123L),
-                        new Tuple2<Integer, Long>(555, 1L))
+                new Tuple3<>(
+                        new Tuple2<>("hello", 1.0), new Tuple2<>(1L, 1L), new Tuple2<>(4, -10L)),
+                new Tuple3<>(
+                        new Tuple2<>("hello", 2.0), new Tuple2<>(1L, 2L), new Tuple2<>(4, -5L)),
+                new Tuple3<>(new Tuple2<>("hello", 3.0), new Tuple2<>(1L, 3L), new Tuple2<>(4, 0L)),
+                new Tuple3<>(new Tuple2<>("hello", 3.5), new Tuple2<>(1L, 4L), new Tuple2<>(4, 5L)),
+                new Tuple3<>(
+                        new Tuple2<>("hello", 4325.12), new Tuple2<>(1L, 5L), new Tuple2<>(4, 15L)),
+                new Tuple3<>(
+                        new Tuple2<>("world", 1.0), new Tuple2<>(2L, 4L), new Tuple2<>(45, -5L)),
+                new Tuple3<>(
+                        new Tuple2<>("world", 2.0), new Tuple2<>(2L, 6L), new Tuple2<>(45, 5L)),
+                new Tuple3<>(
+                        new Tuple2<>("world", 3.0), new Tuple2<>(2L, 8L), new Tuple2<>(323, 2L)),
+                new Tuple3<>(
+                        new Tuple2<>("world", 3.5), new Tuple2<>(2L, 9L), new Tuple2<>(323, 5L)),
+                new Tuple3<>(
+                        new Tuple2<>("world", 4325.12),
+                        new Tuple2<>(2L, 123L),
+                        new Tuple2<>(555, 1L))
             };
 
     @SuppressWarnings("unchecked")
@@ -85,8 +65,7 @@ class TupleComparatorTTT1Test
     protected TupleComparator<
                     Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>>
             createComparator(boolean ascending) {
-        return new TupleComparator<
-                Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>>(
+        return new TupleComparator<>(
                 new int[] {0},
                 new TypeComparator[] {
                     new TupleComparator<Tuple2<String, Double>>(
@@ -99,17 +78,17 @@ class TupleComparatorTTT1Test
                             })
                 },
                 new TypeSerializer[] {
-                    new TupleSerializer<Tuple2<String, Double>>(
+                    new TupleSerializer<>(
                             (Class<Tuple2<String, Double>>) (Class<?>) Tuple2.class,
                             new TypeSerializer[] {
                                 StringSerializer.INSTANCE, DoubleSerializer.INSTANCE
                             }),
-                    new TupleSerializer<Tuple2<Long, Long>>(
+                    new TupleSerializer<>(
                             (Class<Tuple2<Long, Long>>) (Class<?>) Tuple2.class,
                             new TypeSerializer[] {
                                 LongSerializer.INSTANCE, LongSerializer.INSTANCE
                             }),
-                    new TupleSerializer<Tuple2<Integer, Long>>(
+                    new TupleSerializer<>(
                             (Class<Tuple2<Integer, Long>>) (Class<?>) Tuple2.class,
                             new TypeSerializer[] {IntSerializer.INSTANCE, LongSerializer.INSTANCE})
                 });
@@ -120,22 +99,21 @@ class TupleComparatorTTT1Test
     protected TupleSerializer<
                     Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>>
             createSerializer() {
-        return new TupleSerializer<
-                Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>>(
+        return new TupleSerializer<>(
                 (Class<Tuple3<Tuple2<String, Double>, Tuple2<Long, Long>, Tuple2<Integer, Long>>>)
                         (Class<?>) Tuple3.class,
                 new TypeSerializer[] {
-                    new TupleSerializer<Tuple2<String, Double>>(
+                    new TupleSerializer<>(
                             (Class<Tuple2<String, Double>>) (Class<?>) Tuple2.class,
                             new TypeSerializer[] {
                                 StringSerializer.INSTANCE, DoubleSerializer.INSTANCE
                             }),
-                    new TupleSerializer<Tuple2<Long, Long>>(
+                    new TupleSerializer<>(
                             (Class<Tuple2<Long, Long>>) (Class<?>) Tuple2.class,
                             new TypeSerializer[] {
                                 LongSerializer.INSTANCE, LongSerializer.INSTANCE
                             }),
-                    new TupleSerializer<Tuple2<Integer, Long>>(
+                    new TupleSerializer<>(
                             (Class<Tuple2<Integer, Long>>) (Class<?>) Tuple2.class,
                             new TypeSerializer[] {IntSerializer.INSTANCE, LongSerializer.INSTANCE})
                 });
@@ -157,8 +135,7 @@ class TupleComparatorTTT1Test
             // Check whether field is of type Tuple2 because assertEquals must be called on the non
             // Tuple2 fields.
             if (should.getField(x) instanceof Tuple2) {
-                this.deepEquals(
-                        message, (Tuple2<?, ?>) should.getField(x), (Tuple2<?, ?>) is.getField(x));
+                this.deepEquals(message, should.getField(x), (Tuple2<?, ?>) is.getField(x));
             } else {
                 assertThat((Object) is.getField(x)).as(message).isEqualTo(should.getField(x));
             }

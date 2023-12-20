@@ -21,7 +21,7 @@ package org.apache.flink.configuration;
 import org.apache.flink.util.TestLogger;
 
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -72,7 +72,7 @@ public class ConfigurationParsingInvalidFormatsTest extends TestLogger {
     @Rule public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void testInvalidStringParsingWithGetOptional() {
+    void testInvalidStringParsingWithGetOptional() {
         Configuration configuration = new Configuration();
         configuration.setString(option.key(), invalidString);
 
@@ -84,7 +84,7 @@ public class ConfigurationParsingInvalidFormatsTest extends TestLogger {
     }
 
     @Test
-    public void testInvalidStringParsingWithGet() {
+    void testInvalidStringParsingWithGet() {
         Configuration configuration = new Configuration();
         configuration.setString(option.key(), invalidString);
 

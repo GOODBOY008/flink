@@ -28,13 +28,10 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.io.Serializable;
-
-import static org.junit.Assert.fail;
 
 /**
  * This tests that the {@link KryoSerializer} properly fails when accessed by two threads
@@ -43,31 +40,31 @@ import static org.junit.Assert.fail;
  * <p><b>Important:</b> This test only works if assertions are activated (-ea) on the JVM when
  * running tests.
  */
-public class KryoSerializerConcurrencyTest {
+class KryoSerializerConcurrencyTest {
 
     @Test
-    public void testDuplicateSerializerWithDefaultSerializerClass() {
+    void testDuplicateSerializerWithDefaultSerializerClass() {
         ExecutionConfig executionConfig = new ExecutionConfig();
         executionConfig.addDefaultKryoSerializer(WrappedString.class, TestSerializer.class);
         runDuplicateSerializerTest(executionConfig);
     }
 
     @Test
-    public void testDuplicateSerializerWithDefaultSerializerInstance() {
+    void testDuplicateSerializerWithDefaultSerializerInstance() {
         ExecutionConfig executionConfig = new ExecutionConfig();
         executionConfig.addDefaultKryoSerializer(WrappedString.class, new TestSerializer());
         runDuplicateSerializerTest(executionConfig);
     }
 
     @Test
-    public void testDuplicateSerializerWithRegisteredSerializerClass() {
+    void testDuplicateSerializerWithRegisteredSerializerClass() {
         ExecutionConfig executionConfig = new ExecutionConfig();
         executionConfig.registerTypeWithKryoSerializer(WrappedString.class, TestSerializer.class);
         runDuplicateSerializerTest(executionConfig);
     }
 
     @Test
-    public void testDuplicateSerializerWithRegisteredSerializerInstance() {
+    void testDuplicateSerializerWithRegisteredSerializerInstance() {
         ExecutionConfig executionConfig = new ExecutionConfig();
         executionConfig.registerTypeWithKryoSerializer(WrappedString.class, new TestSerializer());
         runDuplicateSerializerTest(executionConfig);
@@ -83,15 +80,15 @@ public class KryoSerializerConcurrencyTest {
         String copyWithOriginal = original.copy(testString).content;
         String copyWithDuplicate = duplicate.copy(testString).content;
 
-        Assert.assertTrue(copyWithOriginal.startsWith(testString.content));
-        Assert.assertTrue(copyWithDuplicate.startsWith(testString.content));
+        Assertions.assertTrue(copyWithOriginal.startsWith(testString.content));
+        Assertions.assertTrue(copyWithDuplicate.startsWith(testString.content));
 
         // check that both serializer instances have appended a different identity hash
-        Assert.assertNotEquals(copyWithOriginal, copyWithDuplicate);
+        Assertions.assertNotEquals(copyWithOriginal, copyWithDuplicate);
     }
 
     @Test
-    public void testConcurrentUseOfSerializer() throws Exception {
+    void testConcurrentUseOfSerializer() throws Exception {
         final KryoSerializer<String> serializer =
                 new KryoSerializer<>(String.class, new ExecutionConfig());
 
@@ -115,7 +112,7 @@ public class KryoSerializerConcurrencyTest {
         // this should fail with an exception
         try {
             serializer.serialize("value", regularOut);
-            fail("should have failed with an exception");
+            Assertions.fail("should have failed with an exception");
         } catch (IllegalStateException e) {
             // expected
         } finally {
@@ -139,7 +136,7 @@ public class KryoSerializerConcurrencyTest {
         }
 
         @Override
-        public void write(byte[] b, int off, int len) throws IOException {
+        public void write(byte[] b, int off, int len) {
             blocker.blockNonInterruptible();
         }
     }

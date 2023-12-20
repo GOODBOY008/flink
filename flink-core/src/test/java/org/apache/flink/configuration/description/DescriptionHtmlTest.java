@@ -18,16 +18,16 @@
 
 package org.apache.flink.configuration.description;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.apache.flink.configuration.description.LinkElement.link;
 import static org.apache.flink.configuration.description.TextElement.text;
-import static org.junit.Assert.assertEquals;
 
 /** Tests for {@link Description} and formatting with {@link HtmlFormatter}. */
 public class DescriptionHtmlTest {
     @Test
-    public void testDescriptionWithLink() {
+    void testDescriptionWithLink() {
         Description description =
                 Description.builder()
                         .text("This is a text with a link %s", link("https://somepage", "to here"))
@@ -35,13 +35,13 @@ public class DescriptionHtmlTest {
 
         String formattedDescription = new HtmlFormatter().format(description);
 
-        assertEquals(
+        Assertions.assertEquals(
                 "This is a text with a link <a href=\"https://somepage\">" + "to here</a>",
                 formattedDescription);
     }
 
     @Test
-    public void testDescriptionWithPercents() {
+    void testDescriptionWithPercents() {
         Description description =
                 Description.builder()
                         .text("This is a text that has some percentage value of 20%.")
@@ -49,11 +49,12 @@ public class DescriptionHtmlTest {
 
         String formattedDescription = new HtmlFormatter().format(description);
 
-        assertEquals("This is a text that has some percentage value of 20%.", formattedDescription);
+        Assertions.assertEquals(
+                "This is a text that has some percentage value of 20%.", formattedDescription);
     }
 
     @Test
-    public void testDescriptionWithMultipleLinks() {
+    void testDescriptionWithMultipleLinks() {
         Description description =
                 Description.builder()
                         .text(
@@ -63,14 +64,14 @@ public class DescriptionHtmlTest {
 
         String formattedDescription = new HtmlFormatter().format(description);
 
-        assertEquals(
+        Assertions.assertEquals(
                 "This is a text with a link <a href=\"https://somepage\">to here</a> and another "
                         + "<a href=\"https://link\">https://link</a>",
                 formattedDescription);
     }
 
     @Test
-    public void testDescriptionWithList() {
+    void testDescriptionWithList() {
         Description description =
                 Description.builder()
                         .text("This is some list: ")
@@ -83,7 +84,7 @@ public class DescriptionHtmlTest {
 
         String formattedDescription = new HtmlFormatter().format(description);
 
-        assertEquals(
+        Assertions.assertEquals(
                 "This is some list: <ul><li><a href=\"http://first_link\">http://first_link"
                         + "</a></li><li>this is second element of list "
                         + "with a <a href=\"https://link\">https://link</a></li></ul>",
@@ -91,7 +92,7 @@ public class DescriptionHtmlTest {
     }
 
     @Test
-    public void testDescriptionWithLineBreak() {
+    void testDescriptionWithLineBreak() {
         Description description =
                 Description.builder()
                         .text("This is first line.")
@@ -101,11 +102,12 @@ public class DescriptionHtmlTest {
 
         String formattedDescription = new HtmlFormatter().format(description);
 
-        assertEquals("This is first line.<br />This is second line.", formattedDescription);
+        Assertions.assertEquals(
+                "This is first line.<br />This is second line.", formattedDescription);
     }
 
     @Test
-    public void testDescriptionWithListAndEscaping() {
+    void testDescriptionWithListAndEscaping() {
         Description description =
                 Description.builder()
                         .text("This is some list: ")
@@ -114,7 +116,7 @@ public class DescriptionHtmlTest {
 
         String formattedDescription = new HtmlFormatter().format(description);
 
-        assertEquals(
+        Assertions.assertEquals(
                 "This is some list: <ul><li>this is first element with illegal character '&gt;' and '&lt;'</li></ul>",
                 formattedDescription);
     }

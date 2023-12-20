@@ -35,7 +35,6 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -51,8 +50,8 @@ class ExecutionConfigTest {
     @Test
     void testDoubleTypeRegistration() {
         ExecutionConfig config = new ExecutionConfig();
-        List<Class<?>> types = Arrays.<Class<?>>asList(Double.class, Integer.class, Double.class);
-        List<Class<?>> expectedTypes = Arrays.<Class<?>>asList(Double.class, Integer.class);
+        List<Class<?>> types = Arrays.asList(Double.class, Integer.class, Double.class);
+        List<Class<?>> expectedTypes = Arrays.asList(Double.class, Integer.class);
 
         for (Class<?> tpe : types) {
             config.registerKryoType(tpe);
@@ -102,7 +101,7 @@ class ExecutionConfigTest {
     }
 
     @Test
-    void testExecutionConfigSerialization() throws IOException, ClassNotFoundException {
+    void testExecutionConfigSerialization() throws Exception {
         final Random r = new Random();
 
         final int parallelism = 1 + r.nextInt(10);

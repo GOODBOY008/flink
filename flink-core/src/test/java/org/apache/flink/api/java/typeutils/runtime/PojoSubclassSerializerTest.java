@@ -32,7 +32,7 @@ import java.util.Random;
 /** A test for the {@link PojoSerializer}. */
 class PojoSubclassSerializerTest
         extends SerializerTestBase<PojoSubclassSerializerTest.TestUserClassBase> {
-    private TypeInformation<TestUserClassBase> type =
+    private final TypeInformation<TestUserClassBase> type =
             TypeExtractor.getForClass(TestUserClassBase.class);
 
     @Override
@@ -68,7 +68,7 @@ class PojoSubclassSerializerTest
 
     @Override
     @Test
-    public void testInstantiate() {
+    void testInstantiate() {
         // don't do anything, since the PojoSerializer with subclass will return null
     }
 
@@ -98,10 +98,7 @@ class PojoSubclassSerializerTest
             if (dumm1 != otherTUC.dumm1) {
                 return false;
             }
-            if (!dumm2.equals(otherTUC.dumm2)) {
-                return false;
-            }
-            return true;
+            return dumm2.equals(otherTUC.dumm2);
         }
     }
 
@@ -127,10 +124,7 @@ class PojoSubclassSerializerTest
             if (!dumm2.equals(otherTUC.dumm2)) {
                 return false;
             }
-            if (dumm3 != otherTUC.dumm3) {
-                return false;
-            }
-            return true;
+            return dumm3 == otherTUC.dumm3;
         }
     }
 
@@ -156,15 +150,12 @@ class PojoSubclassSerializerTest
             if (!dumm2.equals(otherTUC.dumm2)) {
                 return false;
             }
-            if (dumm4 != otherTUC.dumm4) {
-                return false;
-            }
-            return true;
+            return dumm4 == otherTUC.dumm4;
         }
     }
 
     public static class TestUserClass3 extends TestUserClassBase {
-        public float dumm4;
+        public final float dumm4;
 
         public TestUserClass3(int dumm1, String dumm2, float dumm4) {
             super(dumm1, dumm2);
@@ -183,10 +174,7 @@ class PojoSubclassSerializerTest
             if (!dumm2.equals(otherTUC.dumm2)) {
                 return false;
             }
-            if (dumm4 != otherTUC.dumm4) {
-                return false;
-            }
-            return true;
+            return dumm4 == otherTUC.dumm4;
         }
     }
 }

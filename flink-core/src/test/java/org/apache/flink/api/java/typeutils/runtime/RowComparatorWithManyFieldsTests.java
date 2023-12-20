@@ -28,6 +28,8 @@ import org.apache.flink.types.Row;
 
 import org.junit.jupiter.api.BeforeAll;
 
+import java.util.Arrays;
+
 import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,11 +48,9 @@ class RowComparatorWithManyFieldsTests extends ComparatorTestBase<Row> {
             };
 
     @BeforeAll
-    static void setUp() throws Exception {
+    static void setUp() {
         TypeInformation<?>[] fieldTypes = new TypeInformation[numberOfFields];
-        for (int i = 0; i < numberOfFields; i++) {
-            fieldTypes[i] = BasicTypeInfo.STRING_TYPE_INFO;
-        }
+      Arrays.fill(fieldTypes, BasicTypeInfo.STRING_TYPE_INFO);
         typeInfo = new RowTypeInfo(fieldTypes);
     }
 

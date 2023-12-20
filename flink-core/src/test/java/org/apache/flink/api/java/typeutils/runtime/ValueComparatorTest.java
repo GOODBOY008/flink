@@ -25,7 +25,7 @@ import org.apache.flink.types.StringValue;
 
 class ValueComparatorTest extends ComparatorTestBase<StringValue> {
 
-    StringValue[] data =
+    final StringValue[] data =
             new StringValue[] {
                 new StringValue(""),
                 new StringValue("Lorem Ipsum Dolor Omit Longer"),
@@ -39,12 +39,12 @@ class ValueComparatorTest extends ComparatorTestBase<StringValue> {
 
     @Override
     protected TypeComparator<StringValue> createComparator(boolean ascending) {
-        return new ValueComparator<StringValue>(ascending, StringValue.class);
+        return new ValueComparator<>(ascending, StringValue.class);
     }
 
     @Override
     protected TypeSerializer<StringValue> createSerializer() {
-        return new ValueSerializer<StringValue>(StringValue.class);
+        return new ValueSerializer<>(StringValue.class);
     }
 
     @Override

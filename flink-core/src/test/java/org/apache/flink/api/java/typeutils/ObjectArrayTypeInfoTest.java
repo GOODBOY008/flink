@@ -31,8 +31,7 @@ class ObjectArrayTypeInfoTest extends TypeInformationTestBase<ObjectArrayTypeInf
             ObjectArrayTypeInfo.getInfoFor(
                     TestClass[].class, new GenericTypeInfo<>(TestClass.class)),
             ObjectArrayTypeInfo.getInfoFor(
-                    TestClass[].class,
-                    new PojoTypeInfo<>(TestClass.class, new ArrayList<PojoField>()))
+                    TestClass[].class, new PojoTypeInfo<>(TestClass.class, new ArrayList<>()))
         };
     }
 

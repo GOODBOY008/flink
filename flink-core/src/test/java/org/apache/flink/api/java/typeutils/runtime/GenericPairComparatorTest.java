@@ -35,29 +35,29 @@ public class GenericPairComparatorTest
                 Tuple3<Integer, String, Double>, Tuple4<Integer, Float, Long, Double>> {
 
     @SuppressWarnings("unchecked")
-    private Tuple3<Integer, String, Double>[] dataISD =
+    private final Tuple3<Integer, String, Double>[] dataISD =
             new Tuple3[] {
-                new Tuple3<Integer, String, Double>(4, "hello", 20.0),
-                new Tuple3<Integer, String, Double>(4, "world", 23.2),
-                new Tuple3<Integer, String, Double>(5, "hello", 18.0),
-                new Tuple3<Integer, String, Double>(5, "world", 19.2),
-                new Tuple3<Integer, String, Double>(6, "hello", 16.0),
-                new Tuple3<Integer, String, Double>(6, "world", 17.2),
-                new Tuple3<Integer, String, Double>(7, "hello", 14.0),
-                new Tuple3<Integer, String, Double>(7, "world", 15.2)
+                new Tuple3<>(4, "hello", 20.0),
+                new Tuple3<>(4, "world", 23.2),
+                new Tuple3<>(5, "hello", 18.0),
+                new Tuple3<>(5, "world", 19.2),
+                new Tuple3<>(6, "hello", 16.0),
+                new Tuple3<>(6, "world", 17.2),
+                new Tuple3<>(7, "hello", 14.0),
+                new Tuple3<>(7, "world", 15.2)
             };
 
     @SuppressWarnings("unchecked")
-    private Tuple4<Integer, Float, Long, Double>[] dataIDL =
+    private final Tuple4<Integer, Float, Long, Double>[] dataIDL =
             new Tuple4[] {
-                new Tuple4<Integer, Float, Long, Double>(4, 0.11f, 14L, 20.0),
-                new Tuple4<Integer, Float, Long, Double>(4, 0.221f, 15L, 23.2),
-                new Tuple4<Integer, Float, Long, Double>(5, 0.33f, 15L, 18.0),
-                new Tuple4<Integer, Float, Long, Double>(5, 0.44f, 20L, 19.2),
-                new Tuple4<Integer, Float, Long, Double>(6, 0.55f, 20L, 16.0),
-                new Tuple4<Integer, Float, Long, Double>(6, 0.66f, 29L, 17.2),
-                new Tuple4<Integer, Float, Long, Double>(7, 0.77f, 29L, 14.0),
-                new Tuple4<Integer, Float, Long, Double>(7, 0.88f, 34L, 15.2)
+                new Tuple4<>(4, 0.11f, 14L, 20.0),
+                new Tuple4<>(4, 0.221f, 15L, 23.2),
+                new Tuple4<>(5, 0.33f, 15L, 18.0),
+                new Tuple4<>(5, 0.44f, 20L, 19.2),
+                new Tuple4<>(6, 0.55f, 20L, 16.0),
+                new Tuple4<>(6, 0.66f, 29L, 17.2),
+                new Tuple4<>(7, 0.77f, 29L, 14.0),
+                new Tuple4<>(7, 0.88f, 34L, 15.2)
             };
 
     @SuppressWarnings("rawtypes")
@@ -80,19 +80,15 @@ public class GenericPairComparatorTest
         TypeSerializer[] sers2 =
                 new TypeSerializer[] {IntSerializer.INSTANCE, DoubleSerializer.INSTANCE};
         TypeComparator<Tuple3<Integer, String, Double>> comp1 =
-                new TupleComparator<Tuple3<Integer, String, Double>>(fields1, comps1, sers1);
+                new TupleComparator<>(fields1, comps1, sers1);
         TypeComparator<Tuple4<Integer, Float, Long, Double>> comp2 =
-                new TupleComparator<Tuple4<Integer, Float, Long, Double>>(fields2, comps2, sers2);
-        return new GenericPairComparator<
-                Tuple3<Integer, String, Double>, Tuple4<Integer, Float, Long, Double>>(
-                comp1, comp2);
+                new TupleComparator<>(fields2, comps2, sers2);
+        return new GenericPairComparator<>(comp1, comp2);
     }
 
     @Override
     protected Tuple2<Tuple3<Integer, String, Double>[], Tuple4<Integer, Float, Long, Double>[]>
             getSortedTestData() {
-        return new Tuple2<
-                Tuple3<Integer, String, Double>[], Tuple4<Integer, Float, Long, Double>[]>(
-                dataISD, dataIDL);
+        return new Tuple2<>(dataISD, dataIDL);
     }
 }

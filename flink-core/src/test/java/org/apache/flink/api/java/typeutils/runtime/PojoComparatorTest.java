@@ -32,10 +32,10 @@ import java.util.Arrays;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PojoComparatorTest extends ComparatorTestBase<PojoContainingTuple> {
-    TypeInformation<PojoContainingTuple> type =
+    final TypeInformation<PojoContainingTuple> type =
             TypeExtractor.getForClass(PojoContainingTuple.class);
 
-    PojoContainingTuple[] data =
+    final PojoContainingTuple[] data =
             new PojoContainingTuple[] {
                 new PojoContainingTuple(1, 1L, 1L),
                 new PojoContainingTuple(2, 2L, 2L),
@@ -48,7 +48,7 @@ class PojoComparatorTest extends ComparatorTestBase<PojoContainingTuple> {
         assertThat(type).isInstanceOf(CompositeType.class);
         CompositeType<PojoContainingTuple> cType = (CompositeType<PojoContainingTuple>) type;
         ExpressionKeys<PojoContainingTuple> keys =
-                new ExpressionKeys<PojoContainingTuple>(new String[] {"theTuple.*"}, cType);
+                new ExpressionKeys<>(new String[] {"theTuple.*"}, cType);
         boolean[] orders = new boolean[keys.getNumberOfKeyFields()];
         Arrays.fill(orders, ascending);
         return cType.createComparator(

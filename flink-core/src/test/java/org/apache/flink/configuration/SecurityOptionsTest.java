@@ -19,10 +19,8 @@ package org.apache.flink.configuration;
 
 import org.apache.flink.util.TestLogger;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the {@link SecurityOptions}. */
 public class SecurityOptionsTest extends TestLogger {
@@ -30,27 +28,27 @@ public class SecurityOptionsTest extends TestLogger {
     /** Tests whether activation of internal / REST SSL evaluates the config flags correctly. */
     @SuppressWarnings("deprecation")
     @Test
-    public void checkEnableSSL() {
+    void checkEnableSSL() {
         // backwards compatibility
         Configuration oldConf = new Configuration();
         oldConf.setBoolean(SecurityOptions.SSL_ENABLED, true);
-        assertTrue(SecurityOptions.isInternalSSLEnabled(oldConf));
-        assertTrue(SecurityOptions.isRestSSLEnabled(oldConf));
+        Assertions.assertTrue(SecurityOptions.isInternalSSLEnabled(oldConf));
+        Assertions.assertTrue(SecurityOptions.isRestSSLEnabled(oldConf));
 
         // new options take precedence
         Configuration newOptions = new Configuration();
         newOptions.setBoolean(SecurityOptions.SSL_INTERNAL_ENABLED, true);
         newOptions.setBoolean(SecurityOptions.SSL_REST_ENABLED, false);
-        assertTrue(SecurityOptions.isInternalSSLEnabled(newOptions));
-        assertFalse(SecurityOptions.isRestSSLEnabled(newOptions));
+        Assertions.assertTrue(SecurityOptions.isInternalSSLEnabled(newOptions));
+        Assertions.assertFalse(SecurityOptions.isRestSSLEnabled(newOptions));
 
         // new options take precedence
         Configuration precedence = new Configuration();
         precedence.setBoolean(SecurityOptions.SSL_ENABLED, true);
         precedence.setBoolean(SecurityOptions.SSL_INTERNAL_ENABLED, false);
         precedence.setBoolean(SecurityOptions.SSL_REST_ENABLED, false);
-        assertFalse(SecurityOptions.isInternalSSLEnabled(precedence));
-        assertFalse(SecurityOptions.isRestSSLEnabled(precedence));
+        Assertions.assertFalse(SecurityOptions.isInternalSSLEnabled(precedence));
+        Assertions.assertFalse(SecurityOptions.isRestSSLEnabled(precedence));
     }
 
     /**
@@ -58,21 +56,21 @@ public class SecurityOptionsTest extends TestLogger {
      * correctly.
      */
     @Test
-    public void checkEnableRestSSLAuthentication() {
+    void checkEnableRestSSLAuthentication() {
         // SSL has to be enabled
         Configuration noSSLOptions = new Configuration();
         noSSLOptions.setBoolean(SecurityOptions.SSL_REST_ENABLED, false);
         noSSLOptions.setBoolean(SecurityOptions.SSL_REST_AUTHENTICATION_ENABLED, true);
-        assertFalse(SecurityOptions.isRestSSLAuthenticationEnabled(noSSLOptions));
+        Assertions.assertFalse(SecurityOptions.isRestSSLAuthenticationEnabled(noSSLOptions));
 
         // authentication is disabled by default
         Configuration defaultOptions = new Configuration();
         defaultOptions.setBoolean(SecurityOptions.SSL_REST_ENABLED, true);
-        assertFalse(SecurityOptions.isRestSSLAuthenticationEnabled(defaultOptions));
+        Assertions.assertFalse(SecurityOptions.isRestSSLAuthenticationEnabled(defaultOptions));
 
         Configuration options = new Configuration();
         options.setBoolean(SecurityOptions.SSL_REST_ENABLED, true);
         options.setBoolean(SecurityOptions.SSL_REST_AUTHENTICATION_ENABLED, true);
-        assertTrue(SecurityOptions.isRestSSLAuthenticationEnabled(options));
+        Assertions.assertTrue(SecurityOptions.isRestSSLAuthenticationEnabled(options));
     }
 }

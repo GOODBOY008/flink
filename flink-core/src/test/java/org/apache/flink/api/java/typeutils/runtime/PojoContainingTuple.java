@@ -29,7 +29,7 @@ public class PojoContainingTuple {
 
     public PojoContainingTuple(int i, long l1, long l2) {
         someInt = i;
-        theTuple = new Tuple2<Long, Long>(l1, l2);
+        theTuple = new Tuple2<>(l1, l2);
     }
 
     @Override

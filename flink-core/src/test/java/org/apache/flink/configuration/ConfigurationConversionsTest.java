@@ -21,9 +21,9 @@ package org.apache.flink.configuration;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -52,7 +52,7 @@ public class ConfigurationConversionsTest {
 
     private Configuration pc;
 
-    @Before
+    @BeforeEach
     public void init() {
         pc = new Configuration();
 
@@ -364,7 +364,7 @@ public class ConfigurationConversionsTest {
     @Parameterized.Parameter public TestSpec<?> testSpec;
 
     @Test
-    public void testConversions() throws Exception {
+    void testConversions() throws Exception {
         testSpec.getExpectedException()
                 .ifPresent(
                         exception -> {
@@ -425,7 +425,7 @@ public class ConfigurationConversionsTest {
         }
 
         public static <T> TestSpec<T> whenAccessed(ConfigurationAccessor<T> configurationAccessor) {
-            return new TestSpec<T>(configurationAccessor);
+            return new TestSpec<>(configurationAccessor);
         }
 
         public TestSpec<T> expect(Matcher<T> expected) {

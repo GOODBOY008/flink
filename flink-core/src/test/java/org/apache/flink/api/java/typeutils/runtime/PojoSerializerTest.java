@@ -51,7 +51,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /** A test for the {@link PojoSerializer}. */
 class PojoSerializerTest extends SerializerTestBase<PojoSerializerTest.TestUserClass> {
-    private TypeInformation<TestUserClass> type = TypeExtractor.getForClass(TestUserClass.class);
+    private final TypeInformation<TestUserClass> type =
+            TypeExtractor.getForClass(TestUserClass.class);
 
     @Override
     protected TypeSerializer<TestUserClass> createSerializer() {
@@ -170,11 +171,8 @@ class PojoSerializerTest extends SerializerTestBase<PojoSerializerTest.TestUserC
                 return false;
             }
 
-            if ((nestedClass == null && otherTUC.nestedClass != null)
-                    || (nestedClass != null && !nestedClass.equals(otherTUC.nestedClass))) {
-                return false;
-            }
-            return true;
+            return (nestedClass != null || otherTUC.nestedClass == null)
+                    && (nestedClass == null || nestedClass.equals(otherTUC.nestedClass));
         }
     }
 
@@ -246,7 +244,7 @@ class PojoSerializerTest extends SerializerTestBase<PojoSerializerTest.TestUserC
 
         // test with a simple, string-key first.
         PojoTypeInfo<TestUserClass> pType = (PojoTypeInfo<TestUserClass>) type;
-        List<FlatFieldDescriptor> result = new ArrayList<FlatFieldDescriptor>();
+        List<FlatFieldDescriptor> result = new ArrayList<>();
         pType.getFlatFields("nestedClass.dumm2", 0, result);
         int[] fields = new int[1]; // see below
         fields[0] = result.get(0).getPosition();
@@ -263,7 +261,7 @@ class PojoSerializerTest extends SerializerTestBase<PojoSerializerTest.TestUserC
                         new NestedTestUserClass(1, "haha", 4d, new int[] {5, 4, 3}));
         int pHash = pojoComp.hash(pojoTestRecord);
 
-        Tuple1<String> tupleTest = new Tuple1<String>("haha");
+        Tuple1<String> tupleTest = new Tuple1<>("haha");
         TupleTypeInfo<Tuple1<String>> tType =
                 (TupleTypeInfo<Tuple1<String>>) TypeExtractor.getForObject(tupleTest);
         TypeComparator<Tuple1<String>> tupleComp =
@@ -278,8 +276,7 @@ class PojoSerializerTest extends SerializerTestBase<PojoSerializerTest.TestUserC
                         "The hashing for tuples and pojos must be the same, so that they are mixable");
 
         Tuple3<Integer, String, Double> multiTupleTest =
-                new Tuple3<Integer, String, Double>(
-                        1, "haha", 4d); // its important here to use the same values.
+                new Tuple3<>(1, "haha", 4d); // its important here to use the same values.
         TupleTypeInfo<Tuple3<Integer, String, Double>> multiTupleType =
                 (TupleTypeInfo<Tuple3<Integer, String, Double>>)
                         TypeExtractor.getForObject(multiTupleTest);

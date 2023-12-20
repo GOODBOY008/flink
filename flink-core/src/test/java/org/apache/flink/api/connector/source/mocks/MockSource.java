@@ -27,7 +27,6 @@ import org.apache.flink.api.connector.source.SplitEnumerator;
 import org.apache.flink.api.connector.source.SplitEnumeratorContext;
 import org.apache.flink.core.io.SimpleVersionedSerializer;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -41,7 +40,7 @@ public class MockSource implements Source<Integer, MockSourceSplit, Set<MockSour
     private final int numSplits;
     private final MockSourceReader.WaitingForSplits readerWaitingForMoreSplits;
     private final boolean readerMarkIdleOnNoSplits;
-    protected List<MockSourceReader> createdReaders;
+    protected final List<MockSourceReader> createdReaders;
 
     public MockSource(Boundedness boundedness, int numSplits) {
         this(boundedness, numSplits, false, false);
@@ -94,8 +93,7 @@ public class MockSource implements Source<Integer, MockSourceSplit, Set<MockSour
 
     @Override
     public SplitEnumerator<MockSourceSplit, Set<MockSourceSplit>> restoreEnumerator(
-            SplitEnumeratorContext<MockSourceSplit> enumContext, Set<MockSourceSplit> checkpoint)
-            throws IOException {
+            SplitEnumeratorContext<MockSourceSplit> enumContext, Set<MockSourceSplit> checkpoint) {
         return new MockSplitEnumerator(checkpoint, enumContext);
     }
 
