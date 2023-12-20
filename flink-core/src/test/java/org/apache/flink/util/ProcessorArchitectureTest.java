@@ -18,24 +18,22 @@
 
 package org.apache.flink.util;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the {@link ProcessorArchitecture}. */
 public class ProcessorArchitectureTest {
 
     @Test
-    public void testArchitectureNotUnknown() {
+    void testArchitectureNotUnknown() {
         final ProcessorArchitecture arch = ProcessorArchitecture.getProcessorArchitecture();
-        assertNotEquals(ProcessorArchitecture.UNKNOWN, arch);
+        Assertions.assertNotEquals(ProcessorArchitecture.UNKNOWN, arch);
     }
 
     @Test
-    public void testNamesNotNull() {
+    void testNamesNotNull() {
         final ProcessorArchitecture arch = ProcessorArchitecture.getProcessorArchitecture();
-        assertNotNull(arch.getArchitectureName());
-        assertNotNull(arch.getAlternativeNames());
+        Assertions.assertNotNull(arch.getArchitectureName());
+        Assertions.assertNotNull(arch.getAlternativeNames());
     }
 }

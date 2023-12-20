@@ -20,8 +20,8 @@ package org.apache.flink.core.fs;
 
 import org.apache.flink.util.AbstractAutoCloseableRegistry;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nullable;
 
@@ -65,7 +65,7 @@ public class CloseableRegistryTest
     }
 
     @Test
-    public void testUnregisterAndCloseAll() throws IOException {
+    void testUnregisterAndCloseAll() throws IOException {
         try (CloseableRegistry closeableRegistry = new CloseableRegistry()) {
 
             int exTestSize = 5;
@@ -96,13 +96,13 @@ public class CloseableRegistryTest
                             checksum += Integer.parseInt(throwable.getMessage());
                         }
                         // Checksum is sum from 1..6 = 15
-                        Assert.assertEquals(15, checksum);
+                        Assertions.assertEquals(15, checksum);
                     });
 
             // Check that unregistered Closable isn't closed.
             TestClosable unregisteredClosable = new TestClosable();
             closeableRegistry.unregisterAndCloseAll(unregisteredClosable);
-            Assert.assertEquals(0, unregisteredClosable.getCallsToClose());
+            Assertions.assertEquals(0, unregisteredClosable.getCallsToClose());
         }
     }
 
@@ -119,7 +119,7 @@ public class CloseableRegistryTest
             closeableRegistry.unregisterAndCloseAll(
                     registeredClosableList.toArray(new Closeable[0]));
             if (exceptionCheck != null) {
-                Assert.fail("Exception expected");
+                Assertions.fail("Exception expected");
             }
         } catch (IOException expected) {
             if (exceptionCheck != null) {
@@ -128,7 +128,7 @@ public class CloseableRegistryTest
         }
 
         for (TestClosable testClosable : registeredClosableList) {
-            Assert.assertEquals(1, testClosable.getCallsToClose());
+            Assertions.assertEquals(1, testClosable.getCallsToClose());
             testClosable.resetCallsToClose();
         }
     }
@@ -150,7 +150,7 @@ public class CloseableRegistryTest
         @Override
         public void close() throws IOException {
             callsToClose.incrementAndGet();
-            if (exceptionMessageOnClose != null && exceptionMessageOnClose.length() > 0) {
+            if (exceptionMessageOnClose != null && !exceptionMessageOnClose.isEmpty()) {
                 throw new IOException(exceptionMessageOnClose);
             }
         }

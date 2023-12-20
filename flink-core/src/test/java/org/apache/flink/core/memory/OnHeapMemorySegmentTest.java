@@ -18,7 +18,7 @@
 
 package org.apache.flink.core.memory;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -26,11 +26,12 @@ import java.nio.ByteBuffer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 
 /** Tests for the {@link MemorySegment} in on-heap mode. */
 @RunWith(Parameterized.class)
-public class OnHeapMemorySegmentTest extends MemorySegmentTestBase {
+class OnHeapMemorySegmentTest extends MemorySegmentTestBase {
 
     public OnHeapMemorySegmentTest(int pageSize) {
         super(pageSize);
@@ -47,19 +48,19 @@ public class OnHeapMemorySegmentTest extends MemorySegmentTestBase {
     }
 
     @Test
-    public void testHeapSegmentSpecifics() {
+    void testHeapSegmentSpecifics() {
         final byte[] buffer = new byte[411];
         MemorySegment seg = new MemorySegment(buffer, null);
 
         assertFalse(seg.isFreed());
         assertFalse(seg.isOffHeap());
         assertEquals(buffer.length, seg.size());
-        assertTrue(buffer == seg.getArray());
+        assertSame(buffer, seg.getArray());
 
         ByteBuffer buf1 = seg.wrap(1, 2);
         ByteBuffer buf2 = seg.wrap(3, 4);
 
-        assertTrue(buf1 != buf2);
+        assertNotSame(buf1, buf2);
         assertEquals(1, buf1.position());
         assertEquals(3, buf1.limit());
         assertEquals(3, buf2.position());
@@ -67,7 +68,7 @@ public class OnHeapMemorySegmentTest extends MemorySegmentTestBase {
     }
 
     @Test
-    public void testReadOnlyByteBufferPut() {
+    void testReadOnlyByteBufferPut() {
         final byte[] buffer = new byte[100];
         MemorySegment seg = new MemorySegment(buffer, null);
 

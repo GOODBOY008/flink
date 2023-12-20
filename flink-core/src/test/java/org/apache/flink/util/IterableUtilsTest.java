@@ -18,14 +18,13 @@
 
 package org.apache.flink.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Queue;
 import java.util.stream.Stream;
-
-import static org.junit.Assert.assertTrue;
 
 /** Tests for the {@link IterableUtils}. */
 public class IterableUtilsTest extends TestLogger {
@@ -33,11 +32,11 @@ public class IterableUtilsTest extends TestLogger {
     private final Iterable<Integer> testIterable = Arrays.asList(1, 8, 5, 3, 8);
 
     @Test
-    public void testToStream() {
+    void testToStream() {
         Queue<Integer> deque = new ArrayDeque<>();
         testIterable.forEach(deque::add);
 
         Stream<Integer> stream = IterableUtils.toStream(testIterable);
-        assertTrue(stream.allMatch(value -> deque.poll().equals(value)));
+        Assertions.assertTrue(stream.allMatch(value -> deque.poll().equals(value)));
     }
 }

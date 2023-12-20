@@ -20,10 +20,10 @@ package org.apache.flink.core.memory;
 
 import org.apache.flink.configuration.ConfigConstants;
 
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
@@ -38,31 +38,31 @@ public class ByteArrayOutputStreamWithPosTest {
 
     private ByteArrayOutputStreamWithPos stream;
 
-    @Before
+    @BeforeEach
     public void setup() {
         stream = new ByteArrayOutputStreamWithPos(BUFFER_SIZE);
     }
 
     /** Test setting position which is exactly the same with the buffer size. */
     @Test
-    public void testSetPositionWhenBufferIsFull() throws Exception {
+    void testSetPositionWhenBufferIsFull() throws Exception {
         stream.write(new byte[BUFFER_SIZE]);
 
         // check whether the buffer is filled fully
-        Assert.assertEquals(BUFFER_SIZE, stream.getBuf().length);
+        Assertions.assertEquals(BUFFER_SIZE, stream.getBuf().length);
 
         // check current position is the end of the buffer
-        Assert.assertEquals(BUFFER_SIZE, stream.getPosition());
+        Assertions.assertEquals(BUFFER_SIZE, stream.getPosition());
 
         stream.setPosition(BUFFER_SIZE);
 
         // confirm current position is at where we expect.
-        Assert.assertEquals(BUFFER_SIZE, stream.getPosition());
+        Assertions.assertEquals(BUFFER_SIZE, stream.getPosition());
     }
 
     /** Test setting negative position. */
     @Test
-    public void testSetNegativePosition() throws Exception {
+    void testSetNegativePosition() throws Exception {
         stream.write(new byte[BUFFER_SIZE]);
 
         thrown.expect(IllegalArgumentException.class);
@@ -72,37 +72,38 @@ public class ByteArrayOutputStreamWithPosTest {
 
     /** Test setting position larger than buffer size. */
     @Test
-    public void testSetPositionLargerThanBufferSize() throws Exception {
+    void testSetPositionLargerThanBufferSize() throws Exception {
         // fully fill the buffer
         stream.write(new byte[BUFFER_SIZE]);
-        Assert.assertEquals(BUFFER_SIZE, stream.getBuf().length);
+        Assertions.assertEquals(BUFFER_SIZE, stream.getBuf().length);
 
         // expand the buffer by setting position beyond the buffer length
         stream.setPosition(BUFFER_SIZE + 1);
-        Assert.assertEquals(BUFFER_SIZE * 2, stream.getBuf().length);
-        Assert.assertEquals(BUFFER_SIZE + 1, stream.getPosition());
+        Assertions.assertEquals(BUFFER_SIZE * 2, stream.getBuf().length);
+        Assertions.assertEquals(BUFFER_SIZE + 1, stream.getPosition());
     }
 
     /** Test that toString returns a substring of the buffer with range(0, position). */
     @Test
-    public void testToString() throws IOException {
+    void testToString() throws IOException {
         byte[] data = "1234567890".getBytes(ConfigConstants.DEFAULT_CHARSET);
 
         ByteArrayOutputStreamWithPos stream = new ByteArrayOutputStreamWithPos(data.length);
 
         stream.write(data);
-        Assert.assertArrayEquals(data, stream.toString().getBytes(ConfigConstants.DEFAULT_CHARSET));
+        Assertions.assertArrayEquals(
+                data, stream.toString().getBytes(ConfigConstants.DEFAULT_CHARSET));
 
         for (int i = 0; i < data.length; i++) {
             stream.setPosition(i);
-            Assert.assertArrayEquals(
+            Assertions.assertArrayEquals(
                     Arrays.copyOf(data, i),
                     stream.toString().getBytes(ConfigConstants.DEFAULT_CHARSET));
         }
 
         // validate that the stored bytes are still tracked properly even when expanding array
         stream.setPosition(data.length + 1);
-        Assert.assertArrayEquals(
+        Assertions.assertArrayEquals(
                 Arrays.copyOf(data, data.length + 1),
                 stream.toString().getBytes(ConfigConstants.DEFAULT_CHARSET));
     }

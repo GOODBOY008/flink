@@ -19,9 +19,9 @@ package org.apache.flink.core.classloading;
 
 import org.apache.flink.util.TestLogger;
 
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class ComponentClassLoaderTest extends TestLogger {
 
     @ClassRule public static final TemporaryFolder TMP = new TemporaryFolder();
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws IOException {
         resourceToLoad = TMP.newFile("tmpfile").getName();
     }
@@ -74,7 +74,7 @@ public class ComponentClassLoaderTest extends TestLogger {
     }
 
     @Test
-    public void testOwnerFirstClassFoundIgnoresComponent() throws Exception {
+    void testOwnerFirstClassFoundIgnoresComponent() throws Exception {
         TestUrlClassLoader owner =
                 new TestUrlClassLoader(CLASS_TO_LOAD.getName(), CLASS_RETURNED_BY_OWNER);
 
@@ -91,7 +91,7 @@ public class ComponentClassLoaderTest extends TestLogger {
     }
 
     @Test
-    public void testOwnerFirstClassNotFoundFallsBackToComponent() throws Exception {
+    void testOwnerFirstClassNotFoundFallsBackToComponent() throws Exception {
         TestUrlClassLoader owner = new TestUrlClassLoader();
 
         final ComponentClassLoader componentClassLoader =
@@ -107,7 +107,7 @@ public class ComponentClassLoaderTest extends TestLogger {
     }
 
     @Test
-    public void testComponentFirstClassFoundIgnoresOwner() throws Exception {
+    void testComponentFirstClassFoundIgnoresOwner() throws Exception {
         TestUrlClassLoader owner =
                 new TestUrlClassLoader(CLASS_TO_LOAD.getName(), CLASS_RETURNED_BY_OWNER);
 
@@ -124,7 +124,7 @@ public class ComponentClassLoaderTest extends TestLogger {
     }
 
     @Test
-    public void testComponentFirstClassNotFoundFallsBackToOwner() throws Exception {
+    void testComponentFirstClassNotFoundFallsBackToOwner() throws Exception {
         TestUrlClassLoader owner =
                 new TestUrlClassLoader(NON_EXISTENT_CLASS_NAME, CLASS_RETURNED_BY_OWNER);
 
@@ -145,7 +145,7 @@ public class ComponentClassLoaderTest extends TestLogger {
     // ----------------------------------------------------------------------------------------------
 
     @Test
-    public void testComponentOnlyIsDefaultForResources() throws IOException {
+    void testComponentOnlyIsDefaultForResources() throws IOException {
         TestUrlClassLoader owner = new TestUrlClassLoader();
 
         final ComponentClassLoader componentClassLoader =
@@ -159,7 +159,7 @@ public class ComponentClassLoaderTest extends TestLogger {
     }
 
     @Test
-    public void testOwnerFirstResourceFoundIgnoresComponent() {
+    void testOwnerFirstResourceFoundIgnoresComponent() {
         TestUrlClassLoader owner =
                 new TestUrlClassLoader(resourceToLoad, RESOURCE_RETURNED_BY_OWNER);
 
@@ -176,7 +176,7 @@ public class ComponentClassLoaderTest extends TestLogger {
     }
 
     @Test
-    public void testOwnerFirstResourceNotFoundFallsBackToComponent() throws Exception {
+    void testOwnerFirstResourceNotFoundFallsBackToComponent() throws Exception {
         TestUrlClassLoader owner = new TestUrlClassLoader();
 
         final ComponentClassLoader componentClassLoader =
@@ -192,7 +192,7 @@ public class ComponentClassLoaderTest extends TestLogger {
     }
 
     @Test
-    public void testComponentFirstResourceFoundIgnoresOwner() throws Exception {
+    void testComponentFirstResourceFoundIgnoresOwner() throws Exception {
         TestUrlClassLoader owner =
                 new TestUrlClassLoader(resourceToLoad, RESOURCE_RETURNED_BY_OWNER);
 
@@ -209,7 +209,7 @@ public class ComponentClassLoaderTest extends TestLogger {
     }
 
     @Test
-    public void testComponentFirstResourceNotFoundFallsBackToOwner() {
+    void testComponentFirstResourceNotFoundFallsBackToOwner() {
         TestUrlClassLoader owner =
                 new TestUrlClassLoader(NON_EXISTENT_RESOURCE_NAME, RESOURCE_RETURNED_BY_OWNER);
 

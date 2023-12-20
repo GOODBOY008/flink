@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class IncrementalDelayRetryStrategyTest extends TestLogger {
 
     @Test
-    public void testGettersNotCapped() throws Exception {
+    void testGettersNotCapped() {
         RetryStrategy retryStrategy =
                 new IncrementalDelayRetryStrategy(
                         10, Duration.ofMillis(5L), Duration.ofMillis(4L), Duration.ofMillis(20L));
@@ -44,7 +44,7 @@ public class IncrementalDelayRetryStrategyTest extends TestLogger {
     }
 
     @Test
-    public void testGettersHitCapped() throws Exception {
+    void testGettersHitCapped() {
         RetryStrategy retryStrategy =
                 new IncrementalDelayRetryStrategy(
                         5, Duration.ofMillis(15L), Duration.ofMillis(10L), Duration.ofMillis(20L));
@@ -57,7 +57,7 @@ public class IncrementalDelayRetryStrategyTest extends TestLogger {
     }
 
     @Test
-    public void testGettersAtCap() throws Exception {
+    void testGettersAtCap() {
         RetryStrategy retryStrategy =
                 new IncrementalDelayRetryStrategy(
                         5, Duration.ofMillis(20L), Duration.ofMillis(5L), Duration.ofMillis(20L));
@@ -71,7 +71,7 @@ public class IncrementalDelayRetryStrategyTest extends TestLogger {
 
     /** Tests that getting a next RetryStrategy below zero remaining retries fails. */
     @Test
-    public void testRetryFailure() {
+    void testRetryFailure() {
         assertThatThrownBy(
                         () ->
                                 new IncrementalDelayRetryStrategy(

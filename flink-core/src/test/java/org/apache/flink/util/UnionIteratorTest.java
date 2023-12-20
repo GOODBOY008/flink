@@ -18,55 +18,51 @@
 
 package org.apache.flink.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
 /** Tests for the {@link UnionIterator}. */
 public class UnionIteratorTest {
 
     @Test
-    public void testUnion() {
+    void testUnion() {
         try {
             UnionIterator<Integer> iter = new UnionIterator<>();
 
             // should succeed and be empty
-            assertFalse(iter.iterator().hasNext());
+            Assertions.assertFalse(iter.iterator().hasNext());
 
             iter.clear();
 
             try {
                 iter.iterator().next();
-                fail("should fail with an exception");
+                Assertions.fail("should fail with an exception");
             } catch (NoSuchElementException e) {
                 // expected
             }
 
             iter.clear();
             iter.addList(Arrays.asList(1, 2, 3, 4, 5, 6, 7));
-            iter.addList(Collections.<Integer>emptyList());
+            iter.addList(Collections.emptyList());
             iter.addList(Arrays.asList(8, 9, 10, 11));
 
             int val = 1;
             for (int i : iter) {
-                assertEquals(val++, i);
+                Assertions.assertEquals(val++, i);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 
     @Test
-    public void testTraversableOnce() {
+    void testTraversableOnce() {
         try {
             UnionIterator<Integer> iter = new UnionIterator<>();
 
@@ -76,7 +72,7 @@ public class UnionIteratorTest {
             // should fail
             try {
                 iter.iterator();
-                fail("should fail with an exception");
+                Assertions.fail("should fail with an exception");
             } catch (TraversableOnceException e) {
                 // expected
             }
@@ -84,7 +80,7 @@ public class UnionIteratorTest {
             // should fail again
             try {
                 iter.iterator();
-                fail("should fail with an exception");
+                Assertions.fail("should fail with an exception");
             } catch (TraversableOnceException e) {
                 // expected
             }
@@ -98,7 +94,7 @@ public class UnionIteratorTest {
             // should fail
             try {
                 iter.iterator();
-                fail("should fail with an exception");
+                Assertions.fail("should fail with an exception");
             } catch (TraversableOnceException e) {
                 // expected
             }
@@ -106,7 +102,7 @@ public class UnionIteratorTest {
             // should fail again
             try {
                 iter.iterator();
-                fail("should fail with an exception");
+                Assertions.fail("should fail with an exception");
             } catch (TraversableOnceException e) {
                 // expected
             }
@@ -117,14 +113,14 @@ public class UnionIteratorTest {
 
             // should succeed
             Iterator<Integer> ints = iter.iterator();
-            assertNotNull(ints.next());
-            assertNotNull(ints.next());
-            assertNotNull(ints.next());
+            Assertions.assertNotNull(ints.next());
+            Assertions.assertNotNull(ints.next());
+            Assertions.assertNotNull(ints.next());
 
             // should fail if called in the middle of operations
             try {
                 iter.iterator();
-                fail("should fail with an exception");
+                Assertions.fail("should fail with an exception");
             } catch (TraversableOnceException e) {
                 // expected
             }
@@ -133,11 +129,11 @@ public class UnionIteratorTest {
             iter.clear();
 
             // should succeed again
-            assertFalse(iter.iterator().hasNext());
+            Assertions.assertFalse(iter.iterator().hasNext());
 
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 }

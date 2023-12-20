@@ -31,12 +31,12 @@ class LocalFileSystemBehaviorTest extends FileSystemBehaviorTestSuite {
     @TempDir private java.nio.file.Path tmp;
 
     @Override
-    protected FileSystem getFileSystem() throws Exception {
+    protected FileSystem getFileSystem() {
         return LocalFileSystem.getSharedInstance();
     }
 
     @Override
-    protected Path getBasePath() throws Exception {
+    protected Path getBasePath() {
         return new Path(tmp.toUri());
     }
 

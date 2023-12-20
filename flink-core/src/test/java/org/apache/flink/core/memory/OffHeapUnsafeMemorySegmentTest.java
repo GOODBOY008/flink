@@ -18,7 +18,7 @@
 
 package org.apache.flink.core.memory;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 
 /** Tests for the {@link MemorySegment} in off-heap mode using unsafe memory. */
 @RunWith(Parameterized.class)
-public class OffHeapUnsafeMemorySegmentTest extends MemorySegmentTestBase {
+class OffHeapUnsafeMemorySegmentTest extends MemorySegmentTestBase {
 
     public OffHeapUnsafeMemorySegmentTest(int pageSize) {
         super(pageSize);
@@ -54,7 +54,7 @@ public class OffHeapUnsafeMemorySegmentTest extends MemorySegmentTestBase {
     }
 
     @Test
-    public void testCallCleanerOnFree() {
+    void testCallCleanerOnFree() {
         final CompletableFuture<Void> cleanerFuture = new CompletableFuture<>();
         MemorySegmentFactory.allocateOffHeapUnsafeMemory(
                         10, null, () -> cleanerFuture.complete(null))
@@ -63,7 +63,7 @@ public class OffHeapUnsafeMemorySegmentTest extends MemorySegmentTestBase {
     }
 
     @Test
-    public void testCallCleanerOnceOnConcurrentFree() throws InterruptedException {
+    void testCallCleanerOnceOnConcurrentFree() throws InterruptedException {
         final AtomicInteger counter = new AtomicInteger(0);
         final Runnable cleaner =
                 () -> {

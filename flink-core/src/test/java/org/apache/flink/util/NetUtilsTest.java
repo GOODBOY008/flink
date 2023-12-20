@@ -21,8 +21,8 @@ package org.apache.flink.util;
 import org.apache.flink.configuration.IllegalConfigurationException;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
-import org.junit.Test;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -39,34 +39,34 @@ import java.util.Set;
 import static org.apache.flink.util.NetUtils.socketToUrl;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /** Tests for the {@link NetUtils}. */
 public class NetUtilsTest extends TestLogger {
 
     @Test
-    public void testCorrectHostnamePort() throws Exception {
+    void testCorrectHostnamePort() throws Exception {
         final URL url = new URL("http", "foo.com", 8080, "/index.html");
-        assertEquals(url, NetUtils.getCorrectHostnamePort("foo.com:8080/index.html"));
+        org.junit.jupiter.api.Assertions.assertEquals(
+                url, NetUtils.getCorrectHostnamePort("foo.com:8080/index.html"));
     }
 
     @Test
-    public void testCorrectHostnamePortWithHttpsScheme() throws Exception {
+    void testCorrectHostnamePortWithHttpsScheme() throws Exception {
         final URL url = new URL("https", "foo.com", 8080, "/some/other/path/index.html");
-        assertEquals(
+        org.junit.jupiter.api.Assertions.assertEquals(
                 url,
                 NetUtils.getCorrectHostnamePort("https://foo.com:8080/some/other/path/index.html"));
     }
 
     @Test
-    public void testParseHostPortAddress() {
+    void testParseHostPortAddress() {
         final InetSocketAddress socketAddress = new InetSocketAddress("foo.com", 8080);
-        assertEquals(socketAddress, NetUtils.parseHostPortAddress("foo.com:8080"));
+        org.junit.jupiter.api.Assertions.assertEquals(
+                socketAddress, NetUtils.parseHostPortAddress("foo.com:8080"));
     }
 
     @Test
-    public void testAcceptWithoutTimeoutSuppressesTimeoutException() throws IOException {
+    void testAcceptWithoutTimeoutSuppressesTimeoutException() throws IOException {
         // Validates that acceptWithoutTimeout suppresses all SocketTimeoutExceptions
         Socket expected = new Socket();
         ServerSocket serverSocket =
@@ -84,11 +84,12 @@ public class NetUtilsTest extends TestLogger {
                     }
                 };
 
-        assertEquals(expected, NetUtils.acceptWithoutTimeout(serverSocket));
+        org.junit.jupiter.api.Assertions.assertEquals(
+                expected, NetUtils.acceptWithoutTimeout(serverSocket));
     }
 
     @Test
-    public void testAcceptWithoutTimeoutDefaultTimeout() throws IOException {
+    void testAcceptWithoutTimeoutDefaultTimeout() throws IOException {
         // Default timeout (should be zero)
         final Socket expected = new Socket();
         try (final ServerSocket serverSocket =
@@ -98,12 +99,13 @@ public class NetUtilsTest extends TestLogger {
                         return expected;
                     }
                 }) {
-            assertEquals(expected, NetUtils.acceptWithoutTimeout(serverSocket));
+            org.junit.jupiter.api.Assertions.assertEquals(
+                    expected, NetUtils.acceptWithoutTimeout(serverSocket));
         }
     }
 
     @Test
-    public void testAcceptWithoutTimeoutZeroTimeout() throws IOException {
+    void testAcceptWithoutTimeoutZeroTimeout() throws IOException {
         // Explicitly sets a timeout of zero
         final Socket expected = new Socket();
         try (final ServerSocket serverSocket =
@@ -114,7 +116,8 @@ public class NetUtilsTest extends TestLogger {
                     }
                 }) {
             serverSocket.setSoTimeout(0);
-            assertEquals(expected, NetUtils.acceptWithoutTimeout(serverSocket));
+            org.junit.jupiter.api.Assertions.assertEquals(
+                    expected, NetUtils.acceptWithoutTimeout(serverSocket));
         }
     }
 
@@ -127,34 +130,36 @@ public class NetUtilsTest extends TestLogger {
     }
 
     @Test
-    public void testIPv4toURL() {
+    void testIPv4toURL() {
         try {
             final String addressString = "192.168.0.1";
 
             InetAddress address = InetAddress.getByName(addressString);
-            assertEquals(addressString, NetUtils.ipAddressToUrlString(address));
+            org.junit.jupiter.api.Assertions.assertEquals(
+                    addressString, NetUtils.ipAddressToUrlString(address));
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            org.junit.jupiter.api.Assertions.fail(e.getMessage());
         }
     }
 
     @Test
-    public void testIPv6toURL() {
+    void testIPv6toURL() {
         try {
             final String addressString = "2001:01db8:00:0:00:ff00:42:8329";
             final String normalizedAddress = "[2001:1db8::ff00:42:8329]";
 
             InetAddress address = InetAddress.getByName(addressString);
-            assertEquals(normalizedAddress, NetUtils.ipAddressToUrlString(address));
+            org.junit.jupiter.api.Assertions.assertEquals(
+                    normalizedAddress, NetUtils.ipAddressToUrlString(address));
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            org.junit.jupiter.api.Assertions.fail(e.getMessage());
         }
     }
 
     @Test
-    public void testIPv4URLEncoding() {
+    void testIPv4URLEncoding() {
         try {
             final String addressString = "10.244.243.12";
             final int port = 23453;
@@ -162,20 +167,21 @@ public class NetUtilsTest extends TestLogger {
             InetAddress address = InetAddress.getByName(addressString);
             InetSocketAddress socketAddress = new InetSocketAddress(address, port);
 
-            assertEquals(addressString, NetUtils.ipAddressToUrlString(address));
-            assertEquals(
+            org.junit.jupiter.api.Assertions.assertEquals(
+                    addressString, NetUtils.ipAddressToUrlString(address));
+            org.junit.jupiter.api.Assertions.assertEquals(
                     addressString + ':' + port,
                     NetUtils.ipAddressAndPortToUrlString(address, port));
-            assertEquals(
+            org.junit.jupiter.api.Assertions.assertEquals(
                     addressString + ':' + port, NetUtils.socketAddressToUrlString(socketAddress));
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            org.junit.jupiter.api.Assertions.fail(e.getMessage());
         }
     }
 
     @Test
-    public void testIPv6URLEncoding() {
+    void testIPv6URLEncoding() {
         try {
             final String addressString = "2001:db8:10:11:12:ff00:42:8329";
             final String bracketedAddressString = '[' + addressString + ']';
@@ -184,53 +190,55 @@ public class NetUtilsTest extends TestLogger {
             InetAddress address = InetAddress.getByName(addressString);
             InetSocketAddress socketAddress = new InetSocketAddress(address, port);
 
-            assertEquals(bracketedAddressString, NetUtils.ipAddressToUrlString(address));
-            assertEquals(
+            org.junit.jupiter.api.Assertions.assertEquals(
+                    bracketedAddressString, NetUtils.ipAddressToUrlString(address));
+            org.junit.jupiter.api.Assertions.assertEquals(
                     bracketedAddressString + ':' + port,
                     NetUtils.ipAddressAndPortToUrlString(address, port));
-            assertEquals(
+            org.junit.jupiter.api.Assertions.assertEquals(
                     bracketedAddressString + ':' + port,
                     NetUtils.socketAddressToUrlString(socketAddress));
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            org.junit.jupiter.api.Assertions.fail(e.getMessage());
         }
     }
 
     @Test
-    public void testFreePortRangeUtility() {
+    void testFreePortRangeUtility() {
         // inspired by Hadoop's example for "yarn.app.mapreduce.am.job.client.port-range"
         String rangeDefinition =
                 "50000-50050, 50100-50200,51234 "; // this also contains some whitespaces
         Iterator<Integer> portsIter = NetUtils.getPortRangeFromString(rangeDefinition);
         Set<Integer> ports = new HashSet<>();
         while (portsIter.hasNext()) {
-            Assert.assertTrue("Duplicate element", ports.add(portsIter.next()));
+            org.junit.jupiter.api.Assertions.assertTrue(
+                    ports.add(portsIter.next()), "Duplicate element");
         }
 
-        Assert.assertEquals(51 + 101 + 1, ports.size());
+        org.junit.jupiter.api.Assertions.assertEquals(51 + 101 + 1, ports.size());
         // check first range
-        Assert.assertThat(ports, hasItems(50000, 50001, 50002, 50050));
+        MatcherAssert.assertThat(ports, hasItems(50000, 50001, 50002, 50050));
         // check second range and last point
-        Assert.assertThat(ports, hasItems(50100, 50101, 50110, 50200, 51234));
+        MatcherAssert.assertThat(ports, hasItems(50100, 50101, 50110, 50200, 51234));
         // check that only ranges are included
-        Assert.assertThat(ports, not(hasItems(50051, 50052, 1337, 50201, 49999, 50099)));
+        MatcherAssert.assertThat(ports, not(hasItems(50051, 50052, 1337, 50201, 49999, 50099)));
 
         // test single port "range":
         portsIter = NetUtils.getPortRangeFromString(" 51234");
-        Assert.assertTrue(portsIter.hasNext());
-        Assert.assertEquals(51234, (int) portsIter.next());
-        Assert.assertFalse(portsIter.hasNext());
+        org.junit.jupiter.api.Assertions.assertTrue(portsIter.hasNext());
+        org.junit.jupiter.api.Assertions.assertEquals(51234, (int) portsIter.next());
+        org.junit.jupiter.api.Assertions.assertFalse(portsIter.hasNext());
 
         // test port list
         portsIter = NetUtils.getPortRangeFromString("5,1,2,3,4");
-        Assert.assertTrue(portsIter.hasNext());
-        Assert.assertEquals(5, (int) portsIter.next());
-        Assert.assertEquals(1, (int) portsIter.next());
-        Assert.assertEquals(2, (int) portsIter.next());
-        Assert.assertEquals(3, (int) portsIter.next());
-        Assert.assertEquals(4, (int) portsIter.next());
-        Assert.assertFalse(portsIter.hasNext());
+        org.junit.jupiter.api.Assertions.assertTrue(portsIter.hasNext());
+        org.junit.jupiter.api.Assertions.assertEquals(5, (int) portsIter.next());
+        org.junit.jupiter.api.Assertions.assertEquals(1, (int) portsIter.next());
+        org.junit.jupiter.api.Assertions.assertEquals(2, (int) portsIter.next());
+        org.junit.jupiter.api.Assertions.assertEquals(3, (int) portsIter.next());
+        org.junit.jupiter.api.Assertions.assertEquals(4, (int) portsIter.next());
+        org.junit.jupiter.api.Assertions.assertFalse(portsIter.hasNext());
 
         Throwable error = null;
 
@@ -240,7 +248,7 @@ public class NetUtilsTest extends TestLogger {
         } catch (Throwable t) {
             error = t;
         }
-        Assert.assertTrue(error instanceof NumberFormatException);
+      org.junit.jupiter.api.Assertions.assertInstanceOf(NumberFormatException.class, error);
         error = null;
 
         // incomplete range
@@ -249,7 +257,7 @@ public class NetUtilsTest extends TestLogger {
         } catch (Throwable t) {
             error = t;
         }
-        Assert.assertTrue(error instanceof NumberFormatException);
+      org.junit.jupiter.api.Assertions.assertInstanceOf(NumberFormatException.class, error);
         error = null;
 
         // incomplete range
@@ -258,7 +266,7 @@ public class NetUtilsTest extends TestLogger {
         } catch (Throwable t) {
             error = t;
         }
-        Assert.assertTrue(error instanceof NumberFormatException);
+      org.junit.jupiter.api.Assertions.assertInstanceOf(NumberFormatException.class, error);
         error = null;
 
         // empty range
@@ -267,7 +275,7 @@ public class NetUtilsTest extends TestLogger {
         } catch (Throwable t) {
             error = t;
         }
-        Assert.assertTrue(error instanceof NumberFormatException);
+      org.junit.jupiter.api.Assertions.assertInstanceOf(NumberFormatException.class, error);
 
         // invalid port
         try {
@@ -275,7 +283,7 @@ public class NetUtilsTest extends TestLogger {
         } catch (Throwable t) {
             error = t;
         }
-        Assert.assertTrue(error instanceof IllegalConfigurationException);
+      org.junit.jupiter.api.Assertions.assertInstanceOf(IllegalConfigurationException.class, error);
 
         // invalid start
         try {
@@ -283,7 +291,7 @@ public class NetUtilsTest extends TestLogger {
         } catch (Throwable t) {
             error = t;
         }
-        Assert.assertTrue(error instanceof IllegalConfigurationException);
+      org.junit.jupiter.api.Assertions.assertInstanceOf(IllegalConfigurationException.class, error);
 
         // invalid end
         try {
@@ -291,7 +299,7 @@ public class NetUtilsTest extends TestLogger {
         } catch (Throwable t) {
             error = t;
         }
-        Assert.assertTrue(error instanceof IllegalConfigurationException);
+      org.junit.jupiter.api.Assertions.assertInstanceOf(IllegalConfigurationException.class, error);
 
         // same range
         try {
@@ -299,16 +307,16 @@ public class NetUtilsTest extends TestLogger {
         } catch (Throwable t) {
             error = t;
         }
-        Assert.assertTrue(error instanceof IllegalConfigurationException);
+      org.junit.jupiter.api.Assertions.assertInstanceOf(IllegalConfigurationException.class, error);
     }
 
     @Test
-    public void testFormatAddress() {
+    void testFormatAddress() {
         {
             // null
             String host = null;
             int port = 42;
-            Assert.assertEquals(
+            org.junit.jupiter.api.Assertions.assertEquals(
                     "127.0.0.1" + ":" + port,
                     NetUtils.unresolvedHostAndPortToNormalizedString(host, port));
         }
@@ -316,7 +324,7 @@ public class NetUtilsTest extends TestLogger {
             // IPv4
             String host = "1.2.3.4";
             int port = 42;
-            Assert.assertEquals(
+            org.junit.jupiter.api.Assertions.assertEquals(
                     host + ":" + port,
                     NetUtils.unresolvedHostAndPortToNormalizedString(host, port));
         }
@@ -324,7 +332,7 @@ public class NetUtilsTest extends TestLogger {
             // IPv6
             String host = "2001:0db8:85a3:0000:0000:8a2e:0370:7334";
             int port = 42;
-            Assert.assertEquals(
+            org.junit.jupiter.api.Assertions.assertEquals(
                     "[2001:db8:85a3::8a2e:370:7334]:" + port,
                     NetUtils.unresolvedHostAndPortToNormalizedString(host, port));
         }
@@ -332,7 +340,7 @@ public class NetUtilsTest extends TestLogger {
             // [IPv6]
             String host = "[2001:0db8:85a3:0000:0000:8a2e:0370:7334]";
             int port = 42;
-            Assert.assertEquals(
+            org.junit.jupiter.api.Assertions.assertEquals(
                     "[2001:db8:85a3::8a2e:370:7334]:" + port,
                     NetUtils.unresolvedHostAndPortToNormalizedString(host, port));
         }
@@ -340,7 +348,7 @@ public class NetUtilsTest extends TestLogger {
             // Hostnames
             String host = "somerandomhostname";
             int port = 99;
-            Assert.assertEquals(
+            org.junit.jupiter.api.Assertions.assertEquals(
                     host + ":" + port,
                     NetUtils.unresolvedHostAndPortToNormalizedString(host, port));
         }
@@ -348,7 +356,7 @@ public class NetUtilsTest extends TestLogger {
             // Whitespace
             String host = "  somerandomhostname  ";
             int port = 99;
-            Assert.assertEquals(
+            org.junit.jupiter.api.Assertions.assertEquals(
                     host.trim() + ":" + port,
                     NetUtils.unresolvedHostAndPortToNormalizedString(host, port));
         }
@@ -358,14 +366,14 @@ public class NetUtilsTest extends TestLogger {
             int port = 42;
             try {
                 NetUtils.unresolvedHostAndPortToNormalizedString(host, port);
-                fail();
+                org.junit.jupiter.api.Assertions.fail();
             } catch (Exception ignored) {
             }
             // Illegal hostnames
             host = "illegalhost:fasf";
             try {
                 NetUtils.unresolvedHostAndPortToNormalizedString(host, port);
-                fail();
+                org.junit.jupiter.api.Assertions.fail();
             } catch (Exception ignored) {
             }
         }
@@ -375,7 +383,7 @@ public class NetUtilsTest extends TestLogger {
             int port = -1;
             try {
                 NetUtils.unresolvedHostAndPortToNormalizedString(host, port);
-                fail();
+                org.junit.jupiter.api.Assertions.fail();
             } catch (Exception ignored) {
             }
         }
@@ -383,14 +391,14 @@ public class NetUtilsTest extends TestLogger {
             // lower case conversion of hostnames
             String host = "CamelCaseHostName";
             int port = 99;
-            Assert.assertEquals(
+            org.junit.jupiter.api.Assertions.assertEquals(
                     host.toLowerCase() + ":" + port,
                     NetUtils.unresolvedHostAndPortToNormalizedString(host, port));
         }
     }
 
     @Test
-    public void testSocketToUrl() throws MalformedURLException {
+    void testSocketToUrl() throws MalformedURLException {
         InetSocketAddress socketAddress = new InetSocketAddress("foo.com", 8080);
         URL expectedResult = new URL("http://foo.com:8080");
 
@@ -398,7 +406,7 @@ public class NetUtilsTest extends TestLogger {
     }
 
     @Test
-    public void testIpv6SocketToUrl() throws MalformedURLException {
+    void testIpv6SocketToUrl() throws MalformedURLException {
         InetSocketAddress socketAddress = new InetSocketAddress("[2001:1db8::ff00:42:8329]", 8080);
         URL expectedResult = new URL("http://[2001:1db8::ff00:42:8329]:8080");
 
@@ -406,7 +414,7 @@ public class NetUtilsTest extends TestLogger {
     }
 
     @Test
-    public void testIpv4SocketToUrl() throws MalformedURLException {
+    void testIpv4SocketToUrl() throws MalformedURLException {
         InetSocketAddress socketAddress = new InetSocketAddress("192.168.0.1", 8080);
         URL expectedResult = new URL("http://192.168.0.1:8080");
 

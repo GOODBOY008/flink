@@ -18,9 +18,10 @@
 
 package org.apache.flink.management.jmx;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
@@ -33,32 +34,29 @@ import javax.management.remote.JMXServiceURL;
 import java.lang.management.ManagementFactory;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 /** Test for {@link JMXServer} functionality. */
 public class JMXServerTest {
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    public void setUp() {
         JMXService.startInstance("23456-23466");
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         JMXService.stopInstance();
     }
 
     /** Verifies initialize, registered mBean and retrieval via attribute. */
     @Test
-    public void testJMXServiceRegisterMBean() throws Exception {
+    void testJMXServiceRegisterMBean() throws Exception {
         TestObject testObject = new TestObject();
         ObjectName testObjectName = new ObjectName("org.apache.flink.management", "key", "value");
         MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
 
         try {
             Optional<JMXServer> server = JMXService.getInstance();
-            assertTrue(server.isPresent());
+            Assertions.assertTrue(server.isPresent());
             mBeanServer.registerMBean(testObject, testObjectName);
 
             JMXServiceURL url =
@@ -71,13 +69,13 @@ public class JMXServerTest {
             JMXConnector jmxConn = JMXConnectorFactory.connect(url);
             MBeanServerConnection mbeanConnConn = jmxConn.getMBeanServerConnection();
 
-            assertEquals(1, mbeanConnConn.getAttribute(testObjectName, "Foo"));
+            Assertions.assertEquals(1, mbeanConnConn.getAttribute(testObjectName, "Foo"));
             mBeanServer.unregisterMBean(testObjectName);
             try {
                 mbeanConnConn.getAttribute(testObjectName, "Foo");
             } catch (Exception e) {
                 // expected for unregistered objects.
-                assertTrue(e instanceof InstanceNotFoundException);
+              Assertions.assertInstanceOf(InstanceNotFoundException.class, e);
             }
         } finally {
             JMXService.stopInstance();
@@ -91,7 +89,7 @@ public class JMXServerTest {
 
     /** Test MBean Object. */
     public static class TestObject implements TestObjectMBean {
-        private int foo = 1;
+        private final int foo = 1;
 
         @Override
         public int getFoo() {

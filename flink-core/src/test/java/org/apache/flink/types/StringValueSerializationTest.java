@@ -22,15 +22,13 @@ import org.apache.flink.core.memory.DataInputViewStreamWrapper;
 import org.apache.flink.core.memory.DataOutputViewStreamWrapper;
 import org.apache.flink.util.StringUtils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Random;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /** Test for the serialization of StringValue. */
 public class StringValueSerializationTest {
@@ -38,7 +36,7 @@ public class StringValueSerializationTest {
     private final Random rnd = new Random(2093486528937460234L);
 
     @Test
-    public void testNonNullValues() {
+    void testNonNullValues() {
         try {
             String[] testStrings =
                     new String[] {"a", "", "bcd", "jbmbmner8 jhk hj \n \t üäßß@µ", "", "non-empty"};
@@ -47,12 +45,12 @@ public class StringValueSerializationTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            fail("Exception in test: " + e.getMessage());
+            Assertions.fail("Exception in test: " + e.getMessage());
         }
     }
 
     @Test
-    public void testLongValues() {
+    void testLongValues() {
         try {
             String[] testStrings =
                     new String[] {
@@ -66,12 +64,12 @@ public class StringValueSerializationTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            fail("Exception in test: " + e.getMessage());
+            Assertions.fail("Exception in test: " + e.getMessage());
         }
     }
 
     @Test
-    public void testMixedValues() {
+    void testMixedValues() {
         try {
             String[] testStrings =
                     new String[] {
@@ -88,12 +86,12 @@ public class StringValueSerializationTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            fail("Exception in test: " + e.getMessage());
+            Assertions.fail("Exception in test: " + e.getMessage());
         }
     }
 
     @Test
-    public void testBinaryCopyOfLongStrings() {
+    void testBinaryCopyOfLongStrings() {
         try {
             String[] testStrings =
                     new String[] {
@@ -110,7 +108,7 @@ public class StringValueSerializationTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            fail("Exception in test: " + e.getMessage());
+            Assertions.fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -134,14 +132,14 @@ public class StringValueSerializationTest {
             StringValue deser = new StringValue();
             deser.read(deserializer);
 
-            assertEquals(
-                    "DeserializedString differs from original string.",
+            Assertions.assertEquals(
                     values[num],
-                    deser.getValue());
+                    deser.getValue(),
+                    "DeserializedString differs from original string.");
             num++;
         }
 
-        assertEquals("Wrong number of deserialized values", values.length, num);
+        Assertions.assertEquals(values.length, num, "Wrong number of deserialized values");
     }
 
     public static void testCopy(String[] values) throws IOException {
@@ -175,13 +173,13 @@ public class StringValueSerializationTest {
         while (validateInput.available() > 0) {
             sValue.read(validate);
 
-            assertEquals(
-                    "DeserializedString differs from original string.",
+            Assertions.assertEquals(
                     values[num],
-                    sValue.getValue());
+                    sValue.getValue(),
+                    "DeserializedString differs from original string.");
             num++;
         }
 
-        assertEquals("Wrong number of deserialized values", values.length, num);
+        Assertions.assertEquals(values.length, num, "Wrong number of deserialized values");
     }
 }

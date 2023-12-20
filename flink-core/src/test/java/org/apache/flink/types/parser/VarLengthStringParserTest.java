@@ -22,26 +22,24 @@ import org.apache.flink.configuration.ConfigConstants;
 import org.apache.flink.types.StringValue;
 import org.apache.flink.types.Value;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class VarLengthStringParserTest {
 
     public StringValueParser parser = new StringValueParser();
 
     @Test
-    public void testGetValue() {
+    void testGetValue() {
         Value v = parser.createValue();
-        assertTrue(v instanceof StringValue);
+      Assertions.assertInstanceOf(StringValue.class, v);
     }
 
     @Test
-    public void testParseValidUnquotedStrings() {
+    void testParseValidUnquotedStrings() {
 
         this.parser = new StringValueParser();
 
@@ -51,38 +49,38 @@ public class VarLengthStringParserTest {
 
         int startPos = 0;
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 9);
-        assertTrue(s.getValue().equals("abcdefgh"));
+        Assertions.assertEquals(9, startPos);
+        Assertions.assertEquals("abcdefgh", s.getValue());
 
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 11);
-        assertTrue(s.getValue().equals("i"));
+        Assertions.assertEquals(11, startPos);
+        Assertions.assertEquals("i", s.getValue());
 
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 18);
-        assertTrue(s.getValue().equals("jklmno"));
+        Assertions.assertEquals(18, startPos);
+        Assertions.assertEquals("jklmno", s.getValue());
 
         // check single field not terminated
         recBytes = "abcde".getBytes(ConfigConstants.DEFAULT_CHARSET);
         startPos = 0;
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 5);
-        assertTrue(s.getValue().equals("abcde"));
+        Assertions.assertEquals(5, startPos);
+        Assertions.assertEquals("abcde", s.getValue());
 
         // check last field not terminated
         recBytes = "abcde|fg".getBytes(ConfigConstants.DEFAULT_CHARSET);
         startPos = 0;
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 6);
-        assertTrue(s.getValue().equals("abcde"));
+        Assertions.assertEquals(6, startPos);
+        Assertions.assertEquals("abcde", s.getValue());
 
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 8);
-        assertTrue(s.getValue().equals("fg"));
+        Assertions.assertEquals(8, startPos);
+        Assertions.assertEquals("fg", s.getValue());
     }
 
     @Test
-    public void testParseValidQuotedStrings() {
+    void testParseValidQuotedStrings() {
 
         this.parser = new StringValueParser();
         this.parser.enableQuotedStringParsing((byte) '"');
@@ -94,60 +92,60 @@ public class VarLengthStringParserTest {
 
         int startPos = 0;
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 11);
-        assertTrue(s.getValue().equals("abcdefgh"));
+        Assertions.assertEquals(11, startPos);
+        Assertions.assertEquals("abcdefgh", s.getValue());
 
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 15);
-        assertTrue(s.getValue().equals("i"));
+        Assertions.assertEquals(15, startPos);
+        Assertions.assertEquals("i", s.getValue());
 
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 24);
-        assertTrue(s.getValue().equals("jklmno"));
+        Assertions.assertEquals(24, startPos);
+        Assertions.assertEquals("jklmno", s.getValue());
 
         // check single field not terminated
         recBytes = "\"abcde\"".getBytes(ConfigConstants.DEFAULT_CHARSET);
         startPos = 0;
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 7);
-        assertTrue(s.getValue().equals("abcde"));
+        Assertions.assertEquals(7, startPos);
+        Assertions.assertEquals("abcde", s.getValue());
 
         // check last field not terminated
         recBytes = "\"abcde\"|\"fg\"".getBytes(ConfigConstants.DEFAULT_CHARSET);
         startPos = 0;
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 8);
-        assertTrue(s.getValue().equals("abcde"));
+        Assertions.assertEquals(8, startPos);
+        Assertions.assertEquals("abcde", s.getValue());
 
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 12);
-        assertTrue(s.getValue().equals("fg"));
+        Assertions.assertEquals(12, startPos);
+        Assertions.assertEquals("fg", s.getValue());
 
         // check delimiter in quotes
         recBytes = "\"abcde|fg\"|\"hij|kl|mn|op\"|".getBytes(ConfigConstants.DEFAULT_CHARSET);
         startPos = 0;
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 11);
-        assertTrue(s.getValue().equals("abcde|fg"));
+        Assertions.assertEquals(11, startPos);
+        Assertions.assertEquals("abcde|fg", s.getValue());
 
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 26);
-        assertTrue(s.getValue().equals("hij|kl|mn|op"));
+        Assertions.assertEquals(26, startPos);
+        Assertions.assertEquals("hij|kl|mn|op", s.getValue());
 
         // check delimiter in quotes last field not terminated
         recBytes = "\"abcde|fg\"|\"hij|kl|mn|op\"".getBytes(ConfigConstants.DEFAULT_CHARSET);
         startPos = 0;
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 11);
-        assertTrue(s.getValue().equals("abcde|fg"));
+        Assertions.assertEquals(11, startPos);
+        Assertions.assertEquals("abcde|fg", s.getValue());
 
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 25);
-        assertTrue(s.getValue().equals("hij|kl|mn|op"));
+        Assertions.assertEquals(25, startPos);
+        Assertions.assertEquals("hij|kl|mn|op", s.getValue());
     }
 
     @Test
-    public void testParseValidMixedStrings() {
+    void testParseValidMixedStrings() {
 
         this.parser = new StringValueParser();
         this.parser.enableQuotedStringParsing((byte) '@');
@@ -159,28 +157,28 @@ public class VarLengthStringParserTest {
 
         int startPos = 0;
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 11);
-        assertTrue(s.getValue().equals("abcde|gh"));
+        Assertions.assertEquals(11, startPos);
+        Assertions.assertEquals("abcde|gh", s.getValue());
 
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 15);
-        assertTrue(s.getValue().equals("i"));
+        Assertions.assertEquals(15, startPos);
+        Assertions.assertEquals("i", s.getValue());
 
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 24);
-        assertTrue(s.getValue().equals("jklmnopq"));
+        Assertions.assertEquals(24, startPos);
+        Assertions.assertEquals("jklmnopq", s.getValue());
 
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 29);
-        assertTrue(s.getValue().equals("rs"));
+        Assertions.assertEquals(29, startPos);
+        Assertions.assertEquals("rs", s.getValue());
 
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos == 32);
-        assertTrue(s.getValue().equals("tuv"));
+        Assertions.assertEquals(32, startPos);
+        Assertions.assertEquals("tuv", s.getValue());
     }
 
     @Test
-    public void testParseInvalidQuotedStrings() {
+    void testParseInvalidQuotedStrings() {
 
         this.parser = new StringValueParser();
         this.parser.enableQuotedStringParsing((byte) '"');
@@ -191,15 +189,15 @@ public class VarLengthStringParserTest {
 
         int startPos = 0;
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos < 0);
+        Assertions.assertTrue(startPos < 0);
 
         startPos = 12;
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertTrue(startPos < 0);
+        Assertions.assertTrue(startPos < 0);
     }
 
     @Test
-    public void testParseValidMixedStringsWithCharset() {
+    void testParseValidMixedStringsWithCharset() {
 
         Charset charset = StandardCharsets.US_ASCII;
         this.parser = new StringValueParser();
@@ -213,7 +211,7 @@ public class VarLengthStringParserTest {
         int startPos = 0;
         parser.setCharset(charset);
         startPos = parser.parseField(recBytes, startPos, recBytes.length, new byte[] {'|'}, s);
-        assertEquals(11, startPos);
-        assertEquals("abcde|gh", s.getValue());
+        Assertions.assertEquals(11, startPos);
+        Assertions.assertEquals("abcde|gh", s.getValue());
     }
 }

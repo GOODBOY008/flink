@@ -20,22 +20,21 @@ package org.apache.flink.core.io;
 
 import org.apache.flink.api.common.io.DefaultInputSplitAssigner;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.*;
-
 public class DefaultSplitAssignerTest {
 
     @Test
-    public void testSerialSplitAssignment() {
+    void testSerialSplitAssignment() {
         try {
             final int NUM_SPLITS = 50;
 
-            Set<InputSplit> splits = new HashSet<InputSplit>();
+            Set<InputSplit> splits = new HashSet<>();
             for (int i = 0; i < NUM_SPLITS; i++) {
                 splits.add(new GenericInputSplit(i, NUM_SPLITS));
             }
@@ -43,25 +42,25 @@ public class DefaultSplitAssignerTest {
             DefaultInputSplitAssigner ia = new DefaultInputSplitAssigner(splits);
             InputSplit is = null;
             while ((is = ia.getNextInputSplit("", 0)) != null) {
-                assertTrue(splits.remove(is));
+                Assertions.assertTrue(splits.remove(is));
             }
 
-            assertTrue(splits.isEmpty());
-            assertNull(ia.getNextInputSplit("", 0));
+            Assertions.assertTrue(splits.isEmpty());
+            Assertions.assertNull(ia.getNextInputSplit("", 0));
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 
     @Test
-    public void testConcurrentSplitAssignment() {
+    void testConcurrentSplitAssignment() {
         try {
             final int NUM_THREADS = 10;
             final int NUM_SPLITS = 500;
             final int SUM_OF_IDS = (NUM_SPLITS - 1) * (NUM_SPLITS) / 2;
 
-            Set<InputSplit> splits = new HashSet<InputSplit>();
+            Set<InputSplit> splits = new HashSet<>();
             for (int i = 0; i < NUM_SPLITS; i++) {
                 splits.add(new GenericInputSplit(i, NUM_SPLITS));
             }
@@ -72,17 +71,13 @@ public class DefaultSplitAssignerTest {
             final AtomicInteger sumOfIds = new AtomicInteger(0);
 
             Runnable retriever =
-                    new Runnable() {
-
-                        @Override
-                        public void run() {
-                            String host = "";
-                            GenericInputSplit split;
-                            while ((split = (GenericInputSplit) ia.getNextInputSplit(host, 0))
-                                    != null) {
-                                splitsRetrieved.incrementAndGet();
-                                sumOfIds.addAndGet(split.getSplitNumber());
-                            }
+                    () -> {
+                        String host = "";
+                        GenericInputSplit split;
+                        while ((split = (GenericInputSplit) ia.getNextInputSplit(host, 0))
+                                != null) {
+                            splitsRetrieved.incrementAndGet();
+                            sumOfIds.addAndGet(split.getSplitNumber());
                         }
                     };
 
@@ -106,19 +101,19 @@ public class DefaultSplitAssignerTest {
             // verify
             for (int i = 0; i < NUM_THREADS; i++) {
                 if (threads[i].isAlive()) {
-                    fail(
+                    Assertions.fail(
                             "The concurrency test case is erroneous, the thread did not respond in time.");
                 }
             }
 
-            assertEquals(NUM_SPLITS, splitsRetrieved.get());
-            assertEquals(SUM_OF_IDS, sumOfIds.get());
+            Assertions.assertEquals(NUM_SPLITS, splitsRetrieved.get());
+            Assertions.assertEquals(SUM_OF_IDS, sumOfIds.get());
 
             // nothing left
-            assertNull(ia.getNextInputSplit("", 0));
+            Assertions.assertNull(ia.getNextInputSplit("", 0));
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 }

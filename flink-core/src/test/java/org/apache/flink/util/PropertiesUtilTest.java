@@ -18,8 +18,8 @@
 
 package org.apache.flink.util;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Properties;
 
@@ -29,7 +29,7 @@ import static org.apache.flink.util.PropertiesUtil.flatten;
 public class PropertiesUtilTest {
 
     @Test
-    public void testFlatten() {
+    void testFlatten() {
         // default Properties is null
         Properties prop1 = new Properties();
         prop1.put("key1", "value1");
@@ -43,8 +43,8 @@ public class PropertiesUtilTest {
         prop3.put("key3", "value3");
 
         Properties flattened = flatten(prop3);
-        Assert.assertEquals(flattened.get("key1"), "value1");
-        Assert.assertEquals(flattened.get("key2"), "value2");
-        Assert.assertEquals(flattened.get("key3"), "value3");
+        Assertions.assertEquals(flattened.get("key1"), "value1");
+        Assertions.assertEquals(flattened.get("key2"), "value2");
+        Assertions.assertEquals(flattened.get("key3"), "value3");
     }
 }

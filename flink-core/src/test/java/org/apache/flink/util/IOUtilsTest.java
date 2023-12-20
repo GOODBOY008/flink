@@ -18,8 +18,8 @@
 
 package org.apache.flink.util;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -30,26 +30,26 @@ import java.util.Arrays;
 public class IOUtilsTest extends TestLogger {
 
     @Test
-    public void testTryReadFullyFromLongerStream() throws IOException {
+    void testTryReadFullyFromLongerStream() throws IOException {
         ByteArrayInputStream inputStream =
                 new ByteArrayInputStream("test-data".getBytes(StandardCharsets.UTF_8));
 
         byte[] out = new byte[4];
         int read = IOUtils.tryReadFully(inputStream, out);
 
-        Assert.assertArrayEquals(
+        Assertions.assertArrayEquals(
                 "test".getBytes(StandardCharsets.UTF_8), Arrays.copyOfRange(out, 0, read));
     }
 
     @Test
-    public void testTryReadFullyFromShorterStream() throws IOException {
+    void testTryReadFullyFromShorterStream() throws IOException {
         ByteArrayInputStream inputStream =
                 new ByteArrayInputStream("t".getBytes(StandardCharsets.UTF_8));
 
         byte[] out = new byte[4];
         int read = IOUtils.tryReadFully(inputStream, out);
 
-        Assert.assertArrayEquals(
+        Assertions.assertArrayEquals(
                 "t".getBytes(StandardCharsets.UTF_8), Arrays.copyOfRange(out, 0, read));
     }
 }

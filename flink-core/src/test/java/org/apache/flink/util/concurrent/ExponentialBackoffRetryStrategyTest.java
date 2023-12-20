@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class ExponentialBackoffRetryStrategyTest extends TestLogger {
 
     @Test
-    public void testGettersNotCapped() {
+    void testGettersNotCapped() {
         RetryStrategy retryStrategy =
                 new ExponentialBackoffRetryStrategy(
                         10, Duration.ofMillis(5L), Duration.ofMillis(20L));
@@ -44,7 +44,7 @@ public class ExponentialBackoffRetryStrategyTest extends TestLogger {
     }
 
     @Test
-    public void testGettersHitCapped() {
+    void testGettersHitCapped() {
         RetryStrategy retryStrategy =
                 new ExponentialBackoffRetryStrategy(
                         5, Duration.ofMillis(15L), Duration.ofMillis(20L));
@@ -57,7 +57,7 @@ public class ExponentialBackoffRetryStrategyTest extends TestLogger {
     }
 
     @Test
-    public void testGettersAtCap() {
+    void testGettersAtCap() {
         RetryStrategy retryStrategy =
                 new ExponentialBackoffRetryStrategy(
                         5, Duration.ofMillis(20L), Duration.ofMillis(20L));
@@ -71,7 +71,7 @@ public class ExponentialBackoffRetryStrategyTest extends TestLogger {
 
     /** Tests that getting a next RetryStrategy below zero remaining retries fails. */
     @Test
-    public void testRetryFailure() {
+    void testRetryFailure() {
         assertThatThrownBy(
                         () ->
                                 new ExponentialBackoffRetryStrategy(

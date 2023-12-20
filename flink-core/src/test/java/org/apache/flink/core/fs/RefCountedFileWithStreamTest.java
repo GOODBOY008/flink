@@ -18,9 +18,9 @@
 
 package org.apache.flink.core.fs;
 
-import org.junit.Assert;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
@@ -39,17 +39,17 @@ public class RefCountedFileWithStreamTest {
     @Rule public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test
-    public void writeShouldSucceed() throws IOException {
+    void writeShouldSucceed() throws IOException {
         byte[] content = bytesOf("hello world");
 
         final RefCountedFileWithStream fileUnderTest = getClosedRefCountedFileWithContent(content);
         long fileLength = fileUnderTest.getLength();
 
-        Assert.assertEquals(content.length, fileLength);
+        Assertions.assertEquals(content.length, fileLength);
     }
 
     @Test
-    public void closeShouldNotReleaseReference() throws IOException {
+    void closeShouldNotReleaseReference() throws IOException {
         getClosedRefCountedFileWithContent("hello world");
         verifyTheFileIsStillThere();
     }
@@ -73,7 +73,7 @@ public class RefCountedFileWithStreamTest {
 
     private void verifyTheFileIsStillThere() throws IOException {
         try (Stream<Path> files = Files.list(temporaryFolder.getRoot().toPath())) {
-            Assert.assertEquals(1L, files.count());
+            Assertions.assertEquals(1L, files.count());
         }
     }
 

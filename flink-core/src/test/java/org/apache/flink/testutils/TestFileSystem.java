@@ -157,7 +157,7 @@ public class TestFileSystem extends LocalFileSystem {
         }
 
         @Override
-        public FileSystem create(URI fsUri) throws IOException {
+        public FileSystem create(URI fsUri) {
             return new TestFileSystem();
         }
     }

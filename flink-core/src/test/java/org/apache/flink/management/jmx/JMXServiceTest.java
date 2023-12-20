@@ -18,22 +18,20 @@
 
 package org.apache.flink.management.jmx;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.ServerSocket;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /** Tests for the singleton usage via {@link JMXService}. */
 public class JMXServiceTest {
 
     /** Verifies initialize with port range. */
     @Test
-    public void testJMXServiceInit() throws Exception {
+    void testJMXServiceInit() throws Exception {
         try {
             JMXService.startInstance("23456-23466");
-            assertTrue(JMXService.getPort().isPresent());
+            Assertions.assertTrue(JMXService.getPort().isPresent());
         } finally {
             JMXService.stopInstance();
         }
@@ -41,10 +39,10 @@ public class JMXServiceTest {
 
     /** Verifies initialize failure with occupied port. */
     @Test
-    public void testJMXServiceInitWithOccupiedPort() throws Exception {
+    void testJMXServiceInitWithOccupiedPort() throws Exception {
         try (ServerSocket socket = new ServerSocket(0)) {
             JMXService.startInstance(String.valueOf(socket.getLocalPort()));
-            assertFalse(JMXService.getInstance().isPresent());
+            Assertions.assertFalse(JMXService.getInstance().isPresent());
         }
     }
 }

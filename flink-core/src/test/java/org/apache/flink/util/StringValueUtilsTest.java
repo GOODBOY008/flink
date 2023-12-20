@@ -21,53 +21,50 @@ package org.apache.flink.util;
 import org.apache.flink.types.StringValue;
 import org.apache.flink.util.StringValueUtils.WhitespaceTokenizer;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /** Tests for the {@link StringValueUtils}. */
 public class StringValueUtilsTest extends TestLogger {
 
     @Test
-    public void testToLowerCaseConverting() {
+    void testToLowerCaseConverting() {
         StringValue testString = new StringValue("TEST");
         StringValueUtils.toLowerCase(testString);
-        assertEquals(new StringValue("test"), testString);
+        Assertions.assertEquals(new StringValue("test"), testString);
     }
 
     @Test
-    public void testReplaceNonWordChars() {
+    void testReplaceNonWordChars() {
         StringValue testString = new StringValue("TEST123_@");
         StringValueUtils.replaceNonWordChars(testString, '!');
-        assertEquals(new StringValue("TEST123_!"), testString);
+        Assertions.assertEquals(new StringValue("TEST123_!"), testString);
     }
 
     @Test
-    public void testTokenizerOnStringWithoutNexToken() {
+    void testTokenizerOnStringWithoutNexToken() {
         StringValue testString = new StringValue("test");
         StringValueUtils.WhitespaceTokenizer tokenizer = new WhitespaceTokenizer();
         tokenizer.setStringToTokenize(testString);
         // first token
         tokenizer.next(testString);
         // next token is not exist
-        assertFalse(tokenizer.next(testString));
+        Assertions.assertFalse(tokenizer.next(testString));
     }
 
     @Test
-    public void testTokenizerOnStringWithNexToken() {
+    void testTokenizerOnStringWithNexToken() {
         StringValue testString = new StringValue("test test");
         StringValueUtils.WhitespaceTokenizer tokenizer = new WhitespaceTokenizer();
         tokenizer.setStringToTokenize(testString);
-        assertTrue(tokenizer.next(testString));
+        Assertions.assertTrue(tokenizer.next(testString));
     }
 
     @Test
-    public void testTokenizerOnStringOnlyWithDelimiter() {
+    void testTokenizerOnStringOnlyWithDelimiter() {
         StringValue testString = new StringValue("    ");
         StringValueUtils.WhitespaceTokenizer tokenizer = new WhitespaceTokenizer();
         tokenizer.setStringToTokenize(testString);
-        assertFalse(tokenizer.next(testString));
+        Assertions.assertFalse(tokenizer.next(testString));
     }
 }

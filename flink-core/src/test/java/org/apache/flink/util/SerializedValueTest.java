@@ -20,52 +20,47 @@ package org.apache.flink.util;
 
 import org.apache.flink.core.testutils.CommonTestUtils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
 /** Tests for the {@link SerializedValue}. */
-public class SerializedValueTest {
+class SerializedValueTest {
 
     @Test
-    public void testSimpleValue() {
+    void testSimpleValue() {
         try {
             final String value = "teststring";
 
             SerializedValue<String> v = new SerializedValue<>(value);
             SerializedValue<String> copy = CommonTestUtils.createCopySerializable(v);
 
-            assertEquals(value, v.deserializeValue(getClass().getClassLoader()));
-            assertEquals(value, copy.deserializeValue(getClass().getClassLoader()));
+            Assertions.assertEquals(value, v.deserializeValue(getClass().getClassLoader()));
+            Assertions.assertEquals(value, copy.deserializeValue(getClass().getClassLoader()));
 
-            assertEquals(v, copy);
-            assertEquals(v.hashCode(), copy.hashCode());
+            Assertions.assertEquals(v, copy);
+            Assertions.assertEquals(v.hashCode(), copy.hashCode());
 
-            assertNotNull(v.toString());
-            assertNotNull(copy.toString());
+            Assertions.assertNotNull(v.toString());
+            Assertions.assertNotNull(copy.toString());
 
-            assertNotEquals(0, v.getByteArray().length);
-            assertArrayEquals(v.getByteArray(), copy.getByteArray());
+            Assertions.assertNotEquals(0, v.getByteArray().length);
+            Assertions.assertArrayEquals(v.getByteArray(), copy.getByteArray());
 
             byte[] bytes = v.getByteArray();
             SerializedValue<String> saved =
                     SerializedValue.fromBytes(Arrays.copyOf(bytes, bytes.length));
-            assertEquals(v, saved);
-            assertArrayEquals(v.getByteArray(), saved.getByteArray());
+            Assertions.assertEquals(v, saved);
+            Assertions.assertArrayEquals(v.getByteArray(), saved.getByteArray());
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 
     @Test(expected = NullPointerException.class)
-    public void testNullValue() throws Exception {
+    public void testNullValue() {
         new SerializedValue<>(null);
     }
 

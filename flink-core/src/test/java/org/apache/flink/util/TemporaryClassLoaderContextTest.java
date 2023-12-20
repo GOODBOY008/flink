@@ -18,8 +18,8 @@
 
 package org.apache.flink.util;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URL;
 
@@ -29,7 +29,7 @@ import static org.apache.flink.util.FlinkUserCodeClassLoader.NOOP_EXCEPTION_HAND
 public class TemporaryClassLoaderContextTest {
 
     @Test
-    public void testTemporaryClassLoaderContext() {
+    void testTemporaryClassLoaderContext() {
         final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
 
         final ChildFirstClassLoader temporaryClassLoader =
@@ -38,10 +38,10 @@ public class TemporaryClassLoaderContextTest {
 
         try (TemporaryClassLoaderContext ignored =
                 TemporaryClassLoaderContext.of(temporaryClassLoader)) {
-            Assert.assertEquals(
+            Assertions.assertEquals(
                     temporaryClassLoader, Thread.currentThread().getContextClassLoader());
         }
 
-        Assert.assertEquals(contextClassLoader, Thread.currentThread().getContextClassLoader());
+        Assertions.assertEquals(contextClassLoader, Thread.currentThread().getContextClassLoader());
     }
 }

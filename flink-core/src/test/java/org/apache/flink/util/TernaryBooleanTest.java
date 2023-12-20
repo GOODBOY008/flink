@@ -18,60 +18,57 @@
 
 package org.apache.flink.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.apache.flink.util.TernaryBoolean.FALSE;
 import static org.apache.flink.util.TernaryBoolean.TRUE;
 import static org.apache.flink.util.TernaryBoolean.UNDEFINED;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /** Tests for the {@link TernaryBoolean} class. */
-public class TernaryBooleanTest {
+class TernaryBooleanTest {
 
     @Test
-    public void testWithDefault() {
-        assertTrue(TRUE.getOrDefault(true));
-        assertTrue(TRUE.getOrDefault(false));
+    void testWithDefault() {
+        Assertions.assertTrue(TRUE.getOrDefault(true));
+        Assertions.assertTrue(TRUE.getOrDefault(false));
 
-        assertFalse(FALSE.getOrDefault(true));
-        assertFalse(FALSE.getOrDefault(false));
+        Assertions.assertFalse(FALSE.getOrDefault(true));
+        Assertions.assertFalse(FALSE.getOrDefault(false));
 
-        assertTrue(UNDEFINED.getOrDefault(true));
-        assertFalse(UNDEFINED.getOrDefault(false));
+        Assertions.assertTrue(UNDEFINED.getOrDefault(true));
+        Assertions.assertFalse(UNDEFINED.getOrDefault(false));
     }
 
     @Test
-    public void testResolveUndefined() {
-        assertEquals(TRUE, TRUE.resolveUndefined(true));
-        assertEquals(TRUE, TRUE.resolveUndefined(false));
+    void testResolveUndefined() {
+        Assertions.assertEquals(TRUE, TRUE.resolveUndefined(true));
+        Assertions.assertEquals(TRUE, TRUE.resolveUndefined(false));
 
-        assertEquals(FALSE, FALSE.resolveUndefined(true));
-        assertEquals(FALSE, FALSE.resolveUndefined(false));
+        Assertions.assertEquals(FALSE, FALSE.resolveUndefined(true));
+        Assertions.assertEquals(FALSE, FALSE.resolveUndefined(false));
 
-        assertEquals(TRUE, UNDEFINED.resolveUndefined(true));
-        assertEquals(FALSE, UNDEFINED.resolveUndefined(false));
+        Assertions.assertEquals(TRUE, UNDEFINED.resolveUndefined(true));
+        Assertions.assertEquals(FALSE, UNDEFINED.resolveUndefined(false));
     }
 
     @Test
-    public void testToBoolean() {
-        assertTrue(Boolean.TRUE == TRUE.getAsBoolean());
-        assertTrue(Boolean.FALSE == FALSE.getAsBoolean());
-        assertNull(UNDEFINED.getAsBoolean());
+    void testToBoolean() {
+        Assertions.assertSame(Boolean.TRUE, TRUE.getAsBoolean());
+        Assertions.assertSame(Boolean.FALSE, FALSE.getAsBoolean());
+        Assertions.assertNull(UNDEFINED.getAsBoolean());
     }
 
     @Test
-    public void testFromBoolean() {
-        assertEquals(TRUE, TernaryBoolean.fromBoolean(true));
-        assertEquals(FALSE, TernaryBoolean.fromBoolean(false));
+    void testFromBoolean() {
+        Assertions.assertEquals(TRUE, TernaryBoolean.fromBoolean(true));
+        Assertions.assertEquals(FALSE, TernaryBoolean.fromBoolean(false));
     }
 
     @Test
-    public void testFromBoxedBoolean() {
-        assertEquals(TRUE, TernaryBoolean.fromBoxedBoolean(Boolean.TRUE));
-        assertEquals(FALSE, TernaryBoolean.fromBoxedBoolean(Boolean.FALSE));
-        assertEquals(UNDEFINED, TernaryBoolean.fromBoxedBoolean(null));
+    void testFromBoxedBoolean() {
+        Assertions.assertEquals(TRUE, TernaryBoolean.fromBoxedBoolean(Boolean.TRUE));
+        Assertions.assertEquals(FALSE, TernaryBoolean.fromBoxedBoolean(Boolean.FALSE));
+        Assertions.assertEquals(UNDEFINED, TernaryBoolean.fromBoxedBoolean(null));
     }
 }
