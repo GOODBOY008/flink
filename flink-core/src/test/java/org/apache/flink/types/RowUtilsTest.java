@@ -18,19 +18,17 @@
 
 package org.apache.flink.types;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /** Tests for {@link RowUtils}. */
 public class RowUtilsTest {
 
     @Test
-    public void testCompareRowsUnordered() {
+    void testCompareRowsUnordered() {
         final List<Row> originalList =
                 Arrays.asList(
                         Row.of("a", 12, false),
@@ -45,7 +43,7 @@ public class RowUtilsTest {
                             Row.of("b", 12, false),
                             Row.of("b", 12, false),
                             Row.of("b", 12, true));
-            assertTrue(RowUtils.compareRows(originalList, list, false));
+            Assertions.assertTrue(RowUtils.compareRows(originalList, list, false));
         }
 
         {
@@ -55,7 +53,7 @@ public class RowUtilsTest {
                             Row.of("b", 12, false),
                             Row.of("b", 12, true), // diff order here
                             Row.of("b", 12, false));
-            assertFalse(RowUtils.compareRows(originalList, list, false));
+            Assertions.assertFalse(RowUtils.compareRows(originalList, list, false));
         }
 
         {
@@ -65,7 +63,7 @@ public class RowUtilsTest {
                             Row.of("b", 12, false),
                             Row.of("b", 12, true), // diff order here
                             Row.of("b", 12, false));
-            assertTrue(RowUtils.compareRows(originalList, list, true));
+            Assertions.assertTrue(RowUtils.compareRows(originalList, list, true));
         }
 
         {
@@ -76,7 +74,7 @@ public class RowUtilsTest {
                             Row.of("b", 12, false),
                             Row.of("b", 12, true),
                             Row.of("b", 12, true)); // diff here
-            assertFalse(RowUtils.compareRows(originalList, list, true));
+            Assertions.assertFalse(RowUtils.compareRows(originalList, list, true));
         }
     }
 }

@@ -34,7 +34,7 @@ public class ManuallyTriggeredScheduledExecutor implements ScheduledExecutor {
      * The service that we redirect to. We wrap this rather than extending it to limit the surfaced
      * interface.
      */
-    org.apache.flink.core.testutils.ManuallyTriggeredScheduledExecutorService execService =
+    final org.apache.flink.core.testutils.ManuallyTriggeredScheduledExecutorService execService =
             new org.apache.flink.core.testutils.ManuallyTriggeredScheduledExecutorService();
 
     @Override

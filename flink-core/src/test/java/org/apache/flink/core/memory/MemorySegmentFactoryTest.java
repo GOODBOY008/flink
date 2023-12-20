@@ -17,35 +17,35 @@
 
 package org.apache.flink.core.memory;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static java.lang.System.arraycopy;
-import static org.junit.Assert.assertArrayEquals;
 
 /** {@link MemorySegmentFactory} test. */
 public class MemorySegmentFactoryTest {
 
     @Test
-    public void testWrapCopyChangingData() {
+    void testWrapCopyChangingData() {
         byte[] data = {1, 2, 3, 4, 5};
         byte[] changingData = new byte[data.length];
         arraycopy(data, 0, changingData, 0, data.length);
         MemorySegment segment = MemorySegmentFactory.wrapCopy(changingData, 0, changingData.length);
         changingData[0]++;
-        assertArrayEquals(data, segment.getHeapMemory());
+        Assertions.assertArrayEquals(data, segment.getHeapMemory());
     }
 
     @Test
-    public void testWrapPartialCopy() {
+    void testWrapPartialCopy() {
         byte[] data = {1, 2, 3, 5, 6};
         MemorySegment segment = MemorySegmentFactory.wrapCopy(data, 0, data.length / 2);
         byte[] exp = new byte[segment.size()];
         arraycopy(data, 0, exp, 0, exp.length);
-        assertArrayEquals(exp, segment.getHeapMemory());
+        Assertions.assertArrayEquals(exp, segment.getHeapMemory());
     }
 
     @Test
-    public void testWrapCopyEmpty() {
+    void testWrapCopyEmpty() {
         MemorySegmentFactory.wrapCopy(new byte[0], 0, 0);
     }
 

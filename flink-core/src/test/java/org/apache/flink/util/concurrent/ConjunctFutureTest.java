@@ -22,7 +22,7 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.util.TestLogger;
 import org.apache.flink.util.concurrent.FutureUtils.ConjunctFuture;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -57,7 +57,7 @@ public class ConjunctFutureTest extends TestLogger {
     @Parameterized.Parameter public FutureFactory futureFactory;
 
     @Test
-    public void testConjunctFutureFailsOnEmptyAndNull() throws Exception {
+    void testConjunctFutureFailsOnEmptyAndNull() {
         try {
             futureFactory.createFuture(null);
             fail();
@@ -73,7 +73,7 @@ public class ConjunctFutureTest extends TestLogger {
     }
 
     @Test
-    public void testConjunctFutureCompletion() throws Exception {
+    void testConjunctFutureCompletion() {
         // some futures that we combine
         java.util.concurrent.CompletableFuture<Object> future1 =
                 new java.util.concurrent.CompletableFuture<>();
@@ -123,7 +123,7 @@ public class ConjunctFutureTest extends TestLogger {
     }
 
     @Test
-    public void testConjunctFutureFailureOnFirst() throws Exception {
+    void testConjunctFutureFailureOnFirst() throws Exception {
 
         java.util.concurrent.CompletableFuture<Object> future1 =
                 new java.util.concurrent.CompletableFuture<>();
@@ -167,7 +167,7 @@ public class ConjunctFutureTest extends TestLogger {
     }
 
     @Test
-    public void testConjunctFutureFailureOnSuccessive() throws Exception {
+    void testConjunctFutureFailureOnSuccessive() throws Exception {
 
         java.util.concurrent.CompletableFuture<Object> future1 =
                 new java.util.concurrent.CompletableFuture<>();
@@ -215,7 +215,7 @@ public class ConjunctFutureTest extends TestLogger {
      * the same order in which the futures were inserted.
      */
     @Test
-    public void testConjunctFutureValue() throws Exception {
+    void testConjunctFutureValue() throws Exception {
         final int numberFutures = 10;
 
         final List<CompletableFuture<Integer>> futures = new ArrayList<>(numberFutures);
@@ -248,7 +248,7 @@ public class ConjunctFutureTest extends TestLogger {
     }
 
     @Test
-    public void testConjunctOfNone() throws Exception {
+    void testConjunctOfNone() {
         final ConjunctFuture<?> result =
                 futureFactory.createFuture(
                         Collections.<java.util.concurrent.CompletableFuture<Object>>emptyList());

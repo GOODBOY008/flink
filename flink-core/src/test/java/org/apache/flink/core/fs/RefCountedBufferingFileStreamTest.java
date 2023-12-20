@@ -18,9 +18,9 @@
 
 package org.apache.flink.core.fs;
 
-import org.junit.Assert;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
@@ -30,7 +30,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.UUID;
 
 /** Tests for the {@link RefCountedBufferingFileStream}. */
@@ -41,14 +40,14 @@ public class RefCountedBufferingFileStreamTest {
     @Rule public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test
-    public void testSmallWritesGoToBuffer() throws IOException {
+    void testSmallWritesGoToBuffer() throws IOException {
         RefCountedBufferingFileStream stream = getStreamToTest();
 
         final byte[] contentToWrite = bytesOf("hello");
         stream.write(contentToWrite);
 
-        Assert.assertEquals(contentToWrite.length, stream.getPositionInBuffer());
-        Assert.assertEquals(contentToWrite.length, stream.getPos());
+        Assertions.assertEquals(contentToWrite.length, stream.getPositionInBuffer());
+        Assertions.assertEquals(contentToWrite.length, stream.getPos());
 
         stream.close();
         stream.release();
@@ -61,8 +60,8 @@ public class RefCountedBufferingFileStreamTest {
         final byte[] contentToWrite = bytesOf("hello");
         stream.write(contentToWrite);
 
-        Assert.assertEquals(contentToWrite.length, stream.getPositionInBuffer());
-        Assert.assertEquals(contentToWrite.length, stream.getPos());
+        Assertions.assertEquals(contentToWrite.length, stream.getPositionInBuffer());
+        Assertions.assertEquals(contentToWrite.length, stream.getPos());
 
         stream.close();
 
@@ -70,34 +69,34 @@ public class RefCountedBufferingFileStreamTest {
     }
 
     @Test
-    public void testBigWritesGoToFile() throws IOException {
+    void testBigWritesGoToFile() throws IOException {
         RefCountedBufferingFileStream stream = getStreamToTest();
 
         final byte[] contentToWrite = bytesOf("hello big world");
         stream.write(contentToWrite);
 
-        Assert.assertEquals(0, stream.getPositionInBuffer());
-        Assert.assertEquals(contentToWrite.length, stream.getPos());
+        Assertions.assertEquals(0, stream.getPositionInBuffer());
+        Assertions.assertEquals(contentToWrite.length, stream.getPos());
 
         stream.close();
         stream.release();
     }
 
     @Test
-    public void testSpillingWhenBufferGetsFull() throws IOException {
+    void testSpillingWhenBufferGetsFull() throws IOException {
         RefCountedBufferingFileStream stream = getStreamToTest();
 
         final byte[] firstContentToWrite = bytesOf("hello");
         stream.write(firstContentToWrite);
 
-        Assert.assertEquals(firstContentToWrite.length, stream.getPositionInBuffer());
-        Assert.assertEquals(firstContentToWrite.length, stream.getPos());
+        Assertions.assertEquals(firstContentToWrite.length, stream.getPositionInBuffer());
+        Assertions.assertEquals(firstContentToWrite.length, stream.getPos());
 
         final byte[] secondContentToWrite = bytesOf(" world!");
         stream.write(secondContentToWrite);
 
-        Assert.assertEquals(secondContentToWrite.length, stream.getPositionInBuffer());
-        Assert.assertEquals(
+        Assertions.assertEquals(secondContentToWrite.length, stream.getPositionInBuffer());
+        Assertions.assertEquals(
                 firstContentToWrite.length + secondContentToWrite.length, stream.getPos());
 
         stream.close();
@@ -105,23 +104,23 @@ public class RefCountedBufferingFileStreamTest {
     }
 
     @Test
-    public void testFlush() throws IOException {
+    void testFlush() throws IOException {
         RefCountedBufferingFileStream stream = getStreamToTest();
 
         final byte[] contentToWrite = bytesOf("hello");
         stream.write(contentToWrite);
 
-        Assert.assertEquals(contentToWrite.length, stream.getPositionInBuffer());
-        Assert.assertEquals(contentToWrite.length, stream.getPos());
+        Assertions.assertEquals(contentToWrite.length, stream.getPositionInBuffer());
+        Assertions.assertEquals(contentToWrite.length, stream.getPos());
 
         stream.flush();
 
-        Assert.assertEquals(0, stream.getPositionInBuffer());
-        Assert.assertEquals(contentToWrite.length, stream.getPos());
+        Assertions.assertEquals(0, stream.getPositionInBuffer());
+        Assertions.assertEquals(contentToWrite.length, stream.getPos());
 
         final byte[] contentRead = new byte[contentToWrite.length];
         new FileInputStream(stream.getInputFile()).read(contentRead, 0, contentRead.length);
-        Assert.assertTrue(Arrays.equals(contentToWrite, contentRead));
+        Assertions.assertArrayEquals(contentToWrite, contentRead);
 
         stream.release();
     }

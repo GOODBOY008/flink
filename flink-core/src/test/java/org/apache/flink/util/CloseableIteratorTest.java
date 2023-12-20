@@ -17,14 +17,13 @@
 
 package org.apache.flink.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertFalse;
 
 /** {@link CloseableIterator} test. */
 @SuppressWarnings("unchecked")
@@ -33,20 +32,20 @@ public class CloseableIteratorTest {
     private static final String[] ELEMENTS = new String[] {"element-1", "element-2"};
 
     @Test
-    public void testFlattenEmpty() throws Exception {
+    void testFlattenEmpty() throws Exception {
         List<CloseableIterator<?>> iterators =
                 asList(
                         CloseableIterator.flatten(),
                         CloseableIterator.flatten(CloseableIterator.empty()),
                         CloseableIterator.flatten(CloseableIterator.flatten()));
         for (CloseableIterator<?> i : iterators) {
-            assertFalse(i.hasNext());
+            Assertions.assertFalse(i.hasNext());
             i.close();
         }
     }
 
     @Test
-    public void testFlattenIteration() {
+    void testFlattenIteration() {
         CloseableIterator<String> iterator =
                 CloseableIterator.flatten(
                         CloseableIterator.ofElement(ELEMENTS[0], unused -> {}),
@@ -54,7 +53,7 @@ public class CloseableIteratorTest {
 
         List<String> iterated = new ArrayList<>();
         iterator.forEachRemaining(iterated::add);
-        assertArrayEquals(ELEMENTS, iterated.toArray());
+        Assertions.assertArrayEquals(ELEMENTS, iterated.toArray());
     }
 
     @Test(expected = TestException.class)
@@ -72,7 +71,7 @@ public class CloseableIteratorTest {
         try {
             iterator.close();
         } finally {
-            assertArrayEquals(ELEMENTS, closed.toArray());
+            Assertions.assertArrayEquals(ELEMENTS, closed.toArray());
         }
     }
 

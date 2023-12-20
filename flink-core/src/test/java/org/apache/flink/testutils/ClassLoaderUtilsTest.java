@@ -18,37 +18,34 @@
 
 package org.apache.flink.testutils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Supplier;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
 
 /** Tests for the {@link ClassLoaderUtils}. */
 public class ClassLoaderUtilsTest {
 
     @Test
-    public void testObjectFromNewClassLoaderObject() throws Exception {
+    void testObjectFromNewClassLoaderObject() {
         testObjectFromNewClassLoaderObject(
                 ClassLoaderUtils::createSerializableObjectFromNewClassLoader);
     }
 
     @Test
-    public void testObjectFromNewClassLoaderClassLoaders() throws Exception {
+    void testObjectFromNewClassLoaderClassLoaders() {
         testObjectFromNewClassLoaderClassLoaders(
                 ClassLoaderUtils::createSerializableObjectFromNewClassLoader);
     }
 
     @Test
-    public void testExceptionObjectFromNewClassLoaderObject() throws Exception {
+    void testExceptionObjectFromNewClassLoaderObject() {
         testObjectFromNewClassLoaderObject(
                 ClassLoaderUtils::createExceptionObjectFromNewClassLoader);
     }
 
     @Test
-    public void testExceptionObjectFromNewClassLoaderClassLoaders() throws Exception {
+    void testExceptionObjectFromNewClassLoaderClassLoaders() {
         testObjectFromNewClassLoaderClassLoaders(
                 ClassLoaderUtils::createExceptionObjectFromNewClassLoader);
     }
@@ -58,11 +55,12 @@ public class ClassLoaderUtilsTest {
         final ClassLoaderUtils.ObjectAndClassLoader<X> objectAndClassLoader = supplier.get();
         final Object o = objectAndClassLoader.getObject();
 
-        assertNotEquals(ClassLoader.getSystemClassLoader(), o.getClass().getClassLoader());
+        Assertions.assertNotEquals(
+                ClassLoader.getSystemClassLoader(), o.getClass().getClassLoader());
 
         try {
             Class.forName(o.getClass().getName());
-            fail("should not be able to load class from the system class loader");
+            Assertions.fail("should not be able to load class from the system class loader");
         } catch (ClassNotFoundException ignored) {
         }
     }
@@ -71,8 +69,9 @@ public class ClassLoaderUtilsTest {
             Supplier<ClassLoaderUtils.ObjectAndClassLoader<X>> supplier) {
         final ClassLoaderUtils.ObjectAndClassLoader<X> objectAndClassLoader = supplier.get();
 
-        assertNotEquals(ClassLoader.getSystemClassLoader(), objectAndClassLoader.getClassLoader());
-        assertEquals(
+        Assertions.assertNotEquals(
+                ClassLoader.getSystemClassLoader(), objectAndClassLoader.getClassLoader());
+        Assertions.assertEquals(
                 ClassLoader.getSystemClassLoader(),
                 objectAndClassLoader.getClassLoader().getParent());
     }

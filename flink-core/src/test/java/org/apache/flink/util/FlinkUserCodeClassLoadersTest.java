@@ -18,10 +18,12 @@
 
 package org.apache.flink.util;
 
-import org.junit.BeforeClass;
+import org.hamcrest.MatcherAssert;
 import org.junit.ClassRule;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
@@ -33,11 +35,6 @@ import static org.apache.flink.util.FlinkUserCodeClassLoader.NOOP_EXCEPTION_HAND
 import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.hamcrest.Matchers.startsWith;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /** Tests for classloading and class loader utilities. */
 public class FlinkUserCodeClassLoadersTest extends TestLogger {
@@ -55,7 +52,7 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
 
     private static File userJar;
 
-    @BeforeClass
+    @BeforeAll
     public static void prepare() throws Exception {
         userJar =
                 UserClassLoaderJarTestUtils.createJarFile(
@@ -66,7 +63,7 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
     }
 
     @Test
-    public void testParentFirstClassLoading() throws Exception {
+    void testParentFirstClassLoading() throws Exception {
         final ClassLoader parentClassLoader = getClass().getClassLoader();
 
         // collect the libraries / class folders with RocksDB related code: the state backend and
@@ -85,15 +82,15 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
         final Class<?> clazz2 = Class.forName(className, false, childClassLoader1);
         final Class<?> clazz3 = Class.forName(className, false, childClassLoader2);
 
-        assertEquals(clazz1, clazz2);
-        assertEquals(clazz1, clazz3);
+        assertSame(clazz1, clazz2);
+        assertSame(clazz1, clazz3);
 
         childClassLoader1.close();
         childClassLoader2.close();
     }
 
     @Test
-    public void testChildFirstClassLoading() throws Exception {
+    void testChildFirstClassLoading() throws Exception {
         final ClassLoader parentClassLoader = getClass().getClassLoader();
 
         // collect the libraries / class folders with RocksDB related code: the state backend and
@@ -112,16 +109,16 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
         final Class<?> clazz2 = Class.forName(className, false, childClassLoader1);
         final Class<?> clazz3 = Class.forName(className, false, childClassLoader2);
 
-        assertNotEquals(clazz1, clazz2);
-        assertNotEquals(clazz1, clazz3);
-        assertNotEquals(clazz2, clazz3);
+        Assertions.assertNotEquals(clazz1, clazz2);
+        Assertions.assertNotEquals(clazz1, clazz3);
+        Assertions.assertNotEquals(clazz2, clazz3);
 
         childClassLoader1.close();
         childClassLoader2.close();
     }
 
     @Test
-    public void testRepeatedChildFirstClassLoading() throws Exception {
+    void testRepeatedChildFirstClassLoading() throws Exception {
         final ClassLoader parentClassLoader = getClass().getClassLoader();
 
         // collect the libraries / class folders with RocksDB related code: the state backend and
@@ -138,16 +135,16 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
         final Class<?> clazz3 = Class.forName(className, false, childClassLoader);
         final Class<?> clazz4 = Class.forName(className, false, childClassLoader);
 
-        assertNotEquals(clazz1, clazz2);
+        Assertions.assertNotEquals(clazz1, clazz2);
 
-        assertEquals(clazz2, clazz3);
-        assertEquals(clazz2, clazz4);
+        assertSame(clazz2, clazz3);
+        assertSame(clazz2, clazz4);
 
         childClassLoader.close();
     }
 
     @Test
-    public void testRepeatedParentFirstPatternClass() throws Exception {
+    void testRepeatedParentFirstPatternClass() throws Exception {
         final String className = FlinkUserCodeClassLoadersTest.class.getName();
         final String parentFirstPattern = className.substring(0, className.lastIndexOf('.'));
 
@@ -170,15 +167,15 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
         final Class<?> clazz3 = Class.forName(className, false, childClassLoader);
         final Class<?> clazz4 = Class.forName(className, false, childClassLoader);
 
-        assertEquals(clazz1, clazz2);
-        assertEquals(clazz1, clazz3);
-        assertEquals(clazz1, clazz4);
+        assertSame(clazz1, clazz2);
+        assertSame(clazz1, clazz3);
+        assertSame(clazz1, clazz4);
 
         childClassLoader.close();
     }
 
     @Test
-    public void testGetClassLoaderInfo() throws Exception {
+    void testGetClassLoaderInfo() throws Exception {
         final ClassLoader parentClassLoader = getClass().getClassLoader();
 
         final URL childCodePath = getClass().getProtectionDomain().getCodeSource().getLocation();
@@ -188,7 +185,7 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
 
         String formattedURL = ClassLoaderUtil.formatURL(childCodePath);
 
-        assertEquals(
+        Assertions.assertEquals(
                 ClassLoaderUtil.getUserCodeClassLoaderInfo(childClassLoader),
                 "URL ClassLoader:" + formattedURL);
 
@@ -196,7 +193,7 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
     }
 
     @Test
-    public void testGetClassLoaderInfoWithClassLoaderClosed() throws Exception {
+    void testGetClassLoaderInfoWithClassLoaderClosed() throws Exception {
         final ClassLoader parentClassLoader = getClass().getClassLoader();
 
         final URL childCodePath = getClass().getProtectionDomain().getCodeSource().getLocation();
@@ -206,7 +203,7 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
 
         childClassLoader.close();
 
-        assertThat(
+        MatcherAssert.assertThat(
                 ClassLoaderUtil.getUserCodeClassLoaderInfo(childClassLoader),
                 startsWith("Cannot access classloader info due to an exception."));
     }
@@ -228,7 +225,7 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
     }
 
     @Test
-    public void testClosingOfClassloader() throws Exception {
+    void testClosingOfClassloader() throws Exception {
         final String className = ClassToLoad.class.getName();
 
         final ClassLoader parentClassLoader = ClassLoader.getSystemClassLoader().getParent();
@@ -240,7 +237,7 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
 
         final Class<?> loadedClass = childClassLoader.loadClass(className);
 
-        assertNotSame(ClassToLoad.class, loadedClass);
+        Assertions.assertNotSame(ClassToLoad.class, loadedClass);
 
         childClassLoader.close();
 
@@ -250,14 +247,14 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
     }
 
     @Test
-    public void testParallelCapable() {
+    void testParallelCapable() {
         // It will be true only if all the super classes (except class Object) of the caller are
         // registered as parallel capable.
-        assertTrue(TestParentFirstClassLoader.isParallelCapable);
+        Assertions.assertTrue(TestParentFirstClassLoader.isParallelCapable);
     }
 
     @Test
-    public void testParentFirstClassLoadingByAddURL() throws Exception {
+    void testParentFirstClassLoadingByAddURL() throws Exception {
         // collect the libraries / class folders with RocksDB related code: the state backend and
         // RocksDB itself
         final URL childCodePath = getClass().getProtectionDomain().getCodeSource().getLocation();
@@ -282,8 +279,8 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
         final Class<?> clazz2 = Class.forName(USER_CLASS, false, childClassLoader1);
         final Class<?> clazz3 = Class.forName(USER_CLASS, false, childClassLoader2);
 
-        assertEquals(clazz1, clazz2);
-        assertEquals(clazz1, clazz3);
+        assertSame(clazz1, clazz2);
+        assertSame(clazz1, clazz3);
 
         parentClassLoader.close();
         childClassLoader1.close();
@@ -291,7 +288,7 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
     }
 
     @Test
-    public void testChildFirstClassLoadingByAddURL() throws Exception {
+    void testChildFirstClassLoadingByAddURL() throws Exception {
 
         // collect the libraries / class folders with RocksDB related code: the state backend and
         // RocksDB itself
@@ -320,7 +317,7 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
         final Class<?> clazz1 = Class.forName(USER_CLASS, false, childClassLoader1);
         final Class<?> clazz2 = Class.forName(USER_CLASS, false, childClassLoader2);
 
-        assertNotEquals(clazz1, clazz2);
+        Assertions.assertNotEquals(clazz1, clazz2);
 
         parentClassLoader.close();
         childClassLoader1.close();
@@ -338,7 +335,7 @@ public class FlinkUserCodeClassLoadersTest extends TestLogger {
 
     private static class TestParentFirstClassLoader
             extends FlinkUserCodeClassLoaders.ParentFirstClassLoader {
-        public static boolean isParallelCapable;
+        public static final boolean isParallelCapable;
 
         static {
             isParallelCapable = ClassLoader.registerAsParallelCapable();

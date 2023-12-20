@@ -20,44 +20,43 @@ package org.apache.flink.util;
 
 import org.apache.flink.core.testutils.CommonTestUtils;
 
-import org.junit.Test;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /** This class contains tests for the {@link org.apache.flink.util.AbstractID} class. */
 public class AbstractIDTest extends TestLogger {
 
     /** Tests the serialization/deserialization of an abstract ID. */
     @Test
-    public void testSerialization() throws Exception {
+    void testSerialization() throws Exception {
         final AbstractID origID = new AbstractID();
         final AbstractID copyID = CommonTestUtils.createCopySerializable(origID);
 
-        assertEquals(origID.hashCode(), copyID.hashCode());
-        assertEquals(origID, copyID);
+        Assertions.assertEquals(origID.hashCode(), copyID.hashCode());
+        Assertions.assertEquals(origID, copyID);
     }
 
     @Test
-    public void testConvertToBytes() throws Exception {
+    void testConvertToBytes() {
         final AbstractID origID = new AbstractID();
 
         AbstractID copy1 = new AbstractID(origID);
         AbstractID copy2 = new AbstractID(origID.getBytes());
         AbstractID copy3 = new AbstractID(origID.getLowerPart(), origID.getUpperPart());
 
-        assertEquals(origID, copy1);
-        assertEquals(origID, copy2);
-        assertEquals(origID, copy3);
+        Assertions.assertEquals(origID, copy1);
+        Assertions.assertEquals(origID, copy2);
+        Assertions.assertEquals(origID, copy3);
     }
 
     @Test
-    public void testCompare() throws Exception {
+    void testCompare() throws Exception {
         AbstractID id1 = new AbstractID(0, 0);
         AbstractID id2 = new AbstractID(1, 0);
         AbstractID id3 = new AbstractID(0, 1);
@@ -71,16 +70,16 @@ public class AbstractIDTest extends TestLogger {
         AbstractID id10 = new AbstractID(Long.MIN_VALUE, Long.MAX_VALUE);
 
         // test self equality
-        assertEquals(0, id1.compareTo(CommonTestUtils.createCopySerializable(id1)));
-        assertEquals(0, id2.compareTo(CommonTestUtils.createCopySerializable(id2)));
-        assertEquals(0, id3.compareTo(CommonTestUtils.createCopySerializable(id3)));
-        assertEquals(0, id4.compareTo(CommonTestUtils.createCopySerializable(id4)));
-        assertEquals(0, id5.compareTo(CommonTestUtils.createCopySerializable(id5)));
-        assertEquals(0, id6.compareTo(CommonTestUtils.createCopySerializable(id6)));
-        assertEquals(0, id7.compareTo(CommonTestUtils.createCopySerializable(id7)));
-        assertEquals(0, id8.compareTo(CommonTestUtils.createCopySerializable(id8)));
-        assertEquals(0, id9.compareTo(CommonTestUtils.createCopySerializable(id9)));
-        assertEquals(0, id10.compareTo(CommonTestUtils.createCopySerializable(id10)));
+        Assertions.assertEquals(0, id1.compareTo(CommonTestUtils.createCopySerializable(id1)));
+        Assertions.assertEquals(0, id2.compareTo(CommonTestUtils.createCopySerializable(id2)));
+        Assertions.assertEquals(0, id3.compareTo(CommonTestUtils.createCopySerializable(id3)));
+        Assertions.assertEquals(0, id4.compareTo(CommonTestUtils.createCopySerializable(id4)));
+        Assertions.assertEquals(0, id5.compareTo(CommonTestUtils.createCopySerializable(id5)));
+        Assertions.assertEquals(0, id6.compareTo(CommonTestUtils.createCopySerializable(id6)));
+        Assertions.assertEquals(0, id7.compareTo(CommonTestUtils.createCopySerializable(id7)));
+        Assertions.assertEquals(0, id8.compareTo(CommonTestUtils.createCopySerializable(id8)));
+        Assertions.assertEquals(0, id9.compareTo(CommonTestUtils.createCopySerializable(id9)));
+        Assertions.assertEquals(0, id10.compareTo(CommonTestUtils.createCopySerializable(id10)));
 
         // test order
         assertCompare(id1, id2, -1);
@@ -109,7 +108,7 @@ public class AbstractIDTest extends TestLogger {
      * abstractID-with-toString-field-set have been created with the serialized data.
      */
     @Test
-    public void testOldAbstractIDDeserialization() throws Exception {
+    void testOldAbstractIDDeserialization() throws Exception {
         final long lowerPart = 42L;
         final long upperPart = 1337L;
         final AbstractID expectedAbstractId = new AbstractID(lowerPart, upperPart);
@@ -120,7 +119,7 @@ public class AbstractIDTest extends TestLogger {
             final AbstractID deserializedAbstractId =
                     InstantiationUtil.deserializeObject(
                             resourceAsStream, getClass().getClassLoader());
-            assertThat(deserializedAbstractId, is(equalTo(expectedAbstractId)));
+            MatcherAssert.assertThat(deserializedAbstractId, is(equalTo(expectedAbstractId)));
         }
 
         final String resourceName2 = "abstractID-with-toString-field-set";
@@ -129,7 +128,7 @@ public class AbstractIDTest extends TestLogger {
             final AbstractID deserializedAbstractId =
                     InstantiationUtil.deserializeObject(
                             resourceAsStream, getClass().getClassLoader());
-            assertThat(deserializedAbstractId, is(equalTo(expectedAbstractId)));
+            MatcherAssert.assertThat(deserializedAbstractId, is(equalTo(expectedAbstractId)));
         }
     }
 
@@ -140,7 +139,7 @@ public class AbstractIDTest extends TestLogger {
         int sgnAB = cmpAB > 0 ? 1 : (cmpAB < 0 ? -1 : 0);
         int sgnBA = cmpBA > 0 ? 1 : (cmpBA < 0 ? -1 : 0);
 
-        assertEquals(signum, sgnAB);
-        assertTrue(sgnAB == -sgnBA);
+        Assertions.assertEquals(signum, sgnAB);
+        Assertions.assertEquals(sgnAB, -sgnBA);
     }
 }

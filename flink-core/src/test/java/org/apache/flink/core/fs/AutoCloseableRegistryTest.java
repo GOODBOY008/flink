@@ -20,17 +20,15 @@ package org.apache.flink.core.fs;
 
 import org.apache.flink.util.TestLogger;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /** Tests for the {@link AutoCloseableRegistry}. */
 public class AutoCloseableRegistryTest extends TestLogger {
     @Test
-    public void testReverseOrderOfClosing() throws Exception {
+    void testReverseOrderOfClosing() throws Exception {
         ArrayList<Integer> closeOrder = new ArrayList<>();
         AutoCloseableRegistry autoCloseableRegistry = new AutoCloseableRegistry();
         autoCloseableRegistry.registerCloseable(() -> closeOrder.add(3));
@@ -41,12 +39,12 @@ public class AutoCloseableRegistryTest extends TestLogger {
 
         int expected = 1;
         for (int actual : closeOrder) {
-            assertEquals(expected++, actual);
+            Assertions.assertEquals(expected++, actual);
         }
     }
 
     @Test
-    public void testSuppressedExceptions() throws Exception {
+    void testSuppressedExceptions() throws Exception {
         AutoCloseableRegistry autoCloseableRegistry = new AutoCloseableRegistry();
         autoCloseableRegistry.registerCloseable(
                 () -> {
@@ -64,11 +62,12 @@ public class AutoCloseableRegistryTest extends TestLogger {
         try {
             autoCloseableRegistry.close();
 
-            fail("Close should throw exception");
+            Assertions.fail("Close should throw exception");
         } catch (Exception ex) {
-            assertEquals("1", ex.getMessage());
-            assertEquals("2", ex.getSuppressed()[0].getMessage());
-            assertEquals("java.lang.AssertionError: 3", ex.getSuppressed()[1].getMessage());
+            Assertions.assertEquals("1", ex.getMessage());
+            Assertions.assertEquals("2", ex.getSuppressed()[0].getMessage());
+            Assertions.assertEquals(
+                    "java.lang.AssertionError: 3", ex.getSuppressed()[1].getMessage());
         }
     }
 }

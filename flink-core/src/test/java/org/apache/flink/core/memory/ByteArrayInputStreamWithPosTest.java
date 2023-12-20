@@ -18,12 +18,10 @@
 
 package org.apache.flink.core.memory;
 
-import org.junit.Assert;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
-
-import static org.junit.Assert.assertEquals;
 
 /** Tests for {@link ByteArrayInputStreamWithPos}. */
 public class ByteArrayInputStreamWithPosTest {
@@ -35,59 +33,59 @@ public class ByteArrayInputStreamWithPosTest {
     private final ByteArrayInputStreamWithPos stream = new ByteArrayInputStreamWithPos(data);
 
     @Test
-    public void testGetWithNullArray() {
+    void testGetWithNullArray() {
         thrown.expect(NullPointerException.class);
         stream.read(null, 0, 1);
     }
 
     @Test
-    public void testGetWithNegativeLength() {
+    void testGetWithNegativeLength() {
         int read = stream.read(new byte[0], 0, -1);
-        assertEquals(0, read);
+        Assertions.assertEquals(0, read);
     }
 
     @Test
-    public void testGetWithTargetArrayOverflow() {
+    void testGetWithTargetArrayOverflow() {
         thrown.expect(IndexOutOfBoundsException.class);
         stream.read(new byte[0], 0, 2);
     }
 
     @Test
-    public void testGetWithEOF() {
+    void testGetWithEOF() {
         drainStream(stream);
         int read = stream.read(new byte[1], 0, 1);
-        assertEquals(-1, read);
+        Assertions.assertEquals(-1, read);
     }
 
     @Test
-    public void testGetMoreThanAvailable() {
+    void testGetMoreThanAvailable() {
         int read = stream.read(new byte[20], 0, 20);
-        assertEquals(10, read);
-        assertEquals(-1, stream.read()); // exhausted now
+        Assertions.assertEquals(10, read);
+        Assertions.assertEquals(-1, stream.read()); // exhausted now
     }
 
     /** Test setting position on a {@link ByteArrayInputStreamWithPos}. */
     @Test
-    public void testSetPosition() throws Exception {
-        Assert.assertEquals(data.length, stream.available());
-        Assert.assertEquals('0', stream.read());
+    void testSetPosition() {
+        Assertions.assertEquals(data.length, stream.available());
+        Assertions.assertEquals('0', stream.read());
 
         stream.setPosition(1);
-        Assert.assertEquals(data.length - 1, stream.available());
-        Assert.assertEquals('1', stream.read());
+        Assertions.assertEquals(data.length - 1, stream.available());
+        Assertions.assertEquals('1', stream.read());
 
         stream.setPosition(3);
-        Assert.assertEquals(data.length - 3, stream.available());
-        Assert.assertEquals('3', stream.read());
+        Assertions.assertEquals(data.length - 3, stream.available());
+        Assertions.assertEquals('3', stream.read());
 
         stream.setPosition(data.length);
-        Assert.assertEquals(0, stream.available());
-        Assert.assertEquals(-1, stream.read());
+        Assertions.assertEquals(0, stream.available());
+        Assertions.assertEquals(-1, stream.read());
     }
 
     /** Test that the expected position exceeds the capacity of the byte array. */
     @Test
-    public void testSetTooLargePosition() throws Exception {
+    void testSetTooLargePosition() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Position out of bounds.");
         stream.setPosition(data.length + 1);
@@ -95,24 +93,24 @@ public class ByteArrayInputStreamWithPosTest {
 
     /** Test setting a negative position. */
     @Test
-    public void testSetNegativePosition() throws Exception {
+    void testSetNegativePosition() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Position out of bounds.");
         stream.setPosition(-1);
     }
 
     @Test
-    public void testSetBuffer() {
+    void testSetBuffer() {
         ByteArrayInputStreamWithPos in = new ByteArrayInputStreamWithPos();
-        Assert.assertEquals(-1, in.read());
+        Assertions.assertEquals(-1, in.read());
         byte[] testData = new byte[] {0x42, 0x43, 0x44, 0x45};
         int off = 1;
         int len = 2;
         in.setBuffer(testData, off, len);
         for (int i = 0; i < len; ++i) {
-            Assert.assertEquals(testData[i + off], in.read());
+            Assertions.assertEquals(testData[i + off], in.read());
         }
-        Assert.assertEquals(-1, in.read());
+        Assertions.assertEquals(-1, in.read());
     }
 
     private static int drainStream(ByteArrayInputStreamWithPos stream) {

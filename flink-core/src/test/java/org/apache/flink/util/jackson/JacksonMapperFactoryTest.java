@@ -120,7 +120,7 @@ class JacksonMapperFactoryTest {
     }
 
     public static class TypeWithOptional {
-        public Optional<String> data;
+        public final Optional<String> data;
 
         @JsonCreator
         public TypeWithOptional(@JsonProperty("data") Optional<String> data) {
@@ -129,7 +129,7 @@ class JacksonMapperFactoryTest {
     }
 
     public static class TypeWithInstant {
-        public Instant data;
+        public final Instant data;
 
         @JsonCreator
         public TypeWithInstant(@JsonProperty("data") Instant data) {

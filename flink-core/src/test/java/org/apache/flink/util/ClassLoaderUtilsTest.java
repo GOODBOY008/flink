@@ -18,7 +18,8 @@
 
 package org.apache.flink.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,15 +32,11 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 /** Tests that validate the {@link ClassLoaderUtil}. */
 public class ClassLoaderUtilsTest {
 
     @Test
-    public void testWithURLClassLoader() {
+    void testWithURLClassLoader() {
         File validJar = null;
         File invalidJar = null;
 
@@ -49,16 +46,10 @@ public class ClassLoaderUtilsTest {
             createValidJar(validJar);
 
             // validate that the JAR is correct and the test setup is not broken
-            JarFile jarFile = null;
-            try {
-                jarFile = new JarFile(validJar.getAbsolutePath());
+            try (JarFile jarFile = new JarFile(validJar.getAbsolutePath())) {
             } catch (Exception e) {
                 e.printStackTrace();
-                fail("test setup broken: cannot create a valid jar file");
-            } finally {
-                if (jarFile != null) {
-                    jarFile.close();
-                }
+                Assertions.fail("test setup broken: cannot create a valid jar file");
             }
 
             // file with some random contents
@@ -72,7 +63,7 @@ public class ClassLoaderUtilsTest {
 
             // non existing file
             File nonExisting = File.createTempFile("flink-url-test", ".tmp");
-            assertTrue("Cannot create and delete temp file", nonExisting.delete());
+            Assertions.assertTrue(nonExisting.delete(), "Cannot create and delete temp file");
 
             // create a URL classloader with
             // - a HTTP URL
@@ -90,13 +81,14 @@ public class ClassLoaderUtilsTest {
             URLClassLoader loader = new URLClassLoader(urls, getClass().getClassLoader());
             String info = ClassLoaderUtil.getUserCodeClassLoaderInfo(loader);
 
-            assertTrue(info.indexOf("/some/file/path") > 0);
-            assertTrue(info.indexOf(validJar.getAbsolutePath() + "' (valid") > 0);
-            assertTrue(info.indexOf(invalidJar.getAbsolutePath() + "' (invalid JAR") > 0);
-            assertTrue(info.indexOf(nonExisting.getAbsolutePath() + "' (missing") > 0);
+            Assertions.assertTrue(info.indexOf("/some/file/path") > 0);
+            Assertions.assertTrue(info.indexOf(validJar.getAbsolutePath() + "' (valid") > 0);
+            Assertions.assertTrue(
+                    info.indexOf(invalidJar.getAbsolutePath() + "' (invalid JAR") > 0);
+            Assertions.assertTrue(info.indexOf(nonExisting.getAbsolutePath() + "' (missing") > 0);
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         } finally {
             if (validJar != null) {
                 //noinspection ResultOfMethodCallIgnored
@@ -135,25 +127,25 @@ public class ClassLoaderUtilsTest {
     }
 
     @Test
-    public void testWithAppClassLoader() {
+    void testWithAppClassLoader() {
         try {
             String result =
                     ClassLoaderUtil.getUserCodeClassLoaderInfo(ClassLoader.getSystemClassLoader());
-            assertTrue(result.toLowerCase().contains("system classloader"));
+            Assertions.assertTrue(result.toLowerCase().contains("system classloader"));
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 
     @Test
-    public void testInvalidClassLoaders() {
+    void testInvalidClassLoaders() {
         try {
             // must return something when invoked with 'null'
-            assertNotNull(ClassLoaderUtil.getUserCodeClassLoaderInfo(null));
+            Assertions.assertNotNull(ClassLoaderUtil.getUserCodeClassLoaderInfo(null));
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 }

@@ -45,11 +45,8 @@ public final class TestConfigUtils {
             final File confFile = new File(confDir, GlobalConfiguration.FLINK_CONF_FILENAME);
 
             try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(confFile));
-                try {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(confFile))) {
                     writer.write(contents);
-                } finally {
-                    writer.close();
                 }
                 return GlobalConfiguration.loadConfiguration(confDir.getAbsolutePath());
             } finally {

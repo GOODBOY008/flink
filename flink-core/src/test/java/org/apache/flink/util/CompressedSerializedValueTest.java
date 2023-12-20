@@ -20,42 +20,38 @@ package org.apache.flink.util;
 
 import org.apache.flink.core.testutils.CommonTestUtils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 
 /** Tests for {@link CompressedSerializedValue}. */
 public class CompressedSerializedValueTest {
     @Test
-    public void testSimpleValue() throws Exception {
+    void testSimpleValue() throws Exception {
 
         final String value = "teststring";
 
         CompressedSerializedValue<String> v = CompressedSerializedValue.fromObject(value);
         CompressedSerializedValue<String> copy = CommonTestUtils.createCopySerializable(v);
 
-        assertEquals(value, v.deserializeValue(getClass().getClassLoader()));
-        assertEquals(value, copy.deserializeValue(getClass().getClassLoader()));
+        Assertions.assertEquals(value, v.deserializeValue(getClass().getClassLoader()));
+        Assertions.assertEquals(value, copy.deserializeValue(getClass().getClassLoader()));
 
-        assertEquals(v, copy);
-        assertEquals(v.hashCode(), copy.hashCode());
+        Assertions.assertEquals(v, copy);
+        Assertions.assertEquals(v.hashCode(), copy.hashCode());
 
-        assertNotNull(v.toString());
-        assertNotNull(copy.toString());
+        Assertions.assertNotNull(v.toString());
+        Assertions.assertNotNull(copy.toString());
 
-        assertNotEquals(0, v.getSize());
-        assertArrayEquals(v.getByteArray(), copy.getByteArray());
+        Assertions.assertNotEquals(0, v.getSize());
+        Assertions.assertArrayEquals(v.getByteArray(), copy.getByteArray());
 
         byte[] bytes = v.getByteArray();
         CompressedSerializedValue<String> saved =
                 CompressedSerializedValue.fromBytes(Arrays.copyOf(bytes, bytes.length));
-        assertEquals(v, saved);
-        assertArrayEquals(v.getByteArray(), saved.getByteArray());
+        Assertions.assertEquals(v, saved);
+        Assertions.assertArrayEquals(v.getByteArray(), saved.getByteArray());
     }
 
     @Test(expected = NullPointerException.class)

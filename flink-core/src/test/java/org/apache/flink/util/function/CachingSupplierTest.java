@@ -30,7 +30,7 @@ class CachingSupplierTest {
     @Test
     void testCaching() {
         final AtomicInteger instantiationCounts = new AtomicInteger();
-        final Supplier<Integer> backingSupplier = () -> instantiationCounts.incrementAndGet();
+        final Supplier<Integer> backingSupplier = instantiationCounts::incrementAndGet;
         final CachingSupplier<Integer> cachingSupplier = new CachingSupplier<>(backingSupplier);
 
         assertThat(cachingSupplier.get(), is(cachingSupplier.get()));

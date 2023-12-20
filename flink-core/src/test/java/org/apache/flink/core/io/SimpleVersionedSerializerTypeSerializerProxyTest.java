@@ -21,9 +21,9 @@ package org.apache.flink.core.io;
 import org.apache.flink.api.common.typeutils.SerializerTestBase;
 import org.apache.flink.api.common.typeutils.TypeSerializer;
 
-import java.nio.charset.StandardCharsets;
+import org.junit.jupiter.api.Assertions;
 
-import static org.junit.Assert.assertEquals;
+import java.nio.charset.StandardCharsets;
 
 /** Tests for {@link SimpleVersionedSerializerTypeSerializerProxy}. */
 class SimpleVersionedSerializerTypeSerializerProxyTest extends SerializerTestBase<String> {
@@ -79,7 +79,7 @@ class SimpleVersionedSerializerTypeSerializerProxyTest extends SerializerTestBas
 
         @Override
         public String deserialize(int version, byte[] serialized) {
-            assertEquals(VERSION, version);
+            Assertions.assertEquals(VERSION, version);
             return new String(serialized, StandardCharsets.UTF_8);
         }
 

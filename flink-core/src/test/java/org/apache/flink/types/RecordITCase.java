@@ -24,9 +24,9 @@ import org.apache.flink.core.memory.DataOutputView;
 import org.apache.flink.core.memory.DataOutputViewStreamWrapper;
 import org.apache.flink.util.TestLogger;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -40,7 +40,7 @@ public class RecordITCase extends TestLogger {
     private DataInputView in;
     private DataOutputView out;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         PipedInputStream pipedInput = new PipedInputStream(32 * 1024 * 1024);
         this.in = new DataInputViewStreamWrapper(pipedInput);
@@ -48,7 +48,7 @@ public class RecordITCase extends TestLogger {
     }
 
     @Test
-    public void massiveRandomBlackBoxTests() {
+    void massiveRandomBlackBoxTests() {
         try {
             // random test with records with a small number of fields
             for (int i = 0; i < 100000; i++) {
@@ -68,7 +68,7 @@ public class RecordITCase extends TestLogger {
                 RecordTest.blackboxTestRecordWithValues(fields, this.rand, this.in, this.out);
             }
         } catch (Throwable t) {
-            Assert.fail("Test failed due to an exception: " + t.getMessage());
+            Assertions.fail("Test failed due to an exception: " + t.getMessage());
         }
     }
 }

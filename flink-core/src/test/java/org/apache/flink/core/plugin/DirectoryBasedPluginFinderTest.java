@@ -20,9 +20,9 @@ package org.apache.flink.core.plugin;
 
 import org.apache.flink.util.Preconditions;
 
-import org.junit.Assert;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.TemporaryFolder;
 
 import javax.annotation.Nonnull;
@@ -39,20 +39,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.fail;
-
 /** Test for {@link DirectoryBasedPluginFinder}. */
 public class DirectoryBasedPluginFinderTest {
 
     @Rule public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test
-    public void createPluginDescriptorsForDirectory() throws Exception {
+    void createPluginDescriptorsForDirectory() throws Exception {
         File rootFolder = temporaryFolder.newFolder();
         PluginFinder descriptorsFactory = new DirectoryBasedPluginFinder(rootFolder.toPath());
         Collection<PluginDescriptor> actual = descriptorsFactory.findPlugins();
 
-        Assert.assertTrue("empty root dir -> expected no actual", actual.isEmpty());
+        Assertions.assertTrue(actual.isEmpty(), "empty root dir -> expected no actual");
 
         List<File> subDirs =
                 Stream.of("A", "B", "C")
@@ -65,9 +63,9 @@ public class DirectoryBasedPluginFinderTest {
 
         try {
             descriptorsFactory.findPlugins();
-            fail("all empty plugin sub-dirs");
+            Assertions.fail("all empty plugin sub-dirs");
         } catch (RuntimeException expected) {
-            Assert.assertTrue(expected.getCause() instanceof IOException);
+          Assertions.assertInstanceOf(IOException.class, expected.getCause());
         }
 
         for (File subDir : subDirs) {
@@ -78,9 +76,9 @@ public class DirectoryBasedPluginFinderTest {
 
         try {
             descriptorsFactory.findPlugins();
-            fail("still no jars in plugin sub-dirs");
+            Assertions.fail("still no jars in plugin sub-dirs");
         } catch (RuntimeException expected) {
-            Assert.assertTrue(expected.getCause() instanceof IOException);
+          Assertions.assertInstanceOf(IOException.class, expected.getCause());
         }
 
         List<PluginDescriptor> expected = new ArrayList<>(3);
@@ -101,7 +99,7 @@ public class DirectoryBasedPluginFinderTest {
 
         actual = descriptorsFactory.findPlugins();
 
-        Assert.assertTrue(equalsIgnoreOrder(expected, new ArrayList<>(actual)));
+        Assertions.assertTrue(equalsIgnoreOrder(expected, new ArrayList<>(actual)));
     }
 
     private boolean equalsIgnoreOrder(List<PluginDescriptor> a, List<PluginDescriptor> b) {

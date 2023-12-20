@@ -18,29 +18,29 @@
 
 package org.apache.flink.util;
 
-import org.junit.Test;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 
 /** Tests for the {@link FlinkUserCodeClassLoader}. */
 public class FlinkUserCodeClassLoaderTest extends TestLogger {
     @Test
-    public void testExceptionHandling() {
+    void testExceptionHandling() {
         RuntimeException expectedException = new RuntimeException("Expected exception");
         AtomicReference<Throwable> handledException = new AtomicReference<>();
         try (FlinkUserCodeClassLoader classLoaderWithErrorHandler =
                 new ThrowingURLClassLoader(handledException::set, expectedException)) {
             classLoaderWithErrorHandler.loadClass("dummy.class");
-            fail("The expected exception is not thrown");
+            Assertions.fail("The expected exception is not thrown");
         } catch (Throwable t) {
-            assertThat(handledException.get(), is(expectedException));
-            assertThat(t, is(expectedException));
+            MatcherAssert.assertThat(handledException.get(), is(expectedException));
+            MatcherAssert.assertThat(t, is(expectedException));
         }
     }
 

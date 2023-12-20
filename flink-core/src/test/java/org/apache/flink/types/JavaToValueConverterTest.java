@@ -21,80 +21,86 @@ package org.apache.flink.types;
 import org.apache.flink.core.memory.DataInputView;
 import org.apache.flink.core.memory.DataOutputView;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-
-import static org.junit.Assert.*;
 
 public class JavaToValueConverterTest {
 
     @Test
-    public void testJavaToValueConversion() {
+    void testJavaToValueConversion() {
         try {
-            assertNull(JavaToValueConverter.convertBoxedJavaType(null));
+            Assertions.assertNull(JavaToValueConverter.convertBoxedJavaType(null));
 
-            assertEquals(
+            Assertions.assertEquals(
                     new StringValue("123Test"),
                     JavaToValueConverter.convertBoxedJavaType("123Test"));
-            assertEquals(
+            Assertions.assertEquals(
                     new ByteValue((byte) 44), JavaToValueConverter.convertBoxedJavaType((byte) 44));
-            assertEquals(
+            Assertions.assertEquals(
                     new ShortValue((short) 10000),
                     JavaToValueConverter.convertBoxedJavaType((short) 10000));
-            assertEquals(new IntValue(3567564), JavaToValueConverter.convertBoxedJavaType(3567564));
-            assertEquals(
+            Assertions.assertEquals(
+                    new IntValue(3567564), JavaToValueConverter.convertBoxedJavaType(3567564));
+            Assertions.assertEquals(
                     new LongValue(767692734),
                     JavaToValueConverter.convertBoxedJavaType(767692734L));
-            assertEquals(new FloatValue(17.5f), JavaToValueConverter.convertBoxedJavaType(17.5f));
-            assertEquals(
+            Assertions.assertEquals(
+                    new FloatValue(17.5f), JavaToValueConverter.convertBoxedJavaType(17.5f));
+            Assertions.assertEquals(
                     new DoubleValue(3.1415926),
                     JavaToValueConverter.convertBoxedJavaType(3.1415926));
-            assertEquals(new BooleanValue(true), JavaToValueConverter.convertBoxedJavaType(true));
-            assertEquals(new CharValue('@'), JavaToValueConverter.convertBoxedJavaType('@'));
+            Assertions.assertEquals(
+                    new BooleanValue(true), JavaToValueConverter.convertBoxedJavaType(true));
+            Assertions.assertEquals(
+                    new CharValue('@'), JavaToValueConverter.convertBoxedJavaType('@'));
 
             try {
-                JavaToValueConverter.convertBoxedJavaType(new ArrayList<Object>());
-                fail("Accepted invalid type.");
+                JavaToValueConverter.convertBoxedJavaType(new ArrayList<>());
+                Assertions.fail("Accepted invalid type.");
             } catch (IllegalArgumentException e) {
                 // expected
             }
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 
     @Test
-    public void testValueToJavaConversion() {
+    void testValueToJavaConversion() {
         try {
-            assertNull(JavaToValueConverter.convertValueType(null));
+            Assertions.assertNull(JavaToValueConverter.convertValueType(null));
 
-            assertEquals(
+            Assertions.assertEquals(
                     "123Test", JavaToValueConverter.convertValueType(new StringValue("123Test")));
-            assertEquals(
+            Assertions.assertEquals(
                     (byte) 44, JavaToValueConverter.convertValueType(new ByteValue((byte) 44)));
-            assertEquals(
+            Assertions.assertEquals(
                     (short) 10000,
                     JavaToValueConverter.convertValueType(new ShortValue((short) 10000)));
-            assertEquals(3567564, JavaToValueConverter.convertValueType(new IntValue(3567564)));
-            assertEquals(
+            Assertions.assertEquals(
+                    3567564, JavaToValueConverter.convertValueType(new IntValue(3567564)));
+            Assertions.assertEquals(
                     767692734L, JavaToValueConverter.convertValueType(new LongValue(767692734)));
-            assertEquals(17.5f, JavaToValueConverter.convertValueType(new FloatValue(17.5f)));
-            assertEquals(
+            Assertions.assertEquals(
+                    17.5f, JavaToValueConverter.convertValueType(new FloatValue(17.5f)));
+            Assertions.assertEquals(
                     3.1415926, JavaToValueConverter.convertValueType(new DoubleValue(3.1415926)));
-            assertEquals(true, JavaToValueConverter.convertValueType(new BooleanValue(true)));
-            assertEquals('@', JavaToValueConverter.convertValueType(new CharValue('@')));
+            Assertions.assertEquals(
+                    true, JavaToValueConverter.convertValueType(new BooleanValue(true)));
+            Assertions.assertEquals('@', JavaToValueConverter.convertValueType(new CharValue('@')));
 
             try {
                 JavaToValueConverter.convertValueType(new MyValue());
-                fail("Accepted invalid type.");
+                Assertions.fail("Accepted invalid type.");
             } catch (IllegalArgumentException e) {
                 // expected
             }
         } catch (Exception e) {
             e.printStackTrace();
-            fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 

@@ -37,13 +37,10 @@ public class TestFileUtils {
         File f = File.createTempFile(FILE_PREFIX, FILE_SUFFIX);
         f.deleteOnExit();
 
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(f));
-        try {
+        try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(f))) {
             for (; bytes > 0; bytes--) {
                 out.write(0);
             }
-        } finally {
-            out.close();
         }
         return f.toURI().toString();
     }

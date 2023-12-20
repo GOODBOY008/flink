@@ -31,9 +31,11 @@ import org.apache.flink.util.TestLogger;
 import org.apache.flink.util.function.ThrowingConsumer;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Assume;
+import org.hamcrest.MatcherAssert;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
 
@@ -43,7 +45,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -54,11 +55,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * This class tests the functionality of the {@link LocalFileSystem} class in its components. In
@@ -70,7 +66,7 @@ public class LocalFileSystemTest extends TestLogger {
 
     /** This test checks the functionality of the {@link LocalFileSystem} class. */
     @Test
-    public void testLocalFilesystem() throws Exception {
+    void testLocalFilesystem() throws Exception {
         final File tempdir = new File(temporaryFolder.getRoot(), UUID.randomUUID().toString());
 
         final File testfile1 = new File(tempdir, UUID.randomUUID().toString());
@@ -88,34 +84,34 @@ public class LocalFileSystemTest extends TestLogger {
          */
 
         // check that dir is not existent yet
-        assertFalse(lfs.exists(pathtotmpdir));
-        assertTrue(tempdir.mkdirs());
+        Assertions.assertFalse(lfs.exists(pathtotmpdir));
+        Assertions.assertTrue(tempdir.mkdirs());
 
         // check that local file system recognizes file..
-        assertTrue(lfs.exists(pathtotmpdir));
+        Assertions.assertTrue(lfs.exists(pathtotmpdir));
         final FileStatus localstatus1 = lfs.getFileStatus(pathtotmpdir);
 
         // check that lfs recognizes directory..
-        assertTrue(localstatus1.isDir());
+        Assertions.assertTrue(localstatus1.isDir());
 
         // get status for files in this (empty) directory..
         final FileStatus[] statusforfiles = lfs.listStatus(pathtotmpdir);
 
         // no files in there.. hence, must be zero
-        assertTrue(statusforfiles.length == 0);
+        Assertions.assertEquals(0, statusforfiles.length);
 
         // check that lfs can delete directory..
         lfs.delete(pathtotmpdir, true);
 
         // double check that directory is not existent anymore..
-        assertFalse(lfs.exists(pathtotmpdir));
-        assertFalse(tempdir.exists());
+        Assertions.assertFalse(lfs.exists(pathtotmpdir));
+        Assertions.assertFalse(tempdir.exists());
 
         // re-create directory..
         lfs.mkdirs(pathtotmpdir);
 
         // creation successful?
-        assertTrue(tempdir.exists());
+        Assertions.assertTrue(tempdir.exists());
 
         /*
          * check that lfs can create/read/write from/to files properly and read meta information..
@@ -123,31 +119,31 @@ public class LocalFileSystemTest extends TestLogger {
 
         // create files.. one ""natively"", one using lfs
         final FSDataOutputStream lfsoutput1 = lfs.create(pathtotestfile1, WriteMode.NO_OVERWRITE);
-        assertTrue(testfile2.createNewFile());
+        Assertions.assertTrue(testfile2.createNewFile());
 
         // does lfs create files? does lfs recognize created files?
-        assertTrue(testfile1.exists());
-        assertTrue(lfs.exists(pathtotestfile2));
+        Assertions.assertTrue(testfile1.exists());
+        Assertions.assertTrue(lfs.exists(pathtotestfile2));
 
         // test that lfs can write to files properly
         final byte[] testbytes = {1, 2, 3, 4, 5};
         lfsoutput1.write(testbytes);
         lfsoutput1.close();
 
-        assertEquals(testfile1.length(), 5L);
+        Assertions.assertEquals(testfile1.length(), 5L);
 
         byte[] testbytestest = new byte[5];
         try (FileInputStream fisfile1 = new FileInputStream(testfile1)) {
-            assertEquals(testbytestest.length, fisfile1.read(testbytestest));
+            Assertions.assertEquals(testbytestest.length, fisfile1.read(testbytestest));
         }
 
-        assertArrayEquals(testbytes, testbytestest);
+        Assertions.assertArrayEquals(testbytes, testbytestest);
 
         // does lfs see the correct file length?
-        assertEquals(lfs.getFileStatus(pathtotestfile1).getLen(), testfile1.length());
+        Assertions.assertEquals(lfs.getFileStatus(pathtotestfile1).getLen(), testfile1.length());
 
         // as well, when we call the listStatus (that is intended for directories?)
-        assertEquals(lfs.listStatus(pathtotestfile1)[0].getLen(), testfile1.length());
+        Assertions.assertEquals(lfs.listStatus(pathtotestfile1)[0].getLen(), testfile1.length());
 
         // test that lfs can read files properly
         final FileOutputStream fosfile2 = new FileOutputStream(testfile2);
@@ -156,37 +152,38 @@ public class LocalFileSystemTest extends TestLogger {
 
         testbytestest = new byte[5];
         final FSDataInputStream lfsinput2 = lfs.open(pathtotestfile2);
-        assertEquals(lfsinput2.read(testbytestest), 5);
+        Assertions.assertEquals(lfsinput2.read(testbytestest), 5);
         lfsinput2.close();
-        assertTrue(Arrays.equals(testbytes, testbytestest));
+        Assertions.assertArrayEquals(testbytes, testbytestest);
 
         // does lfs see two files?
-        assertEquals(lfs.listStatus(pathtotmpdir).length, 2);
+        Assertions.assertEquals(lfs.listStatus(pathtotmpdir).length, 2);
 
         // do we get exactly one blocklocation per file? no matter what start and len we provide
-        assertEquals(lfs.getFileBlockLocations(lfs.getFileStatus(pathtotestfile1), 0, 0).length, 1);
+        Assertions.assertEquals(
+                lfs.getFileBlockLocations(lfs.getFileStatus(pathtotestfile1), 0, 0).length, 1);
 
         /*
          * can lfs delete files / directories?
          */
-        assertTrue(lfs.delete(pathtotestfile1, false));
+        Assertions.assertTrue(lfs.delete(pathtotestfile1, false));
 
         // and can lfs also delete directories recursively?
-        assertTrue(lfs.delete(pathtotmpdir, true));
+        Assertions.assertTrue(lfs.delete(pathtotmpdir, true));
 
-        assertTrue(!tempdir.exists());
+        Assertions.assertFalse(tempdir.exists());
     }
 
     @Test
-    public void testRenamePath() throws IOException {
+    void testRenamePath() throws IOException {
         final File rootDirectory = temporaryFolder.newFolder();
 
         // create a file /root/src/B/test.csv
         final File srcDirectory = new File(new File(rootDirectory, "src"), "B");
-        assertTrue(srcDirectory.mkdirs());
+        Assertions.assertTrue(srcDirectory.mkdirs());
 
         final File srcFile = new File(srcDirectory, "test.csv");
-        assertTrue(srcFile.createNewFile());
+        Assertions.assertTrue(srcFile.createNewFile());
 
         // Move/rename B and its content to /root/dst/A
         final File destDirectory = new File(new File(rootDirectory, "dst"), "B");
@@ -200,31 +197,31 @@ public class LocalFileSystemTest extends TestLogger {
         FileSystem fs = FileSystem.getLocalFileSystem();
 
         // pre-conditions: /root/src/B exists but /root/dst/B does not
-        assertTrue(fs.exists(srcDirPath));
-        assertFalse(fs.exists(destDirPath));
+        Assertions.assertTrue(fs.exists(srcDirPath));
+        Assertions.assertFalse(fs.exists(destDirPath));
 
         // do the move/rename: /root/src/B -> /root/dst/
-        assertTrue(fs.rename(srcDirPath, destDirPath));
+        Assertions.assertTrue(fs.rename(srcDirPath, destDirPath));
 
         // post-conditions: /root/src/B doesn't exists, /root/dst/B/test.csv has been created
-        assertTrue(fs.exists(destFilePath));
-        assertFalse(fs.exists(srcDirPath));
+        Assertions.assertTrue(fs.exists(destFilePath));
+        Assertions.assertFalse(fs.exists(srcDirPath));
 
         // re-create source file and test overwrite
-        assertTrue(srcDirectory.mkdirs());
-        assertTrue(srcFile.createNewFile());
+        Assertions.assertTrue(srcDirectory.mkdirs());
+        Assertions.assertTrue(srcFile.createNewFile());
 
         // overwrite the destination file
-        assertTrue(fs.rename(srcFilePath, destFilePath));
+        Assertions.assertTrue(fs.rename(srcFilePath, destFilePath));
 
         // post-conditions: now only the src file has been moved
-        assertFalse(fs.exists(srcFilePath));
-        assertTrue(fs.exists(srcDirPath));
-        assertTrue(fs.exists(destFilePath));
+        Assertions.assertFalse(fs.exists(srcFilePath));
+        Assertions.assertTrue(fs.exists(srcDirPath));
+        Assertions.assertTrue(fs.exists(destFilePath));
     }
 
     @Test
-    public void testRenameNonExistingFile() throws IOException {
+    void testRenameNonExistingFile() throws IOException {
         final FileSystem fs = FileSystem.getLocalFileSystem();
 
         final File srcFile = new File(temporaryFolder.newFolder(), "someFile.txt");
@@ -234,27 +231,27 @@ public class LocalFileSystemTest extends TestLogger {
         final Path destFilePath = new Path(destFile.toURI());
 
         // this cannot succeed because the source file does not exist
-        assertFalse(fs.rename(srcFilePath, destFilePath));
+        Assertions.assertFalse(fs.rename(srcFilePath, destFilePath));
     }
 
     @Test
     @Category(FailsInGHAContainerWithRootUser.class)
-    public void testRenameFileWithNoAccess() throws IOException {
+    void testRenameFileWithNoAccess() throws IOException {
         final FileSystem fs = FileSystem.getLocalFileSystem();
 
         final File srcFile = temporaryFolder.newFile("someFile.txt");
         final File destFile = new File(temporaryFolder.newFolder(), "target");
 
         // we need to make the file non-modifiable so that the rename fails
-        Assume.assumeTrue(srcFile.getParentFile().setWritable(false, false));
-        Assume.assumeTrue(srcFile.setWritable(false, false));
+        Assumptions.assumeTrue(srcFile.getParentFile().setWritable(false, false));
+        Assumptions.assumeTrue(srcFile.setWritable(false, false));
 
         try {
             final Path srcFilePath = new Path(srcFile.toURI());
             final Path destFilePath = new Path(destFile.toURI());
 
             // this cannot succeed because the source folder has no permission to remove the file
-            assertFalse(fs.rename(srcFilePath, destFilePath));
+            Assertions.assertFalse(fs.rename(srcFilePath, destFilePath));
         } finally {
             // make sure we give permission back to ensure proper cleanup
 
@@ -266,36 +263,36 @@ public class LocalFileSystemTest extends TestLogger {
     }
 
     @Test
-    public void testRenameToNonEmptyTargetDir() throws IOException {
+    void testRenameToNonEmptyTargetDir() throws IOException {
         final FileSystem fs = FileSystem.getLocalFileSystem();
 
         // a source folder with a file
         final File srcFolder = temporaryFolder.newFolder();
         final File srcFile = new File(srcFolder, "someFile.txt");
-        assertTrue(srcFile.createNewFile());
+        Assertions.assertTrue(srcFile.createNewFile());
 
         // a non-empty destination folder
         final File dstFolder = temporaryFolder.newFolder();
         final File dstFile = new File(dstFolder, "target");
-        assertTrue(dstFile.createNewFile());
+        Assertions.assertTrue(dstFile.createNewFile());
 
         // this cannot succeed because the destination folder is not empty
-        assertFalse(fs.rename(new Path(srcFolder.toURI()), new Path(dstFolder.toURI())));
+        Assertions.assertFalse(fs.rename(new Path(srcFolder.toURI()), new Path(dstFolder.toURI())));
 
         // retry after deleting the occupying target file
-        assertTrue(dstFile.delete());
-        assertTrue(fs.rename(new Path(srcFolder.toURI()), new Path(dstFolder.toURI())));
-        assertTrue(new File(dstFolder, srcFile.getName()).exists());
+        Assertions.assertTrue(dstFile.delete());
+        Assertions.assertTrue(fs.rename(new Path(srcFolder.toURI()), new Path(dstFolder.toURI())));
+        Assertions.assertTrue(new File(dstFolder, srcFile.getName()).exists());
     }
 
     @Test
-    public void testKind() {
+    void testKind() {
         final FileSystem fs = FileSystem.getLocalFileSystem();
-        assertEquals(FileSystemKind.FILE_SYSTEM, fs.getKind());
+        Assertions.assertEquals(FileSystemKind.FILE_SYSTEM, fs.getKind());
     }
 
     @Test
-    public void testConcurrentMkdirs() throws Exception {
+    void testConcurrentMkdirs() throws Exception {
         final FileSystem fs = FileSystem.getLocalFileSystem();
         final File root = temporaryFolder.getRoot();
         final int directoryDepth = 10;
@@ -316,7 +313,7 @@ public class LocalFileSystemTest extends TestLogger {
                                 () -> {
                                     try {
                                         cyclicBarrier.await();
-                                        assertThat(
+                                        MatcherAssert.assertThat(
                                                 fs.mkdirs(Path.fromLocalFile(targetDirectory)),
                                                 is(true));
                                     } catch (Exception e) {
@@ -341,7 +338,7 @@ public class LocalFileSystemTest extends TestLogger {
 
     /** This test verifies the issue https://issues.apache.org/jira/browse/FLINK-18612. */
     @Test
-    public void testCreatingFileInCurrentDirectoryWithRelativePath() throws IOException {
+    void testCreatingFileInCurrentDirectoryWithRelativePath() throws IOException {
         FileSystem fs = FileSystem.getLocalFileSystem();
 
         Path filePath = new Path("local_fs_test_" + RandomStringUtils.randomAlphanumeric(16));

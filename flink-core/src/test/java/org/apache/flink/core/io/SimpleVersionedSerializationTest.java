@@ -23,20 +23,18 @@ import org.apache.flink.core.memory.DataOutputSerializer;
 
 import org.apache.flink.shaded.guava31.com.google.common.collect.ImmutableList;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-
 /** Tests for the {@link SimpleVersionedSerialization} class. */
 public class SimpleVersionedSerializationTest {
 
     @Test
-    public void testSerializationRoundTrip() throws IOException {
+    void testSerializationRoundTrip() throws IOException {
         final SimpleVersionedSerializer<String> utfEncoder = new TestStringSerializer();
 
         final String testString = "dugfakgs";
@@ -46,19 +44,19 @@ public class SimpleVersionedSerializationTest {
 
         final byte[] bytes =
                 SimpleVersionedSerialization.writeVersionAndSerialize(utfEncoder, testString);
-        assertArrayEquals(bytes, outBytes);
+        Assertions.assertArrayEquals(bytes, outBytes);
 
         final DataInputDeserializer in = new DataInputDeserializer(bytes);
         final String deserialized =
                 SimpleVersionedSerialization.readVersionAndDeSerialize(utfEncoder, in);
         final String deserializedFromBytes =
                 SimpleVersionedSerialization.readVersionAndDeSerialize(utfEncoder, outBytes);
-        assertEquals(testString, deserialized);
-        assertEquals(testString, deserializedFromBytes);
+        Assertions.assertEquals(testString, deserialized);
+        Assertions.assertEquals(testString, deserializedFromBytes);
     }
 
     @Test
-    public void testSerializeEmpty() throws IOException {
+    void testSerializeEmpty() throws IOException {
         final String testString = "beeeep!";
 
         SimpleVersionedSerializer<String> emptySerializer =
@@ -70,14 +68,14 @@ public class SimpleVersionedSerializationTest {
                     }
 
                     @Override
-                    public byte[] serialize(String obj) throws IOException {
+                    public byte[] serialize(String obj) {
                         return new byte[0];
                     }
 
                     @Override
-                    public String deserialize(int version, byte[] serialized) throws IOException {
-                        assertEquals(42, version);
-                        assertEquals(0, serialized.length);
+                    public String deserialize(int version, byte[] serialized) {
+                        Assertions.assertEquals(42, version);
+                        Assertions.assertEquals(0, serialized.length);
                         return testString;
                     }
                 };
@@ -88,19 +86,19 @@ public class SimpleVersionedSerializationTest {
 
         final byte[] bytes =
                 SimpleVersionedSerialization.writeVersionAndSerialize(emptySerializer, "abc");
-        assertArrayEquals(bytes, outBytes);
+        Assertions.assertArrayEquals(bytes, outBytes);
 
         final DataInputDeserializer in = new DataInputDeserializer(bytes);
         final String deserialized =
                 SimpleVersionedSerialization.readVersionAndDeSerialize(emptySerializer, in);
         final String deserializedFromBytes =
                 SimpleVersionedSerialization.readVersionAndDeSerialize(emptySerializer, outBytes);
-        assertEquals(testString, deserialized);
-        assertEquals(testString, deserializedFromBytes);
+        Assertions.assertEquals(testString, deserialized);
+        Assertions.assertEquals(testString, deserializedFromBytes);
     }
 
     @Test
-    public void testListSerializationRoundTrip() throws IOException {
+    void testListSerializationRoundTrip() throws IOException {
         final SimpleVersionedSerializer<String> utfEncoder = new TestStringSerializer();
         final List<String> datums = ImmutableList.of("beeep!", "beep!!!");
 
@@ -111,7 +109,7 @@ public class SimpleVersionedSerializationTest {
         final DataInputDeserializer in = new DataInputDeserializer(outBytes);
         final List<String> deserialized =
                 SimpleVersionedSerialization.readVersionAndDeserializeList(utfEncoder, in);
-        assertEquals(datums, deserialized);
+        Assertions.assertEquals(datums, deserialized);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -133,13 +131,13 @@ public class SimpleVersionedSerializationTest {
         }
 
         @Override
-        public byte[] serialize(String str) throws IOException {
+        public byte[] serialize(String str) {
             return str.getBytes(StandardCharsets.UTF_8);
         }
 
         @Override
-        public String deserialize(int version, byte[] serialized) throws IOException {
-            assertEquals(VERSION, version);
+        public String deserialize(int version, byte[] serialized) {
+            Assertions.assertEquals(VERSION, version);
             return new String(serialized, StandardCharsets.UTF_8);
         }
     }

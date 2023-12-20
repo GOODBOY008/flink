@@ -37,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class FileSystemTest {
 
     @Test
-    void testGet() throws URISyntaxException, IOException {
+    void testGet() throws Exception {
         String scheme = "file";
 
         assertThat(getFileSystemWithoutSafetyNet(scheme + ":///test/test"))
