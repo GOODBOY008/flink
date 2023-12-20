@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class OuterJoinOperatorBaseTest implements Serializable {
@@ -265,7 +265,7 @@ class OuterJoinOperatorBaseTest implements Serializable {
         @Override
         public void open(OpenContext openContext) {
             opened.compareAndSet(false, true);
-            assertThat(getRuntimeContext().getIndexOfThisSubtask()).isEqualTo(0);
+            assertThat(getRuntimeContext().getIndexOfThisSubtask()).isZero();
             assertThat(getRuntimeContext().getNumberOfParallelSubtasks()).isEqualTo(1);
         }
 

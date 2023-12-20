@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /** Tests runtime context access from inside an RichOutputFormat class */
 class RichOutputFormatTest {

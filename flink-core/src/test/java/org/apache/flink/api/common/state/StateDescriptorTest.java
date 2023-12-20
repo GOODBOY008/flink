@@ -36,11 +36,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Tests for the common/shared functionality of {@link StateDescriptor}. */
 class StateDescriptorTest {
@@ -124,13 +122,13 @@ class StateDescriptorTest {
     @Test
     void testInitializeSerializerAfterSerializationWithCustomConfig() throws Exception {
         // guard our test assumptions.
-        assertEquals(
-                -1,
-                new KryoSerializer<>(String.class, new ExecutionConfig())
-                        .getKryo()
-                        .getRegistration(File.class)
-                        .getId(),
-                "broken test assumption");
+        assertThat(
+                        new KryoSerializer<>(String.class, new ExecutionConfig())
+                                .getKryo()
+                                .getRegistration(File.class)
+                                .getId())
+                .as("broken test assumption")
+                .isEqualTo(-1);
 
         final ExecutionConfig config = new ExecutionConfig();
         config.registerKryoType(File.class);
@@ -141,12 +139,13 @@ class StateDescriptorTest {
         clone.initializeSerializerUnlessSet(config);
 
         // serialized one (later initialized) carries the registration
-        assertTrue(
-                ((KryoSerializer<?>) clone.getSerializer())
-                                .getKryo()
-                                .getRegistration(File.class)
-                                .getId()
-                        > 0);
+        assertThat(
+                        ((KryoSerializer<?>) clone.getSerializer())
+                                        .getKryo()
+                                        .getRegistration(File.class)
+                                        .getId()
+                                > 0)
+                .isTrue();
     }
 
     // ------------------------------------------------------------------------
@@ -244,10 +243,9 @@ class StateDescriptorTest {
         for (CheckedThread t : threads) {
             t.sync();
         }
-        assertEquals(
-                1,
-                serializers.size(),
-                "Should use only one serializer but actually: " + serializers);
+        assertThat(serializers.size())
+                .as("Should use only one serializer but actually: " + serializers)
+                .isEqualTo(1);
         threads.clear();
     }
 

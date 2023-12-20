@@ -40,7 +40,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.Arrays.asList;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
 
 class MapOperatorTest implements java.io.Serializable {
@@ -87,7 +87,7 @@ class MapOperatorTest implements java.io.Serializable {
                         public void open(OpenContext openContext) {
                             opened.set(true);
                             RuntimeContext ctx = getRuntimeContext();
-                            assertThat(ctx.getIndexOfThisSubtask()).isEqualTo(0);
+                            assertThat(ctx.getIndexOfThisSubtask()).isZero();
                             assertThat(ctx.getNumberOfParallelSubtasks()).isEqualTo(1);
                             assertThat(ctx.getTaskName()).isEqualTo(taskName);
                         }

@@ -41,9 +41,8 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InnerJoinOperatorBaseTest implements Serializable {
 
@@ -101,7 +100,7 @@ class InnerJoinOperatorBaseTest implements Serializable {
                     public void open(OpenContext openContext) {
                         opened.compareAndSet(false, true);
                         assertThat(getRuntimeContext().getIndexOfThisSubtask()).isZero();
-                        assertEquals(1, getRuntimeContext().getNumberOfParallelSubtasks());
+                        assertThat(getRuntimeContext().getNumberOfParallelSubtasks()).isEqualTo(1);
                     }
 
                     @Override

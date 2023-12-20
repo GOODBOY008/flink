@@ -25,10 +25,8 @@ import org.apache.flink.testutils.migration.SchemaCompatibilityTestingSerializer
 
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Tests for the {@link CompositeTypeSerializerUtil}. */
 class CompositeTypeSerializerUtilTest {
@@ -59,8 +57,8 @@ class CompositeTypeSerializerUtilTest {
 
         assertThat(intermediateCompatibilityResult.isCompatibleAsIs()).isTrue();
         assertThat(intermediateCompatibilityResult.getFinalResult().isCompatibleAsIs()).isTrue();
-        assertArrayEquals(
-                testNewSerializers, intermediateCompatibilityResult.getNestedSerializers());
+        assertThat(intermediateCompatibilityResult.getNestedSerializers())
+                .containsExactly(testNewSerializers);
     }
 
     @Test
@@ -88,10 +86,10 @@ class CompositeTypeSerializerUtilTest {
                     new SchemaCompatibilityTestingSerializer("b"),
                 };
 
-        assertTrue(intermediateCompatibilityResult.isCompatibleWithReconfiguredSerializer());
-        assertArrayEquals(
-                expectedReconfiguredNestedSerializers,
-                intermediateCompatibilityResult.getNestedSerializers());
+        assertThat(intermediateCompatibilityResult.isCompatibleWithReconfiguredSerializer())
+                .isTrue();
+        assertThat(intermediateCompatibilityResult.getNestedSerializers())
+                .containsExactly(expectedReconfiguredNestedSerializers);
     }
 
     @Test
@@ -117,7 +115,8 @@ class CompositeTypeSerializerUtilTest {
                         testNewSerializers, testSerializerSnapshots);
 
         assertThat(intermediateCompatibilityResult.isCompatibleAfterMigration()).isTrue();
-        assertTrue(intermediateCompatibilityResult.getFinalResult().isCompatibleAfterMigration());
+        assertThat(intermediateCompatibilityResult.getFinalResult().isCompatibleAfterMigration())
+                .isTrue();
     }
 
     @Test
