@@ -29,8 +29,12 @@ import org.apache.flink.types.StringValue;
 import org.apache.flink.types.Value;
 
 import org.junit.ClassRule;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
@@ -76,7 +80,7 @@ public class InstantiationUtilTest extends TestLogger {
             byte[] serializeObject = InstantiationUtil.serializeObject(proxy);
             Object deserializedProxy =
                     InstantiationUtil.deserializeObject(serializeObject, userClassLoader);
-            Assertions.assertNotNull(deserializedProxy);
+       assertThat(deserializedProxy).isNotNull();
         }
     }
 
@@ -96,28 +100,28 @@ public class InstantiationUtilTest extends TestLogger {
     @Test
     void testInstantiationOfStringValue() {
         StringValue stringValue = InstantiationUtil.instantiate(StringValue.class, null);
-        Assertions.assertNotNull(stringValue);
+   assertThat(stringValue).isNotNull();
     }
 
     @Test
     void testInstantiationOfStringValueAndCastToValue() {
         StringValue stringValue = InstantiationUtil.instantiate(StringValue.class, Value.class);
-        Assertions.assertNotNull(stringValue);
+   assertThat(stringValue).isNotNull();
     }
 
     @Test
     void testHasNullaryConstructor() {
-        Assertions.assertTrue(InstantiationUtil.hasPublicNullaryConstructor(StringValue.class));
+   assertThat(InstantiationUtil.hasPublicNullaryConstructor(StringValue.class)).isTrue();
     }
 
     @Test
     void testClassIsProper() {
-        Assertions.assertTrue(InstantiationUtil.isProperClass(StringValue.class));
+   assertThat(InstantiationUtil.isProperClass(StringValue.class)).isTrue();
     }
 
     @Test
     void testClassIsNotProper() {
-        Assertions.assertFalse(InstantiationUtil.isProperClass(Value.class));
+   assertThat(InstantiationUtil.isProperClass(Value.class)).isFalse();
     }
 
     @Test(expected = RuntimeException.class)
@@ -135,7 +139,7 @@ public class InstantiationUtilTest extends TestLogger {
         DoubleValue deserialized =
                 InstantiationUtil.deserializeFromByteArray(serializer, serialized);
 
-        Assertions.assertEquals(
+   assertEquals(
                 toSerialize, deserialized, "Serialized record is not equal after serialization.");
     }
 
@@ -144,7 +148,7 @@ public class InstantiationUtilTest extends TestLogger {
             throws Exception {
         final String value = "teststring";
 
-        Assertions.assertEquals(
+   assertEquals(
                 value,
                 InstantiationUtil.decompressAndDeserializeObject(
                         InstantiationUtil.serializeObjectAndCompress(value),
@@ -161,11 +165,11 @@ public class InstantiationUtilTest extends TestLogger {
             try {
                 InstantiationUtil.writeObjectToConfig(
                         new TestClassWriteFails(), config, "irgnored");
-                Assertions.fail("should throw an exception");
+           fail("should throw an exception");
             } catch (TestException e) {
                 // expected
             } catch (Exception e) {
-                Assertions.fail("Wrong exception type - exception not properly forwarded");
+           fail("Wrong exception type - exception not properly forwarded");
             }
 
             InstantiationUtil.writeObjectToConfig(new TestClassReadFails(), config, key1);
@@ -173,24 +177,24 @@ public class InstantiationUtilTest extends TestLogger {
 
             try {
                 InstantiationUtil.readObjectFromConfig(config, key1, getClass().getClassLoader());
-                Assertions.fail("should throw an exception");
+           fail("should throw an exception");
             } catch (TestException e) {
                 // expected
             } catch (Exception e) {
-                Assertions.fail("Wrong exception type - exception not properly forwarded");
+           fail("Wrong exception type - exception not properly forwarded");
             }
 
             try {
                 InstantiationUtil.readObjectFromConfig(config, key2, getClass().getClassLoader());
-                Assertions.fail("should throw an exception");
+           fail("should throw an exception");
             } catch (ClassNotFoundException e) {
                 // expected
             } catch (Exception e) {
-                Assertions.fail("Wrong exception type - exception not properly forwarded");
+           fail("Wrong exception type - exception not properly forwarded");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+       fail(e.getMessage());
         }
     }
 
@@ -199,8 +203,8 @@ public class InstantiationUtilTest extends TestLogger {
         WritableType original = new WritableType();
         WritableType copy = InstantiationUtil.createCopyWritable(original);
 
-        Assertions.assertNotSame(original, copy);
-        Assertions.assertEquals(original, copy);
+   assertThat(copy).isNotSameAs(original);
+   assertThat(copy).isEqualTo(original);
     }
 
     // --------------------------------------------------------------------------------------------

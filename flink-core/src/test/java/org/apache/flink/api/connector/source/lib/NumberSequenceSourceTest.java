@@ -31,12 +31,13 @@ import org.apache.flink.metrics.groups.UnregisteredMetricsGroup;
 import org.apache.flink.util.SimpleUserCodeClassLoader;
 import org.apache.flink.util.UserCodeClassLoader;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.assertj.core.api.Fail.fail;
 
 /** Tests for the {@link NumberSequenceSource}. */
 class NumberSequenceSourceTest {
@@ -92,7 +93,7 @@ class NumberSequenceSourceTest {
     }
 
     private static void failSequence(final List<Long> sequence, final long from, final long to) {
-        Assertions.fail(
+        fail(
                 String.format(
                         "Expected: A sequence [%d, %d], but found: sequence (size %d) : %s",
                         from, to, sequence.size(), sequence));

@@ -18,7 +18,11 @@
 
 package org.apache.flink.core.memory;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -53,9 +57,9 @@ class OffHeapDirectMemorySegmentTest extends MemorySegmentTestBase {
         final int bufSize = 411;
         MemorySegment seg = createSegment(bufSize);
 
-        assertFalse(seg.isFreed());
-        assertTrue(seg.isOffHeap());
-        assertEquals(bufSize, seg.size());
+        assertThat(seg.isFreed()).isFalse();
+        assertThat(seg.isOffHeap()).isTrue();
+        assertThat(seg.size()).isEqualTo(bufSize);
 
         try {
             //noinspection ResultOfMethodCallIgnored
@@ -68,10 +72,10 @@ class OffHeapDirectMemorySegmentTest extends MemorySegmentTestBase {
         ByteBuffer buf1 = seg.wrap(1, 2);
         ByteBuffer buf2 = seg.wrap(3, 4);
 
-        assertNotSame(buf1, buf2);
-        assertEquals(1, buf1.position());
-        assertEquals(3, buf1.limit());
-        assertEquals(3, buf2.position());
-        assertEquals(7, buf2.limit());
+        assertThat(buf2).isNotSameAs(buf1);
+        assertThat(buf1.position()).isEqualTo(1);
+        assertThat(buf1.limit()).isEqualTo(3);
+        assertThat(buf2.position()).isEqualTo(3);
+        assertThat(buf2.limit()).isEqualTo(7);
     }
 }

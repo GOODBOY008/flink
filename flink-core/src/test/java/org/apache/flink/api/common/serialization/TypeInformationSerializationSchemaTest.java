@@ -23,7 +23,6 @@ import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
 import org.apache.flink.core.testutils.CommonTestUtils;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -31,8 +30,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Fail.fail;
+
 /** Tests for {@link TypeInformationSerializationSchema}. */
-public class TypeInformationSerializationSchemaTest {
+class TypeInformationSerializationSchemaTest {
 
     @Test
     void testDeSerialization() {
@@ -52,11 +54,11 @@ public class TypeInformationSerializationSchemaTest {
             for (MyPOJO val : types) {
                 byte[] serialized = schema.serialize(val);
                 MyPOJO deser = schema.deserialize(serialized);
-                Assertions.assertEquals(val, deser);
+                assertThat(deser).isEqualTo(val);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -71,7 +73,7 @@ public class TypeInformationSerializationSchemaTest {
             CommonTestUtils.createCopySerializable(schema);
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+            fail(e.getMessage());
         }
     }
 

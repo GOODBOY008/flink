@@ -18,8 +18,12 @@
 
 package org.apache.flink.util;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Tests for the {@link NumberSequenceIterator}. */
 public class NumberSequenceIteratorTest extends TestLogger {
@@ -50,15 +54,15 @@ public class NumberSequenceIteratorTest extends TestLogger {
     private static void testSplitting(NumberSequenceIterator iter, int numSplits) {
         NumberSequenceIterator[] splits = iter.split(numSplits);
 
-        Assertions.assertEquals(numSplits, splits.length);
+   assertThat(splits.length).isEqualTo(numSplits);
 
         // test start and end of range
-        Assertions.assertEquals(iter.getCurrent(), splits[0].getCurrent());
-        Assertions.assertEquals(iter.getTo(), splits[numSplits - 1].getTo());
+   assertThat(splits[0].getCurrent()).isEqualTo(iter.getCurrent());
+   assertThat(splits[numSplits - 1].getTo()).isEqualTo(iter.getTo());
 
         // test continuous range
         for (int i = 1; i < splits.length; i++) {
-            Assertions.assertEquals(splits[i - 1].getTo() + 1, splits[i].getCurrent());
+       assertThat(splits[i].getCurrent()).isEqualTo(splits[i - 1].getTo() + 1);
         }
 
         testMaxSplitDiff(splits);
@@ -83,6 +87,6 @@ public class NumberSequenceIteratorTest extends TestLogger {
             maxSplitSize = Math.max(maxSplitSize, diff);
         }
 
-        Assertions.assertTrue(maxSplitSize == minSplitSize || maxSplitSize - 1 == minSplitSize);
+   assertThat(maxSplitSize == minSplitSize || maxSplitSize - 1 == minSplitSize).isTrue();
     }
 }

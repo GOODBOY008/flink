@@ -19,7 +19,11 @@
 package org.apache.flink.configuration;
 
 import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -83,7 +87,7 @@ public class DelegatingConfigurationTest {
         DelegatingConfiguration configuration = new DelegatingConfiguration(backingConf, null);
         Set<String> keySet = configuration.keySet();
 
-        org.junit.jupiter.api.Assertions.assertEquals(keySet, backingConf.keySet());
+        org.junit.jupiter.api.Assertions.assertThat(backingConf.keySet()).isEqualTo(keySet);
     }
 
     @Test
@@ -100,8 +104,8 @@ public class DelegatingConfigurationTest {
         DelegatingConfiguration configuration = new DelegatingConfiguration(backingConf, prefix);
         Set<String> keySet = configuration.keySet();
 
-        org.junit.jupiter.api.Assertions.assertEquals(keySet.size(), 1);
-        org.junit.jupiter.api.Assertions.assertEquals(keySet.iterator().next(), expectedKey);
+        org.junit.jupiter.api.Assertions.assertThat(1).isEqualTo(keySet.size());
+        org.junit.jupiter.api.Assertions.assertThat(expectedKey).isEqualTo(keySet.iterator().next());
 
         /*
          * Key does not match the prefix
@@ -112,7 +116,7 @@ public class DelegatingConfigurationTest {
         configuration = new DelegatingConfiguration(backingConf, prefix);
         keySet = configuration.keySet();
 
-        org.junit.jupiter.api.Assertions.assertTrue(keySet.isEmpty());
+        org.junit.jupiter.api.Assertions.assertThat(keySet.isEmpty()).isTrue();
     }
 
     @Test
@@ -131,7 +135,7 @@ public class DelegatingConfigurationTest {
         Properties mapProperties = new Properties();
       mapProperties.putAll(map);
         // Verification
-        org.junit.jupiter.api.Assertions.assertEquals(properties, mapProperties);
+        org.junit.jupiter.api.Assertions.assertThat(mapProperties).isEqualTo(properties);
     }
 
     @Test
@@ -139,7 +143,7 @@ public class DelegatingConfigurationTest {
         final Configuration conf = new Configuration();
         final DelegatingConfiguration delegatingConf = new DelegatingConfiguration(conf, "prefix.");
 
-        Assertions.assertThat(delegatingConf.set(CoreOptions.DEFAULT_PARALLELISM, 1))
+   assertThat(delegatingConf.set(CoreOptions.DEFAULT_PARALLELISM, 1))
                 .isSameAs(delegatingConf);
     }
 }

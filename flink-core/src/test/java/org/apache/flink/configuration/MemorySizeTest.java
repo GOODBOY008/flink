@@ -21,8 +21,12 @@ package org.apache.flink.configuration;
 import org.apache.flink.core.testutils.CommonTestUtils;
 
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
@@ -35,39 +39,39 @@ public class MemorySizeTest {
     @Test
     void testUnitConversion() {
         final MemorySize zero = MemorySize.ZERO;
-        Assertions.assertEquals(0, zero.getBytes());
-        Assertions.assertEquals(0, zero.getKibiBytes());
-        Assertions.assertEquals(0, zero.getMebiBytes());
-        Assertions.assertEquals(0, zero.getGibiBytes());
-        Assertions.assertEquals(0, zero.getTebiBytes());
+   assertThat(zero.getBytes()).isEqualTo(0);
+   assertThat(zero.getKibiBytes()).isEqualTo(0);
+   assertThat(zero.getMebiBytes()).isEqualTo(0);
+   assertThat(zero.getGibiBytes()).isEqualTo(0);
+   assertThat(zero.getTebiBytes()).isEqualTo(0);
 
         final MemorySize bytes = new MemorySize(955);
-        Assertions.assertEquals(955, bytes.getBytes());
-        Assertions.assertEquals(0, bytes.getKibiBytes());
-        Assertions.assertEquals(0, bytes.getMebiBytes());
-        Assertions.assertEquals(0, bytes.getGibiBytes());
-        Assertions.assertEquals(0, bytes.getTebiBytes());
+   assertThat(bytes.getBytes()).isEqualTo(955);
+   assertThat(bytes.getKibiBytes()).isEqualTo(0);
+   assertThat(bytes.getMebiBytes()).isEqualTo(0);
+   assertThat(bytes.getGibiBytes()).isEqualTo(0);
+   assertThat(bytes.getTebiBytes()).isEqualTo(0);
 
         final MemorySize kilos = new MemorySize(18500);
-        Assertions.assertEquals(18500, kilos.getBytes());
-        Assertions.assertEquals(18, kilos.getKibiBytes());
-        Assertions.assertEquals(0, kilos.getMebiBytes());
-        Assertions.assertEquals(0, kilos.getGibiBytes());
-        Assertions.assertEquals(0, kilos.getTebiBytes());
+   assertThat(kilos.getBytes()).isEqualTo(18500);
+   assertThat(kilos.getKibiBytes()).isEqualTo(18);
+   assertThat(kilos.getMebiBytes()).isEqualTo(0);
+   assertThat(kilos.getGibiBytes()).isEqualTo(0);
+   assertThat(kilos.getTebiBytes()).isEqualTo(0);
 
         final MemorySize megas = new MemorySize(15 * 1024 * 1024);
-        Assertions.assertEquals(15_728_640, megas.getBytes());
-        Assertions.assertEquals(15_360, megas.getKibiBytes());
-        Assertions.assertEquals(15, megas.getMebiBytes());
-        Assertions.assertEquals(0, megas.getGibiBytes());
-        Assertions.assertEquals(0, megas.getTebiBytes());
+   assertThat(megas.getBytes()).isEqualTo(15_728_640);
+   assertThat(megas.getKibiBytes()).isEqualTo(15_360);
+   assertThat(megas.getMebiBytes()).isEqualTo(15);
+   assertThat(megas.getGibiBytes()).isEqualTo(0);
+   assertThat(megas.getTebiBytes()).isEqualTo(0);
 
         final MemorySize teras = new MemorySize(2L * 1024 * 1024 * 1024 * 1024 + 10);
-        Assertions.assertEquals(2199023255562L, teras.getBytes());
-        Assertions.assertEquals(2147483648L, teras.getKibiBytes());
-        Assertions.assertEquals(2097152, teras.getMebiBytes());
-        Assertions.assertEquals(2048, teras.getGibiBytes());
-        Assertions.assertEquals(2, teras.getTebiBytes());
+   assertThat(teras.getBytes()).isEqualTo(2199023255562L);
+   assertThat(teras.getKibiBytes()).isEqualTo(2147483648L);
+   assertThat(teras.getMebiBytes()).isEqualTo(2097152);
+   assertThat(teras.getGibiBytes()).isEqualTo(2048);
+   assertThat(teras.getTebiBytes()).isEqualTo(2);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -80,73 +84,73 @@ public class MemorySizeTest {
         final MemorySize size = new MemorySize(1234567890L);
         final MemorySize cloned = CommonTestUtils.createCopySerializable(size);
 
-        Assertions.assertEquals(size, cloned);
-        Assertions.assertEquals(size.hashCode(), cloned.hashCode());
-        Assertions.assertEquals(size.toString(), cloned.toString());
+   assertThat(cloned).isEqualTo(size);
+   assertThat(cloned.hashCode()).isEqualTo(size.hashCode());
+   assertThat(cloned.toString()).isEqualTo(size.toString());
     }
 
     @Test
     void testParseBytes() {
-        Assertions.assertEquals(1234, MemorySize.parseBytes("1234"));
-        Assertions.assertEquals(1234, MemorySize.parseBytes("1234b"));
-        Assertions.assertEquals(1234, MemorySize.parseBytes("1234 b"));
-        Assertions.assertEquals(1234, MemorySize.parseBytes("1234bytes"));
-        Assertions.assertEquals(1234, MemorySize.parseBytes("1234 bytes"));
+   assertThat(MemorySize.parseBytes("1234")).isEqualTo(1234);
+   assertThat(MemorySize.parseBytes("1234b")).isEqualTo(1234);
+   assertThat(MemorySize.parseBytes("1234 b")).isEqualTo(1234);
+   assertThat(MemorySize.parseBytes("1234bytes")).isEqualTo(1234);
+   assertThat(MemorySize.parseBytes("1234 bytes")).isEqualTo(1234);
     }
 
     @Test
     void testParseKibiBytes() {
-        Assertions.assertEquals(667766, MemorySize.parse("667766k").getKibiBytes());
-        Assertions.assertEquals(667766, MemorySize.parse("667766 k").getKibiBytes());
-        Assertions.assertEquals(667766, MemorySize.parse("667766kb").getKibiBytes());
-        Assertions.assertEquals(667766, MemorySize.parse("667766 kb").getKibiBytes());
-        Assertions.assertEquals(667766, MemorySize.parse("667766kibibytes").getKibiBytes());
-        Assertions.assertEquals(667766, MemorySize.parse("667766 kibibytes").getKibiBytes());
+   assertThat(MemorySize.parse("667766k").getKibiBytes()).isEqualTo(667766);
+   assertThat(MemorySize.parse("667766 k").getKibiBytes()).isEqualTo(667766);
+   assertThat(MemorySize.parse("667766kb").getKibiBytes()).isEqualTo(667766);
+   assertThat(MemorySize.parse("667766 kb").getKibiBytes()).isEqualTo(667766);
+   assertThat(MemorySize.parse("667766kibibytes").getKibiBytes()).isEqualTo(667766);
+   assertThat(MemorySize.parse("667766 kibibytes").getKibiBytes()).isEqualTo(667766);
     }
 
     @Test
     void testParseMebiBytes() {
-        Assertions.assertEquals(7657623, MemorySize.parse("7657623m").getMebiBytes());
-        Assertions.assertEquals(7657623, MemorySize.parse("7657623 m").getMebiBytes());
-        Assertions.assertEquals(7657623, MemorySize.parse("7657623mb").getMebiBytes());
-        Assertions.assertEquals(7657623, MemorySize.parse("7657623 mb").getMebiBytes());
-        Assertions.assertEquals(7657623, MemorySize.parse("7657623mebibytes").getMebiBytes());
-        Assertions.assertEquals(7657623, MemorySize.parse("7657623 mebibytes").getMebiBytes());
+   assertThat(MemorySize.parse("7657623m").getMebiBytes()).isEqualTo(7657623);
+   assertThat(MemorySize.parse("7657623 m").getMebiBytes()).isEqualTo(7657623);
+   assertThat(MemorySize.parse("7657623mb").getMebiBytes()).isEqualTo(7657623);
+   assertThat(MemorySize.parse("7657623 mb").getMebiBytes()).isEqualTo(7657623);
+   assertThat(MemorySize.parse("7657623mebibytes").getMebiBytes()).isEqualTo(7657623);
+   assertThat(MemorySize.parse("7657623 mebibytes").getMebiBytes()).isEqualTo(7657623);
     }
 
     @Test
     void testParseGibiBytes() {
-        Assertions.assertEquals(987654, MemorySize.parse("987654g").getGibiBytes());
-        Assertions.assertEquals(987654, MemorySize.parse("987654 g").getGibiBytes());
-        Assertions.assertEquals(987654, MemorySize.parse("987654gb").getGibiBytes());
-        Assertions.assertEquals(987654, MemorySize.parse("987654 gb").getGibiBytes());
-        Assertions.assertEquals(987654, MemorySize.parse("987654gibibytes").getGibiBytes());
-        Assertions.assertEquals(987654, MemorySize.parse("987654 gibibytes").getGibiBytes());
+   assertThat(MemorySize.parse("987654g").getGibiBytes()).isEqualTo(987654);
+   assertThat(MemorySize.parse("987654 g").getGibiBytes()).isEqualTo(987654);
+   assertThat(MemorySize.parse("987654gb").getGibiBytes()).isEqualTo(987654);
+   assertThat(MemorySize.parse("987654 gb").getGibiBytes()).isEqualTo(987654);
+   assertThat(MemorySize.parse("987654gibibytes").getGibiBytes()).isEqualTo(987654);
+   assertThat(MemorySize.parse("987654 gibibytes").getGibiBytes()).isEqualTo(987654);
     }
 
     @Test
     void testParseTebiBytes() {
-        Assertions.assertEquals(1234567, MemorySize.parse("1234567t").getTebiBytes());
-        Assertions.assertEquals(1234567, MemorySize.parse("1234567 t").getTebiBytes());
-        Assertions.assertEquals(1234567, MemorySize.parse("1234567tb").getTebiBytes());
-        Assertions.assertEquals(1234567, MemorySize.parse("1234567 tb").getTebiBytes());
-        Assertions.assertEquals(1234567, MemorySize.parse("1234567tebibytes").getTebiBytes());
-        Assertions.assertEquals(1234567, MemorySize.parse("1234567 tebibytes").getTebiBytes());
+   assertThat(MemorySize.parse("1234567t").getTebiBytes()).isEqualTo(1234567);
+   assertThat(MemorySize.parse("1234567 t").getTebiBytes()).isEqualTo(1234567);
+   assertThat(MemorySize.parse("1234567tb").getTebiBytes()).isEqualTo(1234567);
+   assertThat(MemorySize.parse("1234567 tb").getTebiBytes()).isEqualTo(1234567);
+   assertThat(MemorySize.parse("1234567tebibytes").getTebiBytes()).isEqualTo(1234567);
+   assertThat(MemorySize.parse("1234567 tebibytes").getTebiBytes()).isEqualTo(1234567);
     }
 
     @Test
     void testUpperCase() {
-        Assertions.assertEquals(1L, MemorySize.parse("1 B").getBytes());
-        Assertions.assertEquals(1L, MemorySize.parse("1 K").getKibiBytes());
-        Assertions.assertEquals(1L, MemorySize.parse("1 M").getMebiBytes());
-        Assertions.assertEquals(1L, MemorySize.parse("1 G").getGibiBytes());
-        Assertions.assertEquals(1L, MemorySize.parse("1 T").getTebiBytes());
+   assertThat(MemorySize.parse("1 B").getBytes()).isEqualTo(1L);
+   assertThat(MemorySize.parse("1 K").getKibiBytes()).isEqualTo(1L);
+   assertThat(MemorySize.parse("1 M").getMebiBytes()).isEqualTo(1L);
+   assertThat(MemorySize.parse("1 G").getGibiBytes()).isEqualTo(1L);
+   assertThat(MemorySize.parse("1 T").getTebiBytes()).isEqualTo(1L);
     }
 
     @Test
     void testTrimBeforeParse() {
-        Assertions.assertEquals(155L, MemorySize.parseBytes("      155      "));
-        Assertions.assertEquals(155L, MemorySize.parseBytes("      155      bytes   "));
+   assertThat(MemorySize.parseBytes("      155      ")).isEqualTo(155L);
+   assertThat(MemorySize.parseBytes("      155      bytes   ")).isEqualTo(155L);
     }
 
     @Test
@@ -154,49 +158,49 @@ public class MemorySizeTest {
         // null
         try {
             MemorySize.parseBytes(null);
-            Assertions.fail("exception expected");
+       fail("exception expected");
         } catch (NullPointerException ignored) {
         }
 
         // empty
         try {
             MemorySize.parseBytes("");
-            Assertions.fail("exception expected");
+       fail("exception expected");
         } catch (IllegalArgumentException ignored) {
         }
 
         // blank
         try {
             MemorySize.parseBytes("     ");
-            Assertions.fail("exception expected");
+       fail("exception expected");
         } catch (IllegalArgumentException ignored) {
         }
 
         // no number
         try {
             MemorySize.parseBytes("foobar or fubar or foo bazz");
-            Assertions.fail("exception expected");
+       fail("exception expected");
         } catch (IllegalArgumentException ignored) {
         }
 
         // wrong unit
         try {
             MemorySize.parseBytes("16 gjah");
-            Assertions.fail("exception expected");
+       fail("exception expected");
         } catch (IllegalArgumentException ignored) {
         }
 
         // multiple numbers
         try {
             MemorySize.parseBytes("16 16 17 18 bytes");
-            Assertions.fail("exception expected");
+       fail("exception expected");
         } catch (IllegalArgumentException ignored) {
         }
 
         // negative number
         try {
             MemorySize.parseBytes("-100 bytes");
-            Assertions.fail("exception expected");
+       fail("exception expected");
         } catch (IllegalArgumentException ignored) {
         }
     }
@@ -213,16 +217,16 @@ public class MemorySizeTest {
 
     @Test
     void testParseWithDefaultUnit() {
-        Assertions.assertEquals(7, MemorySize.parse("7", MEGA_BYTES).getMebiBytes());
-        Assertions.assertNotEquals(7, MemorySize.parse("7340032", MEGA_BYTES));
-        Assertions.assertEquals(7, MemorySize.parse("7m", MEGA_BYTES).getMebiBytes());
-        Assertions.assertEquals(7168, MemorySize.parse("7", MEGA_BYTES).getKibiBytes());
-        Assertions.assertEquals(7168, MemorySize.parse("7m", MEGA_BYTES).getKibiBytes());
-        Assertions.assertEquals(7, MemorySize.parse("7 m", MEGA_BYTES).getMebiBytes());
-        Assertions.assertEquals(7, MemorySize.parse("7mb", MEGA_BYTES).getMebiBytes());
-        Assertions.assertEquals(7, MemorySize.parse("7 mb", MEGA_BYTES).getMebiBytes());
-        Assertions.assertEquals(7, MemorySize.parse("7mebibytes", MEGA_BYTES).getMebiBytes());
-        Assertions.assertEquals(7, MemorySize.parse("7 mebibytes", MEGA_BYTES).getMebiBytes());
+   assertThat(MemorySize.parse("7", MEGA_BYTES).getMebiBytes()).isEqualTo(7);
+   assertThat(MemorySize.parse("7340032", MEGA_BYTES)).isNotEqualTo(7);
+   assertThat(MemorySize.parse("7m", MEGA_BYTES).getMebiBytes()).isEqualTo(7);
+   assertThat(MemorySize.parse("7", MEGA_BYTES).getKibiBytes()).isEqualTo(7168);
+   assertThat(MemorySize.parse("7m", MEGA_BYTES).getKibiBytes()).isEqualTo(7168);
+   assertThat(MemorySize.parse("7 m", MEGA_BYTES).getMebiBytes()).isEqualTo(7);
+   assertThat(MemorySize.parse("7mb", MEGA_BYTES).getMebiBytes()).isEqualTo(7);
+   assertThat(MemorySize.parse("7 mb", MEGA_BYTES).getMebiBytes()).isEqualTo(7);
+   assertThat(MemorySize.parse("7mebibytes", MEGA_BYTES).getMebiBytes()).isEqualTo(7);
+   assertThat(MemorySize.parse("7 mebibytes", MEGA_BYTES).getMebiBytes()).isEqualTo(7);
     }
 
     @Test

@@ -25,8 +25,12 @@ import org.apache.flink.util.TestLogger;
 
 import org.junit.Rule;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.rules.TemporaryFolder;
 
 import java.net.URI;
@@ -46,10 +50,10 @@ public class FilesystemSchemeConfigTest extends TestLogger {
     @Test
     void testDefaultsToLocal() throws Exception {
         URI justPath = new URI(tempFolder.newFile().toURI().getPath());
-        Assertions.assertNull(justPath.getScheme());
+   assertThat(justPath.getScheme()).isNull();
 
         FileSystem fs = FileSystem.get(justPath);
-        Assertions.assertEquals("file", fs.getUri().getScheme());
+   assertThat(fs.getUri().getScheme()).isEqualTo("file");
     }
 
     @Test
@@ -60,10 +64,10 @@ public class FilesystemSchemeConfigTest extends TestLogger {
         FileSystem.initialize(conf);
 
         URI justPath = new URI(tempFolder.newFile().toURI().getPath());
-        Assertions.assertNull(justPath.getScheme());
+   assertThat(justPath.getScheme()).isNull();
 
         FileSystem fs = FileSystem.get(justPath);
-        Assertions.assertEquals("file", fs.getUri().getScheme());
+   assertThat(fs.getUri().getScheme()).isEqualTo("file");
     }
 
     @Test
@@ -73,13 +77,13 @@ public class FilesystemSchemeConfigTest extends TestLogger {
         FileSystem.initialize(conf);
 
         URI justPath = new URI(tempFolder.newFile().toURI().getPath());
-        Assertions.assertNull(justPath.getScheme());
+   assertThat(justPath.getScheme()).isNull();
 
         try {
             FileSystem.get(justPath);
-            Assertions.fail("should have failed with an exception");
+       fail("should have failed with an exception");
         } catch (UnsupportedFileSystemSchemeException e) {
-            Assertions.assertTrue(e.getMessage().contains("otherFS"));
+       assertThat(e.getMessage().contains("otherFS")).isTrue();
         }
     }
 
@@ -90,9 +94,9 @@ public class FilesystemSchemeConfigTest extends TestLogger {
         FileSystem.initialize(conf);
 
         URI pathAndScheme = tempFolder.newFile().toURI();
-        Assertions.assertNotNull(pathAndScheme.getScheme());
+   assertThat(pathAndScheme.getScheme()).isNotNull();
 
         FileSystem fs = FileSystem.get(pathAndScheme);
-        Assertions.assertEquals("file", fs.getUri().getScheme());
+   assertThat(fs.getUri().getScheme()).isEqualTo("file");
     }
 }

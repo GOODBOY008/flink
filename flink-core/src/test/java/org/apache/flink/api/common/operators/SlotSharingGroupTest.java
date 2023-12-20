@@ -20,16 +20,17 @@ package org.apache.flink.api.common.operators;
 
 import org.apache.flink.configuration.MemorySize;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 /** Tests for {@link SlotSharingGroup}. */
-public class SlotSharingGroupTest {
+class SlotSharingGroupTest {
     @Test
     void testBuildSlotSharingGroupWithSpecificResource() {
         final String name = "ssg";
@@ -60,24 +61,35 @@ public class SlotSharingGroupTest {
         final SlotSharingGroup slotSharingGroup = SlotSharingGroup.newBuilder(name).build();
 
         assertThat(slotSharingGroup.getName(), is(name));
-        Assertions.assertFalse(slotSharingGroup.getCpuCores().isPresent());
-        Assertions.assertFalse(slotSharingGroup.getTaskHeapMemory().isPresent());
-        Assertions.assertFalse(slotSharingGroup.getManagedMemory().isPresent());
-        Assertions.assertFalse(slotSharingGroup.getTaskOffHeapMemory().isPresent());
-        Assertions.assertTrue(slotSharingGroup.getExternalResources().isEmpty());
+        assertThat(slotSharingGroup.getCpuCores().isPresent()).isFalse();
+        assertThat(slotSharingGroup.getTaskHeapMemory().isPresent()).isFalse();
+        assertThat(slotSharingGroup.getManagedMemory().isPresent()).isFalse();
+        assertThat(slotSharingGroup.getTaskOffHeapMemory().isPresent()).isFalse();
+        assertThat(slotSharingGroup.getExternalResources().isEmpty()).isTrue();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     void testBuildSlotSharingGroupWithIllegalConfig() {
-        SlotSharingGroup.newBuilder("ssg")
-                .setCpuCores(1)
-                .setTaskHeapMemory(MemorySize.ZERO)
-                .setTaskOffHeapMemoryMB(10)
-                .build();
+        assertThatThrownBy(
+                        () ->
+                                SlotSharingGroup.newBuilder("ssg")
+                                        .setCpuCores(1)
+                                        .setTaskHeapMemory(MemorySize.ZERO)
+                                        .setTaskOffHeapMemoryMB(10)
+                                        .build())
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Task heap memory size must be positive");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     void testBuildSlotSharingGroupWithoutAllRequiredConfig() {
-        SlotSharingGroup.newBuilder("ssg").setCpuCores(1).setTaskOffHeapMemoryMB(10).build();
+        assertThatThrownBy(
+                        () ->
+                                SlotSharingGroup.newBuilder("ssg")
+                                        .setCpuCores(1)
+                                        .setTaskOffHeapMemoryMB(10)
+                                        .build())
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Task heap memory size must be positive");
     }
 }

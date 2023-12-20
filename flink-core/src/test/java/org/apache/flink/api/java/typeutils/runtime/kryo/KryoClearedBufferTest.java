@@ -28,8 +28,12 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
@@ -66,7 +70,7 @@ class KryoClearedBufferTest {
 
         try {
             kryoSerializer.serialize(testRecord, target);
-            Assertions.fail("Expected an EOFException.");
+       fail("Expected an EOFException.");
         } catch (EOFException eofException) {
             // expected exception
             // now the Kryo Output should have been cleared
@@ -77,7 +81,7 @@ class KryoClearedBufferTest {
                         new DataInputViewStreamWrapper(
                                 new ByteArrayInputStream(target.getBuffer())));
 
-        Assertions.assertEquals(testRecord, actualRecord);
+   assertThat(actualRecord).isEqualTo(testRecord);
 
         target.clear();
 
@@ -95,7 +99,7 @@ class KryoClearedBufferTest {
         }
       }
 
-        Assertions.assertEquals(size, counter);
+   assertThat(counter).isEqualTo(size);
     }
 
     public static class TestRecord {

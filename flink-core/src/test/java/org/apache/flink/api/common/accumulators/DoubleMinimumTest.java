@@ -18,15 +18,17 @@
 
 package org.apache.flink.api.common.accumulators;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class DoubleMinimumTest {
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+
+class DoubleMinimumTest {
 
     @Test
     void testGet() {
         DoubleMinimum min = new DoubleMinimum();
-        Assertions.assertEquals(Double.POSITIVE_INFINITY, min.getLocalValue(), 0.0);
+        assertThat(min.getLocalValue()).isCloseTo(Double.POSITIVE_INFINITY, within(0.0));
     }
 
     @Test
@@ -35,10 +37,10 @@ public class DoubleMinimumTest {
         double value = 13.57902468;
 
         min.add(value);
-        Assertions.assertEquals(value, min.getLocalValue(), 0.0);
+        assertThat(min.getLocalValue()).isCloseTo(value, within(0.0));
 
         min.resetLocal();
-        Assertions.assertEquals(Double.POSITIVE_INFINITY, min.getLocalValue(), 0.0);
+        assertThat(min.getLocalValue()).isCloseTo(Double.POSITIVE_INFINITY, within(0.0));
     }
 
     @Test
@@ -50,7 +52,7 @@ public class DoubleMinimumTest {
         min.add(-987.6543);
         min.add(-123.4567);
 
-        Assertions.assertEquals(-987.6543, min.getLocalValue(), 0.0);
+        assertThat(min.getLocalValue()).isCloseTo(-987.6543, within(0.0));
     }
 
     @Test
@@ -62,10 +64,10 @@ public class DoubleMinimumTest {
         min2.add(5678.9012);
 
         min2.merge(min1);
-        Assertions.assertEquals(1234.5768, min2.getLocalValue(), 0.0);
+        assertThat(min2.getLocalValue()).isCloseTo(1234.5768, within(0.0));
 
         min1.merge(min2);
-        Assertions.assertEquals(1234.5768, min1.getLocalValue(), 0.0);
+        assertThat(min1.getLocalValue()).isCloseTo(1234.5768, within(0.0));
     }
 
     @Test
@@ -76,6 +78,6 @@ public class DoubleMinimumTest {
         min.add(value);
 
         DoubleMinimum clone = min.clone();
-        Assertions.assertEquals(value, clone.getLocalValue(), 0.0);
+        assertThat(clone.getLocalValue()).isCloseTo(value, within(0.0));
     }
 }

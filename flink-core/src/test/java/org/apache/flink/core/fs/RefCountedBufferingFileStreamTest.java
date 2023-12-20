@@ -19,8 +19,12 @@
 package org.apache.flink.core.fs;
 
 import org.junit.Rule;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
@@ -46,8 +50,8 @@ public class RefCountedBufferingFileStreamTest {
         final byte[] contentToWrite = bytesOf("hello");
         stream.write(contentToWrite);
 
-        Assertions.assertEquals(contentToWrite.length, stream.getPositionInBuffer());
-        Assertions.assertEquals(contentToWrite.length, stream.getPos());
+   assertThat(stream.getPositionInBuffer()).isEqualTo(contentToWrite.length);
+   assertThat(stream.getPos()).isEqualTo(contentToWrite.length);
 
         stream.close();
         stream.release();
@@ -60,8 +64,8 @@ public class RefCountedBufferingFileStreamTest {
         final byte[] contentToWrite = bytesOf("hello");
         stream.write(contentToWrite);
 
-        Assertions.assertEquals(contentToWrite.length, stream.getPositionInBuffer());
-        Assertions.assertEquals(contentToWrite.length, stream.getPos());
+   assertThat(stream.getPositionInBuffer()).isEqualTo(contentToWrite.length);
+   assertThat(stream.getPos()).isEqualTo(contentToWrite.length);
 
         stream.close();
 
@@ -75,8 +79,8 @@ public class RefCountedBufferingFileStreamTest {
         final byte[] contentToWrite = bytesOf("hello big world");
         stream.write(contentToWrite);
 
-        Assertions.assertEquals(0, stream.getPositionInBuffer());
-        Assertions.assertEquals(contentToWrite.length, stream.getPos());
+   assertThat(stream.getPositionInBuffer()).isEqualTo(0);
+   assertThat(stream.getPos()).isEqualTo(contentToWrite.length);
 
         stream.close();
         stream.release();
@@ -89,14 +93,14 @@ public class RefCountedBufferingFileStreamTest {
         final byte[] firstContentToWrite = bytesOf("hello");
         stream.write(firstContentToWrite);
 
-        Assertions.assertEquals(firstContentToWrite.length, stream.getPositionInBuffer());
-        Assertions.assertEquals(firstContentToWrite.length, stream.getPos());
+   assertThat(stream.getPositionInBuffer()).isEqualTo(firstContentToWrite.length);
+   assertThat(stream.getPos()).isEqualTo(firstContentToWrite.length);
 
         final byte[] secondContentToWrite = bytesOf(" world!");
         stream.write(secondContentToWrite);
 
-        Assertions.assertEquals(secondContentToWrite.length, stream.getPositionInBuffer());
-        Assertions.assertEquals(
+   assertThat(stream.getPositionInBuffer()).isEqualTo(secondContentToWrite.length);
+   assertEquals(
                 firstContentToWrite.length + secondContentToWrite.length, stream.getPos());
 
         stream.close();
@@ -110,17 +114,17 @@ public class RefCountedBufferingFileStreamTest {
         final byte[] contentToWrite = bytesOf("hello");
         stream.write(contentToWrite);
 
-        Assertions.assertEquals(contentToWrite.length, stream.getPositionInBuffer());
-        Assertions.assertEquals(contentToWrite.length, stream.getPos());
+   assertThat(stream.getPositionInBuffer()).isEqualTo(contentToWrite.length);
+   assertThat(stream.getPos()).isEqualTo(contentToWrite.length);
 
         stream.flush();
 
-        Assertions.assertEquals(0, stream.getPositionInBuffer());
-        Assertions.assertEquals(contentToWrite.length, stream.getPos());
+   assertThat(stream.getPositionInBuffer()).isEqualTo(0);
+   assertThat(stream.getPos()).isEqualTo(contentToWrite.length);
 
         final byte[] contentRead = new byte[contentToWrite.length];
         new FileInputStream(stream.getInputFile()).read(contentRead, 0, contentRead.length);
-        Assertions.assertArrayEquals(contentToWrite, contentRead);
+   assertThat(contentRead).isEqualTo(contentToWrite);
 
         stream.release();
     }

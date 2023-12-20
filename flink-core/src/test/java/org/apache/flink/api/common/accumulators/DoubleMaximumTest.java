@@ -18,15 +18,17 @@
 
 package org.apache.flink.api.common.accumulators;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
 
 class DoubleMaximumTest {
 
     @Test
     void testGet() {
         DoubleMaximum max = new DoubleMaximum();
-        Assertions.assertEquals(Double.NEGATIVE_INFINITY, max.getLocalValue(), 0.0);
+        assertThat(max.getLocalValue()).isCloseTo(Double.NEGATIVE_INFINITY, within(0.0));
     }
 
     @Test
@@ -35,10 +37,10 @@ class DoubleMaximumTest {
         double value = 13.57902468;
 
         max.add(value);
-        Assertions.assertEquals(value, max.getLocalValue(), 0.0);
+        assertThat(max.getLocalValue()).isCloseTo(value, within(0.0));
 
         max.resetLocal();
-        Assertions.assertEquals(Double.NEGATIVE_INFINITY, max.getLocalValue(), 0.0);
+        assertThat(max.getLocalValue()).isCloseTo(Double.NEGATIVE_INFINITY, within(0.0));
     }
 
     @Test
@@ -50,7 +52,7 @@ class DoubleMaximumTest {
         max.add(-987.6543);
         max.add(-123.4567);
 
-        Assertions.assertEquals(9876.5432, max.getLocalValue(), 0.0);
+        assertThat(max.getLocalValue()).isCloseTo(9876.5432, within(0.0));
     }
 
     @Test
@@ -62,10 +64,10 @@ class DoubleMaximumTest {
         max2.add(5678.9012);
 
         max2.merge(max1);
-        Assertions.assertEquals(5678.9012, max2.getLocalValue(), 0.0);
+        assertThat(max2.getLocalValue()).isCloseTo(5678.9012, within(0.0));
 
         max1.merge(max2);
-        Assertions.assertEquals(5678.9012, max1.getLocalValue(), 0.0);
+        assertThat(max1.getLocalValue()).isCloseTo(5678.9012, within(0.0));
     }
 
     @Test
@@ -76,6 +78,6 @@ class DoubleMaximumTest {
         max.add(value);
 
         DoubleMaximum clone = max.clone();
-        Assertions.assertEquals(value, clone.getLocalValue(), 0.0);
+        assertThat(clone.getLocalValue()).isCloseTo(value, within(0.0));
     }
 }

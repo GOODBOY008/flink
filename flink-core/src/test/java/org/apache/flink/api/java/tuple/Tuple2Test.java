@@ -20,8 +20,9 @@ package org.apache.flink.api.java.tuple;
 
 import org.apache.flink.types.NullFieldException;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 /** Tests for {@link Tuple2}. */
 class Tuple2Test {
@@ -31,16 +32,16 @@ class Tuple2Test {
         Tuple2<String, Integer> toSwap = new Tuple2<>("Test case", 25);
         Tuple2<Integer, String> swapped = toSwap.swap();
 
-        Assertions.assertEquals(swapped.f0, toSwap.f1);
+        assertThat(toSwap.f1).isEqualTo(swapped.f0);
 
-        Assertions.assertEquals(swapped.f1, toSwap.f0);
+        assertThat(toSwap.f0).isEqualTo(swapped.f1);
     }
 
     @Test(expected = NullFieldException.class)
     void testGetFieldNotNull() {
         Tuple2<String, Integer> tuple = new Tuple2<>("Test case", null);
 
-        Assertions.assertEquals("Test case", tuple.getFieldNotNull(0));
+        assertThat(tuple.getFieldNotNull(0)).isEqualTo("Test case");
         tuple.getFieldNotNull(1);
     }
 }

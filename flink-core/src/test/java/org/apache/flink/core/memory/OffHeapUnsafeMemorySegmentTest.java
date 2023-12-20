@@ -18,7 +18,11 @@
 
 package org.apache.flink.core.memory;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -59,7 +63,7 @@ class OffHeapUnsafeMemorySegmentTest extends MemorySegmentTestBase {
         MemorySegmentFactory.allocateOffHeapUnsafeMemory(
                         10, null, () -> cleanerFuture.complete(null))
                 .free();
-        assertTrue(cleanerFuture.isDone());
+        assertThat(cleanerFuture.isDone()).isTrue();
     }
 
     @Test

@@ -38,6 +38,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 @SuppressWarnings("unused")
 public class ExpressionKeysTest {
 
@@ -47,15 +52,15 @@ public class ExpressionKeysTest {
         TypeInformation<Long> longType = BasicTypeInfo.LONG_TYPE_INFO;
         ExpressionKeys<Long> ek = new ExpressionKeys<>("*", longType);
 
-        Assertions.assertArrayEquals(new int[] {0}, ek.computeLogicalKeyPositions());
+        assertThat(ek.computeLogicalKeyPositions()).isEqualTo(new int[] {0});
     }
 
-    @Test(expected = InvalidProgramException.class)
+    @Test
     void testGenericNonKeyType() {
         // Fail: GenericType cannot be used as key
         TypeInformation<GenericNonKeyType> genericType =
                 new GenericTypeInfo<>(GenericNonKeyType.class);
-        new ExpressionKeys<>("*", genericType);
+        assertThrows(InvalidProgramException.class, () -> new ExpressionKeys<>("*", genericType));
     }
 
     @Test
@@ -64,7 +69,7 @@ public class ExpressionKeysTest {
         TypeInformation<GenericKeyType> genericType = new GenericTypeInfo<>(GenericKeyType.class);
         ExpressionKeys<GenericKeyType> ek = new ExpressionKeys<>("*", genericType);
 
-        Assertions.assertArrayEquals(new int[] {0}, ek.computeLogicalKeyPositions());
+        assertThat(ek.computeLogicalKeyPositions()).isEqualTo(new int[] {0});
     }
 
     @Test
@@ -83,7 +88,7 @@ public class ExpressionKeysTest {
         } catch (Throwable iae) {
             ex = iae;
         }
-        Assertions.assertNotNull(ex);
+        assertThat(ex).isNotNull();
     }
 
     @Test
@@ -111,14 +116,14 @@ public class ExpressionKeysTest {
                             ints.length); // copy, just to make sure that the code is not cheating
             // by changing the ints.
             ek = new ExpressionKeys<>(inInts, typeInfo);
-            Assertions.assertArrayEquals(ints, ek.computeLogicalKeyPositions());
-            Assertions.assertEquals(ints.length, ek.computeLogicalKeyPositions().length);
+            assertThat(ek.computeLogicalKeyPositions()).isEqualTo(ints);
+            assertThat(ek.computeLogicalKeyPositions().length).isEqualTo(ints.length);
 
             ArrayUtils.reverse(ints);
             inInts = Arrays.copyOf(ints, ints.length);
             ek = new ExpressionKeys<>(inInts, typeInfo);
-            Assertions.assertArrayEquals(ints, ek.computeLogicalKeyPositions());
-            Assertions.assertEquals(ints.length, ek.computeLogicalKeyPositions().length);
+            assertThat(ek.computeLogicalKeyPositions()).isEqualTo(ints);
+            assertThat(ek.computeLogicalKeyPositions().length).isEqualTo(ints.length);
         }
     }
 
@@ -148,11 +153,11 @@ public class ExpressionKeysTest {
             } catch (Throwable t) {
                 e = t;
             }
-            Assertions.assertNotNull(e);
+            assertThat(e).isNotNull();
         }
     }
 
-    @Test(expected = InvalidProgramException.class)
+    @Test
     void testTupleNonKeyField() {
         // selected field is not a key type
         TypeInformation<Tuple3<String, Long, GenericNonKeyType>> ti =
@@ -161,7 +166,7 @@ public class ExpressionKeysTest {
                         BasicTypeInfo.LONG_TYPE_INFO,
                         TypeExtractor.getForClass(GenericNonKeyType.class));
 
-        new ExpressionKeys<>(2, ti);
+        assertThrows(InvalidProgramException.class, () -> new ExpressionKeys<>(2, ti));
     }
 
     @Test
@@ -176,13 +181,13 @@ public class ExpressionKeysTest {
                         BasicTypeInfo.STRING_TYPE_INFO);
         ExpressionKeys<Tuple3<String, Tuple3<String, String, String>, String>> fpk =
                 new ExpressionKeys<>(0, typeInfo);
-        Assertions.assertArrayEquals(new int[] {0}, fpk.computeLogicalKeyPositions());
+        assertThat(fpk.computeLogicalKeyPositions()).isEqualTo(new int[] {0});
 
         fpk = new ExpressionKeys<>(1, typeInfo);
         Assertions.assertArrayEquals(new int[] {1, 2, 3}, fpk.computeLogicalKeyPositions());
 
         fpk = new ExpressionKeys<>(2, typeInfo);
-        Assertions.assertArrayEquals(new int[] {4}, fpk.computeLogicalKeyPositions());
+        assertThat(fpk.computeLogicalKeyPositions()).isEqualTo(new int[] {4});
 
         fpk = new ExpressionKeys<>(new int[] {0, 1, 2}, typeInfo);
         Assertions.assertArrayEquals(new int[] {0, 1, 2, 3, 4}, fpk.computeLogicalKeyPositions());
@@ -234,20 +239,17 @@ public class ExpressionKeysTest {
                                 Tuple3<Tuple3<String, String, String>, String, String>,
                                 String>>
                 complexFpk = new ExpressionKeys<>(0, complexTypeInfo);
-        Assertions.assertArrayEquals(new int[] {0}, complexFpk.computeLogicalKeyPositions());
+        assertThat(complexFpk.computeLogicalKeyPositions()).isEqualTo(new int[] {0});
 
         complexFpk = new ExpressionKeys<>(new int[] {0, 1, 2}, complexTypeInfo);
-        Assertions.assertArrayEquals(
-                new int[] {0, 1, 2, 3, 4, 5, 6}, complexFpk.computeLogicalKeyPositions());
+        assertArrayEquals(new int[] {0, 1, 2, 3, 4, 5, 6}, complexFpk.computeLogicalKeyPositions());
 
         complexFpk = new ExpressionKeys<>("*", complexTypeInfo);
-        Assertions.assertArrayEquals(
-                new int[] {0, 1, 2, 3, 4, 5, 6}, complexFpk.computeLogicalKeyPositions());
+        assertArrayEquals(new int[] {0, 1, 2, 3, 4, 5, 6}, complexFpk.computeLogicalKeyPositions());
 
         // scala style select all
         complexFpk = new ExpressionKeys<>("_", complexTypeInfo);
-        Assertions.assertArrayEquals(
-                new int[] {0, 1, 2, 3, 4, 5, 6}, complexFpk.computeLogicalKeyPositions());
+        assertArrayEquals(new int[] {0, 1, 2, 3, 4, 5, 6}, complexFpk.computeLogicalKeyPositions());
 
         complexFpk = new ExpressionKeys<>("f1.f0.*", complexTypeInfo);
         Assertions.assertArrayEquals(new int[] {1, 2, 3}, complexFpk.computeLogicalKeyPositions());
@@ -256,7 +258,7 @@ public class ExpressionKeysTest {
         Assertions.assertArrayEquals(new int[] {1, 2, 3}, complexFpk.computeLogicalKeyPositions());
 
         complexFpk = new ExpressionKeys<>("f2", complexTypeInfo);
-        Assertions.assertArrayEquals(new int[] {6}, complexFpk.computeLogicalKeyPositions());
+        assertThat(complexFpk.computeLogicalKeyPositions()).isEqualTo(new int[] {6});
     }
 
     @Test
@@ -280,7 +282,7 @@ public class ExpressionKeysTest {
         Assertions.assertArrayEquals(new int[] {3, 4}, ek.computeLogicalKeyPositions());
 
         ek = new ExpressionKeys<>("i0", ti);
-        Assertions.assertArrayEquals(new int[] {0}, ek.computeLogicalKeyPositions());
+        assertThat(ek.computeLogicalKeyPositions()).isEqualTo(new int[] {0});
     }
 
     @Test
@@ -295,7 +297,7 @@ public class ExpressionKeysTest {
         ExpressionKeys<Tuple3<Integer, Pojo1, PojoWithMultiplePojos>> ek;
 
         ek = new ExpressionKeys<>(0, ti);
-        Assertions.assertArrayEquals(new int[] {0}, ek.computeLogicalKeyPositions());
+        assertThat(ek.computeLogicalKeyPositions()).isEqualTo(new int[] {0});
 
         ek = new ExpressionKeys<>(1, ti);
         Assertions.assertArrayEquals(new int[] {1, 2}, ek.computeLogicalKeyPositions());
@@ -304,12 +306,10 @@ public class ExpressionKeysTest {
         Assertions.assertArrayEquals(new int[] {3, 4, 5, 6, 7}, ek.computeLogicalKeyPositions());
 
         ek = new ExpressionKeys<>(new int[] {}, ti, true);
-        Assertions.assertArrayEquals(
-                new int[] {0, 1, 2, 3, 4, 5, 6, 7}, ek.computeLogicalKeyPositions());
+        assertArrayEquals(new int[] {0, 1, 2, 3, 4, 5, 6, 7}, ek.computeLogicalKeyPositions());
 
         ek = new ExpressionKeys<>("*", ti);
-        Assertions.assertArrayEquals(
-                new int[] {0, 1, 2, 3, 4, 5, 6, 7}, ek.computeLogicalKeyPositions());
+        assertArrayEquals(new int[] {0, 1, 2, 3, 4, 5, 6, 7}, ek.computeLogicalKeyPositions());
 
         ek = new ExpressionKeys<>("f2.p1.*", ti);
         Assertions.assertArrayEquals(new int[] {4, 5}, ek.computeLogicalKeyPositions());
@@ -327,21 +327,21 @@ public class ExpressionKeysTest {
         ExpressionKeys<Tuple3<Integer, Pojo1, PojoWithMultiplePojos>> ek;
 
         ek = new ExpressionKeys<>(0, ti);
-        Assertions.assertArrayEquals(
+        assertArrayEquals(
                 new TypeInformation[] {BasicTypeInfo.INT_TYPE_INFO}, ek.getOriginalKeyFieldTypes());
 
         ek = new ExpressionKeys<>(1, ti);
-        Assertions.assertArrayEquals(
+        assertArrayEquals(
                 new TypeInformation[] {TypeExtractor.getForClass(Pojo1.class)},
                 ek.getOriginalKeyFieldTypes());
 
         ek = new ExpressionKeys<>(2, ti);
-        Assertions.assertArrayEquals(
+        assertArrayEquals(
                 new TypeInformation[] {TypeExtractor.getForClass(PojoWithMultiplePojos.class)},
                 ek.getOriginalKeyFieldTypes());
 
         ek = new ExpressionKeys<>(new int[] {}, ti, true);
-        Assertions.assertArrayEquals(
+        assertArrayEquals(
                 new TypeInformation<?>[] {
                     BasicTypeInfo.INT_TYPE_INFO,
                     TypeExtractor.getForClass(Pojo1.class),
@@ -350,45 +350,46 @@ public class ExpressionKeysTest {
                 ek.getOriginalKeyFieldTypes());
 
         ek = new ExpressionKeys<>("*", ti);
-        Assertions.assertArrayEquals(new TypeInformation<?>[] {ti}, ek.getOriginalKeyFieldTypes());
+        assertThat(ek.getOriginalKeyFieldTypes()).isEqualTo(new TypeInformation<?>[] {ti});
 
         ek = new ExpressionKeys<>("f1", ti);
-        Assertions.assertArrayEquals(
+        assertArrayEquals(
                 new TypeInformation<?>[] {TypeExtractor.getForClass(Pojo1.class)},
                 ek.getOriginalKeyFieldTypes());
 
         ek = new ExpressionKeys<>("f1.*", ti);
-        Assertions.assertArrayEquals(
+        assertArrayEquals(
                 new TypeInformation<?>[] {TypeExtractor.getForClass(Pojo1.class)},
                 ek.getOriginalKeyFieldTypes());
 
         ek = new ExpressionKeys<>("f2.*", ti);
-        Assertions.assertArrayEquals(
+        assertArrayEquals(
                 new TypeInformation<?>[] {TypeExtractor.getForClass(PojoWithMultiplePojos.class)},
                 ek.getOriginalKeyFieldTypes());
 
         ek = new ExpressionKeys<>("f2.p2", ti);
-        Assertions.assertArrayEquals(
+        assertArrayEquals(
                 new TypeInformation<?>[] {TypeExtractor.getForClass(Pojo2.class)},
                 ek.getOriginalKeyFieldTypes());
 
         ek = new ExpressionKeys<>("f2.p2.*", ti);
-        Assertions.assertArrayEquals(
+        assertArrayEquals(
                 new TypeInformation<?>[] {TypeExtractor.getForClass(Pojo2.class)},
                 ek.getOriginalKeyFieldTypes());
 
         ek = new ExpressionKeys<>("f2.p2._", ti);
-        Assertions.assertArrayEquals(
+        assertArrayEquals(
                 new TypeInformation<?>[] {TypeExtractor.getForClass(Pojo2.class)},
                 ek.getOriginalKeyFieldTypes());
     }
 
-    @Test(expected = InvalidProgramException.class)
+    @Test
     void testNonKeyPojoField() {
         // selected field is not a key type
         TypeInformation<PojoWithNonKeyField> ti =
                 TypeExtractor.getForClass(PojoWithNonKeyField.class);
-        new ExpressionKeys<>("b", ti);
+        assertThatThrownBy(() -> new ExpressionKeys<>("b", ti))
+                .isInstanceOf(InvalidProgramException.class);
     }
 
     @Test
@@ -407,7 +408,7 @@ public class ExpressionKeysTest {
             } catch (Throwable t) {
                 e = t;
             }
-            Assertions.assertNotNull(e);
+            assertThat(e).isNotNull();
         }
     }
 
@@ -418,8 +419,8 @@ public class ExpressionKeysTest {
         ExpressionKeys<Pojo1> ek1 = new ExpressionKeys<>("a", t1);
         ExpressionKeys<Pojo1> ek2 = new ExpressionKeys<>("b", t1);
 
-        Assertions.assertTrue(ek1.areCompatible(ek2));
-        Assertions.assertTrue(ek2.areCompatible(ek1));
+        assertThat(ek1.areCompatible(ek2)).isTrue();
+        assertThat(ek2.areCompatible(ek1)).isTrue();
     }
 
     @Test
@@ -431,8 +432,8 @@ public class ExpressionKeysTest {
         ExpressionKeys<Pojo1> ek1 = new ExpressionKeys<>("a", t1);
         ExpressionKeys<Tuple2<String, Long>> ek2 = new ExpressionKeys<>(0, t2);
 
-        Assertions.assertTrue(ek1.areCompatible(ek2));
-        Assertions.assertTrue(ek2.areCompatible(ek1));
+        assertThat(ek1.areCompatible(ek2)).isTrue();
+        assertThat(ek2.areCompatible(ek1)).isTrue();
     }
 
     @Test
@@ -444,8 +445,8 @@ public class ExpressionKeysTest {
         ExpressionKeys<String> ek1 = new ExpressionKeys<>("*", t1);
         ExpressionKeys<Tuple2<String, Long>> ek2 = new ExpressionKeys<>(0, t2);
 
-        Assertions.assertTrue(ek1.areCompatible(ek2));
-        Assertions.assertTrue(ek2.areCompatible(ek1));
+        assertThat(ek1.areCompatible(ek2)).isTrue();
+        assertThat(ek2.areCompatible(ek1)).isTrue();
     }
 
     @Test
@@ -463,8 +464,8 @@ public class ExpressionKeysTest {
         ExpressionKeys<Tuple3<String, Long, Integer>> ek2 =
                 new ExpressionKeys<>(new int[] {0, 0, 2}, t2);
 
-        Assertions.assertTrue(ek1.areCompatible(ek2));
-        Assertions.assertTrue(ek2.areCompatible(ek1));
+        assertThat(ek1.areCompatible(ek2)).isTrue();
+        assertThat(ek2.areCompatible(ek1)).isTrue();
     }
 
     @Test
@@ -478,11 +479,11 @@ public class ExpressionKeysTest {
                 new ExpressionKeys<>(new String[] {"p1.b", "p2.a2"}, t1);
         ExpressionKeys<Tuple2<String, String>> ek2 = new ExpressionKeys<>("*", t2);
 
-        Assertions.assertTrue(ek1.areCompatible(ek2));
-        Assertions.assertTrue(ek2.areCompatible(ek1));
+        assertThat(ek1.areCompatible(ek2)).isTrue();
+        assertThat(ek2.areCompatible(ek1)).isTrue();
     }
 
-    @Test(expected = Keys.IncompatibleKeysException.class)
+    @Test
     void testAreCompatible6() throws Keys.IncompatibleKeysException {
         TypeInformation<Pojo1> t1 = TypeExtractor.getForClass(Pojo1.class);
         TypeInformation<Tuple2<String, Long>> t2 =
@@ -491,10 +492,10 @@ public class ExpressionKeysTest {
         ExpressionKeys<Pojo1> ek1 = new ExpressionKeys<>("a", t1);
         ExpressionKeys<Tuple2<String, Long>> ek2 = new ExpressionKeys<>(1, t2);
 
-        ek1.areCompatible(ek2);
+        assertThrows(Keys.IncompatibleKeysException.class, () -> ek1.areCompatible(ek2));
     }
 
-    @Test(expected = Keys.IncompatibleKeysException.class)
+    @Test
     void testAreCompatible7() throws Keys.IncompatibleKeysException {
         TypeInformation<Pojo1> t1 = TypeExtractor.getForClass(Pojo1.class);
         TypeInformation<Tuple2<String, Long>> t2 =
@@ -503,7 +504,7 @@ public class ExpressionKeysTest {
         ExpressionKeys<Pojo1> ek1 = new ExpressionKeys<>(new String[] {"a", "b"}, t1);
         ExpressionKeys<Tuple2<String, Long>> ek2 = new ExpressionKeys<>(0, t2);
 
-        ek1.areCompatible(ek2);
+        assertThrows(Keys.IncompatibleKeysException.class, () -> ek1.areCompatible(ek2));
     }
 
     @Test
@@ -516,7 +517,7 @@ public class ExpressionKeysTest {
                 new Keys.SelectorFunctionKeys<>(
                         new KeySelector1(), t2, BasicTypeInfo.STRING_TYPE_INFO);
 
-        Assertions.assertTrue(ek1.areCompatible(ek2));
+        assertThat(ek1.areCompatible(ek2)).isTrue();
     }
 
     @Test
@@ -538,7 +539,7 @@ public class ExpressionKeysTest {
                         new TupleTypeInfo<>(
                                 BasicTypeInfo.INT_TYPE_INFO, BasicTypeInfo.STRING_TYPE_INFO));
 
-        Assertions.assertTrue(ek1.areCompatible(ek2));
+        assertThat(ek1.areCompatible(ek2)).isTrue();
     }
 
     public static class Pojo1 {

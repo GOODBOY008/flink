@@ -18,8 +18,12 @@
 
 package org.apache.flink.configuration;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,21 +53,21 @@ public class CoreOptionsTest {
             ConfigOption<List<String>> patternOption,
             ConfigOption<List<String>> additionalOption) {
         Configuration config = new Configuration();
-        Assertions.assertArrayEquals(
+   assertArrayEquals(
                 patternOption.defaultValue().toArray(new String[0]), patternGetter.apply(config));
 
         config.set(patternOption, Arrays.asList("hello", "world"));
 
-        Assertions.assertArrayEquals(new String[] {"hello", "world"}, patternGetter.apply(config));
+   assertArrayEquals(new String[] {"hello", "world"}, patternGetter.apply(config));
 
         config.set(additionalOption, Arrays.asList("how", "are", "you"));
 
-        Assertions.assertArrayEquals(
+   assertArrayEquals(
                 new String[] {"hello", "world", "how", "are", "you"}, patternGetter.apply(config));
 
         config.set(patternOption, Collections.emptyList());
 
-        Assertions.assertArrayEquals(
+   assertArrayEquals(
                 new String[] {"how", "are", "you"}, patternGetter.apply(config));
     }
 }

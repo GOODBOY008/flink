@@ -21,8 +21,12 @@ package org.apache.flink.util;
 import org.apache.flink.core.testutils.CommonTestUtils;
 
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.InputStream;
 
@@ -38,8 +42,8 @@ public class AbstractIDTest extends TestLogger {
         final AbstractID origID = new AbstractID();
         final AbstractID copyID = CommonTestUtils.createCopySerializable(origID);
 
-        Assertions.assertEquals(origID.hashCode(), copyID.hashCode());
-        Assertions.assertEquals(origID, copyID);
+   assertThat(copyID.hashCode()).isEqualTo(origID.hashCode());
+   assertThat(copyID).isEqualTo(origID);
     }
 
     @Test
@@ -50,9 +54,9 @@ public class AbstractIDTest extends TestLogger {
         AbstractID copy2 = new AbstractID(origID.getBytes());
         AbstractID copy3 = new AbstractID(origID.getLowerPart(), origID.getUpperPart());
 
-        Assertions.assertEquals(origID, copy1);
-        Assertions.assertEquals(origID, copy2);
-        Assertions.assertEquals(origID, copy3);
+   assertThat(copy1).isEqualTo(origID);
+   assertThat(copy2).isEqualTo(origID);
+   assertThat(copy3).isEqualTo(origID);
     }
 
     @Test
@@ -70,16 +74,16 @@ public class AbstractIDTest extends TestLogger {
         AbstractID id10 = new AbstractID(Long.MIN_VALUE, Long.MAX_VALUE);
 
         // test self equality
-        Assertions.assertEquals(0, id1.compareTo(CommonTestUtils.createCopySerializable(id1)));
-        Assertions.assertEquals(0, id2.compareTo(CommonTestUtils.createCopySerializable(id2)));
-        Assertions.assertEquals(0, id3.compareTo(CommonTestUtils.createCopySerializable(id3)));
-        Assertions.assertEquals(0, id4.compareTo(CommonTestUtils.createCopySerializable(id4)));
-        Assertions.assertEquals(0, id5.compareTo(CommonTestUtils.createCopySerializable(id5)));
-        Assertions.assertEquals(0, id6.compareTo(CommonTestUtils.createCopySerializable(id6)));
-        Assertions.assertEquals(0, id7.compareTo(CommonTestUtils.createCopySerializable(id7)));
-        Assertions.assertEquals(0, id8.compareTo(CommonTestUtils.createCopySerializable(id8)));
-        Assertions.assertEquals(0, id9.compareTo(CommonTestUtils.createCopySerializable(id9)));
-        Assertions.assertEquals(0, id10.compareTo(CommonTestUtils.createCopySerializable(id10)));
+   assertThat(id1.compareTo(CommonTestUtils.createCopySerializable(id1))).isEqualTo(0);
+   assertThat(id2.compareTo(CommonTestUtils.createCopySerializable(id2))).isEqualTo(0);
+   assertThat(id3.compareTo(CommonTestUtils.createCopySerializable(id3))).isEqualTo(0);
+   assertThat(id4.compareTo(CommonTestUtils.createCopySerializable(id4))).isEqualTo(0);
+   assertThat(id5.compareTo(CommonTestUtils.createCopySerializable(id5))).isEqualTo(0);
+   assertThat(id6.compareTo(CommonTestUtils.createCopySerializable(id6))).isEqualTo(0);
+   assertThat(id7.compareTo(CommonTestUtils.createCopySerializable(id7))).isEqualTo(0);
+   assertThat(id8.compareTo(CommonTestUtils.createCopySerializable(id8))).isEqualTo(0);
+   assertThat(id9.compareTo(CommonTestUtils.createCopySerializable(id9))).isEqualTo(0);
+   assertThat(id10.compareTo(CommonTestUtils.createCopySerializable(id10))).isEqualTo(0);
 
         // test order
         assertCompare(id1, id2, -1);
@@ -139,7 +143,7 @@ public class AbstractIDTest extends TestLogger {
         int sgnAB = cmpAB > 0 ? 1 : (cmpAB < 0 ? -1 : 0);
         int sgnBA = cmpBA > 0 ? 1 : (cmpBA < 0 ? -1 : 0);
 
-        Assertions.assertEquals(signum, sgnAB);
-        Assertions.assertEquals(sgnAB, -sgnBA);
+   assertThat(sgnAB).isEqualTo(signum);
+   assertThat(-sgnBA).isEqualTo(sgnAB);
     }
 }

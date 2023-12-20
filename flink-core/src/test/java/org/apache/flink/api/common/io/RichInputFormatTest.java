@@ -24,13 +24,14 @@ import org.apache.flink.api.common.functions.util.RuntimeUDFContext;
 import org.apache.flink.metrics.groups.UnregisteredMetricsGroup;
 import org.apache.flink.types.Value;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 /** Tests runtime context access from inside an RichInputFormat class */
-public class RichInputFormatTest {
+class RichInputFormatTest {
 
     @Test
     void testCheckRuntimeContextAccess() {
@@ -45,7 +46,7 @@ public class RichInputFormatTest {
                         new HashMap<>(),
                         UnregisteredMetricsGroup.createOperatorMetricGroup()));
 
-        Assertions.assertEquals(inputFormat.getRuntimeContext().getIndexOfThisSubtask(), 1);
-        Assertions.assertEquals(inputFormat.getRuntimeContext().getNumberOfParallelSubtasks(), 3);
+        assertThat(1).isEqualTo(inputFormat.getRuntimeContext().getIndexOfThisSubtask());
+        assertThat(3).isEqualTo(inputFormat.getRuntimeContext().getNumberOfParallelSubtasks());
     }
 }

@@ -24,7 +24,11 @@ import org.apache.flink.core.fs.Path;
 import org.apache.flink.core.testutils.CheckedThread;
 import org.apache.flink.testutils.junit.utils.TempDirUtils;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 

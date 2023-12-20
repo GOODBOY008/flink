@@ -18,8 +18,12 @@
 
 package org.apache.flink.util;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -37,6 +41,6 @@ public class IterableUtilsTest extends TestLogger {
         testIterable.forEach(deque::add);
 
         Stream<Integer> stream = IterableUtils.toStream(testIterable);
-        Assertions.assertTrue(stream.allMatch(value -> deque.poll().equals(value)));
+   assertThat(stream.allMatch(value -> deque.poll().equals(value))).isTrue();
     }
 }

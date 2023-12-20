@@ -25,8 +25,12 @@ import org.apache.flink.api.java.typeutils.runtime.AbstractGenericTypeSerializer
 import org.apache.flink.api.java.typeutils.runtime.TestDataOutputSerializer;
 
 import com.esotericsoftware.kryo.Kryo;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -100,17 +104,17 @@ class KryoGenericTypeSerializerTest extends AbstractGenericTypeSerializerTest {
 
             try {
                 serializer.serialize(str, target);
-                Assertions.fail("should throw a java.io.EOFException");
+           fail("should throw a java.io.EOFException");
             } catch (java.io.EOFException e) {
                 // that is how we like it
             } catch (Exception e) {
-                Assertions.fail(
+           fail(
                         "throws wrong exception: should throw a java.io.EOFException, has thrown a "
                                 + e.getClass().getName());
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+       fail(e.getMessage());
         }
     }
 
@@ -134,22 +138,22 @@ class KryoGenericTypeSerializerTest extends AbstractGenericTypeSerializerTest {
 
             for (int i = 0; i < numElements; i++) {
                 int value = serializer.deserialize(source);
-                Assertions.assertEquals(i, value);
+           assertThat(value).isEqualTo(i);
             }
 
             try {
                 serializer.deserialize(source);
-                Assertions.fail("should throw a java.io.EOFException");
+           fail("should throw a java.io.EOFException");
             } catch (java.io.EOFException e) {
                 // that is how we like it :-)
             } catch (Exception e) {
-                Assertions.fail(
+           fail(
                         "throws wrong exception: should throw a java.io.EOFException, has thrown a "
                                 + e.getClass().getName());
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+       fail(e.getMessage());
         }
     }
 
@@ -158,6 +162,6 @@ class KryoGenericTypeSerializerTest extends AbstractGenericTypeSerializerTest {
         KryoSerializer<String> serializer =
                 new KryoSerializer<>(String.class, new ExecutionConfig());
         Kryo kryo = serializer.getKryo();
-        Assertions.assertTrue(kryo.getReferences());
+   assertThat(kryo.getReferences()).isTrue();
     }
 }

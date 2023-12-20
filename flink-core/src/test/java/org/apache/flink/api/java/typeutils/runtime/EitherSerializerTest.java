@@ -33,8 +33,12 @@ import org.apache.flink.types.Either;
 import org.apache.flink.types.LongValue;
 import org.apache.flink.types.StringValue;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
@@ -172,12 +176,12 @@ class EitherSerializerTest {
         Either<LongValue, DoubleValue> copy2 = eitherSerializer.copy(left, copy1);
 
         // validate reference equality
-        Assertions.assertSame(right, copy1);
-        Assertions.assertSame(copy0, copy2);
+   assertThat(copy1).isSameAs(right);
+   assertThat(copy2).isSameAs(copy0);
 
         // validate reference equality of contained objects
-        Assertions.assertSame(right.right(), copy1.right());
-        Assertions.assertSame(copy0.left(), copy2.left());
+   assertThat(copy1.right()).isSameAs(right.right());
+   assertThat(copy2.left()).isSameAs(copy0.left());
     }
 
     @Test
@@ -209,12 +213,12 @@ class EitherSerializerTest {
         Either<LongValue, DoubleValue> copy2 = eitherSerializer.deserialize(copy1, in);
 
         // validate reference equality
-        Assertions.assertSame(right, copy1);
-        Assertions.assertSame(copy0, copy2);
+   assertThat(copy1).isSameAs(right);
+   assertThat(copy2).isSameAs(copy0);
 
         // validate reference equality of contained objects
-        Assertions.assertSame(right.right(), copy1.right());
-        Assertions.assertSame(copy0.left(), copy2.left());
+   assertThat(copy1.right()).isSameAs(right.right());
+   assertThat(copy2.left()).isSameAs(copy0.left());
     }
 
     /**
@@ -236,14 +240,14 @@ class EitherSerializerTest {
                 TypeSerializer<T> serializer = getSerializer();
 
                 T instance = serializer.createInstance();
-                Assertions.assertNotNull(instance, "The created instance must not be null.");
+           assertThat(instance).as("The created instance must not be null.").isNotNull();
 
                 Class<T> type = getTypeClass();
-                Assertions.assertNotNull(type, "The test is corrupt: type class is null.");
+           assertThat(type).as("The test is corrupt: type class is null.").isNotNull();
             } catch (Exception e) {
                 System.err.println(e.getMessage());
                 e.printStackTrace();
-                Assertions.fail("Exception in test: " + e.getMessage());
+           fail("Exception in test: " + e.getMessage());
             }
         }
     }

@@ -32,7 +32,6 @@ import org.apache.flink.core.fs.Path;
 import org.apache.flink.metrics.groups.UnregisteredMetricsGroup;
 import org.apache.flink.util.Collector;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -43,6 +42,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class OuterJoinOperatorBaseTest implements Serializable {
 
@@ -221,7 +223,7 @@ class OuterJoinOperatorBaseTest implements Serializable {
         testOuterJoin(leftInput, rightInput, expected);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     void testThatExceptionIsThrownForOuterJoinTypeNull() throws Exception {
         final List<String> leftInput = Arrays.asList("foo", "bar", "foobar");
         final List<String> rightInput = Arrays.asList("bar", "foobar", "foo");
@@ -229,7 +231,8 @@ class OuterJoinOperatorBaseTest implements Serializable {
         baseOperator.setOuterJoinType(null);
         ExecutionConfig executionConfig = new ExecutionConfig();
         executionConfig.disableObjectReuse();
-        baseOperator.executeOnCollections(leftInput, rightInput, runtimeContext, executionConfig);
+        assertThatThrownBy(() -> baseOperator.executeOnCollections(leftInput, rightInput, runtimeContext, executionConfig))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     private void testOuterJoin(
@@ -244,11 +247,11 @@ class OuterJoinOperatorBaseTest implements Serializable {
                 baseOperator.executeOnCollections(
                         leftInput, rightInput, runtimeContext, executionConfig);
 
-        Assertions.assertEquals(expected, resultSafe);
-        Assertions.assertEquals(expected, resultRegular);
+        assertThat(resultSafe).isEqualTo(expected);
+        assertThat(resultRegular).isEqualTo(expected);
 
-        Assertions.assertTrue(joiner.opened.get());
-        Assertions.assertTrue(joiner.closed.get());
+        assertThat(joiner.opened.get()).isTrue();
+        assertThat(joiner.closed.get()).isTrue();
     }
 
     private static class MockRichFlatJoinFunction
@@ -259,8 +262,8 @@ class OuterJoinOperatorBaseTest implements Serializable {
         @Override
         public void open(OpenContext openContext) {
             opened.compareAndSet(false, true);
-            Assertions.assertEquals(0, getRuntimeContext().getIndexOfThisSubtask());
-            Assertions.assertEquals(1, getRuntimeContext().getNumberOfParallelSubtasks());
+            assertThat(getRuntimeContext().getIndexOfThisSubtask()).isEqualTo(0);
+            assertThat(getRuntimeContext().getNumberOfParallelSubtasks()).isEqualTo(1);
         }
 
         @Override

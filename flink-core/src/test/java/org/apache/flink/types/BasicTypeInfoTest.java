@@ -21,8 +21,12 @@ package org.apache.flink.types;
 import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
 import org.apache.flink.util.TestLogger;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -54,8 +58,8 @@ public class BasicTypeInfoTest extends TestLogger {
             BasicTypeInfo<?> tpeInfo1 = BasicTypeInfo.getInfoFor(clazz);
             BasicTypeInfo<?> tpeInfo2 = BasicTypeInfo.getInfoFor(clazz);
 
-            Assertions.assertEquals(tpeInfo1, tpeInfo2);
-            Assertions.assertEquals(tpeInfo1.hashCode(), tpeInfo2.hashCode());
+       assertThat(tpeInfo2).isEqualTo(tpeInfo1);
+       assertThat(tpeInfo2.hashCode()).isEqualTo(tpeInfo1.hashCode());
         }
     }
 
@@ -66,7 +70,7 @@ public class BasicTypeInfoTest extends TestLogger {
                 if (!clazz1.equals(clazz2)) {
                     BasicTypeInfo<?> tpeInfo1 = BasicTypeInfo.getInfoFor(clazz1);
                     BasicTypeInfo<?> tpeInfo2 = BasicTypeInfo.getInfoFor(clazz2);
-                    Assertions.assertNotEquals(tpeInfo1, tpeInfo2);
+               assertThat(tpeInfo2).isNotEqualTo(tpeInfo1);
                 }
             }
         }

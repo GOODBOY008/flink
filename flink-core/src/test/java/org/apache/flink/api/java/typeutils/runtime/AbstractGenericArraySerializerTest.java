@@ -29,7 +29,11 @@ import org.apache.flink.api.java.typeutils.runtime.AbstractGenericTypeSerializer
 import org.apache.flink.api.java.typeutils.runtime.AbstractGenericTypeSerializerTest.SimpleTypes;
 import org.apache.flink.util.StringUtils;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;

@@ -18,15 +18,16 @@
 
 package org.apache.flink.api.common.accumulators;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class LongMinimumTest {
 
     @Test
     void testGet() {
         LongMinimum min = new LongMinimum();
-        Assertions.assertEquals(Long.MAX_VALUE, min.getLocalValue().longValue());
+        assertThat(min.getLocalValue().longValue()).isEqualTo(Long.MAX_VALUE);
     }
 
     @Test
@@ -35,10 +36,10 @@ class LongMinimumTest {
         long value = 9876543210L;
 
         min.add(value);
-        Assertions.assertEquals(value, min.getLocalValue().longValue());
+        assertThat(min.getLocalValue().longValue()).isEqualTo(value);
 
         min.resetLocal();
-        Assertions.assertEquals(Long.MAX_VALUE, min.getLocalValue().longValue());
+        assertThat(min.getLocalValue().longValue()).isEqualTo(Long.MAX_VALUE);
     }
 
     @Test
@@ -50,7 +51,7 @@ class LongMinimumTest {
         min.add(-9876543210L);
         min.add(-1234567890);
 
-        Assertions.assertEquals(-9876543210L, min.getLocalValue().longValue());
+        assertThat(min.getLocalValue().longValue()).isEqualTo(-9876543210L);
     }
 
     @Test
@@ -62,10 +63,10 @@ class LongMinimumTest {
         min2.add(5678909876543210123L);
 
         min2.merge(min1);
-        Assertions.assertEquals(1234567890987654321L, min2.getLocalValue().longValue());
+        assertThat(min2.getLocalValue().longValue()).isEqualTo(1234567890987654321L);
 
         min1.merge(min2);
-        Assertions.assertEquals(1234567890987654321L, min1.getLocalValue().longValue());
+        assertThat(min1.getLocalValue().longValue()).isEqualTo(1234567890987654321L);
     }
 
     @Test
@@ -76,6 +77,6 @@ class LongMinimumTest {
         min.add(value);
 
         LongMinimum clone = min.clone();
-        Assertions.assertEquals(value, clone.getLocalValue().longValue());
+        assertThat(clone.getLocalValue().longValue()).isEqualTo(value);
     }
 }

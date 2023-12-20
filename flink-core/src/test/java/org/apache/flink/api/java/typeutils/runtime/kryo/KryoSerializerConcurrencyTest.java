@@ -28,8 +28,12 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.Serializable;
 
@@ -80,11 +84,11 @@ class KryoSerializerConcurrencyTest {
         String copyWithOriginal = original.copy(testString).content;
         String copyWithDuplicate = duplicate.copy(testString).content;
 
-        Assertions.assertTrue(copyWithOriginal.startsWith(testString.content));
-        Assertions.assertTrue(copyWithDuplicate.startsWith(testString.content));
+   assertThat(copyWithOriginal.startsWith(testString.content)).isTrue();
+   assertThat(copyWithDuplicate.startsWith(testString.content)).isTrue();
 
         // check that both serializer instances have appended a different identity hash
-        Assertions.assertNotEquals(copyWithOriginal, copyWithDuplicate);
+   assertThat(copyWithDuplicate).isNotEqualTo(copyWithOriginal);
     }
 
     @Test
@@ -112,7 +116,7 @@ class KryoSerializerConcurrencyTest {
         // this should fail with an exception
         try {
             serializer.serialize("value", regularOut);
-            Assertions.fail("should have failed with an exception");
+       fail("should have failed with an exception");
         } catch (IllegalStateException e) {
             // expected
         } finally {

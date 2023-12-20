@@ -25,7 +25,6 @@ import org.apache.flink.core.testutils.OneShotLatch;
 import org.apache.flink.util.TestLogger;
 
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +34,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 
@@ -84,7 +84,7 @@ public class TransformationTest extends TestLogger {
         final Set<Integer> deduplicatedIds =
                 idLists.stream().flatMap(List::stream).collect(Collectors.toSet());
 
-        Assertions.assertEquals(numThreads * numIdsPerThread, deduplicatedIds.size());
+        assertThat(deduplicatedIds.size()).isEqualTo(numThreads * numIdsPerThread);
     }
 
     @Test

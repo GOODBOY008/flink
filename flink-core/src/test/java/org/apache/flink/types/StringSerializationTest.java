@@ -20,8 +20,12 @@ package org.apache.flink.types;
 
 import org.apache.flink.util.StringUtils;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -49,7 +53,7 @@ public class StringSerializationTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -75,7 +79,7 @@ public class StringSerializationTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -104,7 +108,7 @@ public class StringSerializationTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -133,24 +137,24 @@ public class StringSerializationTest {
                         serializeBytes(testString, StringSerializationTest::oldWriteString);
                 byte[] newBytes =
                         serializeBytes(testString, StringSerializationTest::newWriteString);
-                Assertions.assertArrayEquals(oldBytes, newBytes);
+           assertThat(newBytes).isEqualTo(oldBytes);
                 // old impl should read bytes from new one
                 String oldString =
                         deserializeBytes(newBytes, StringSerializationTest::oldReadString);
-                Assertions.assertEquals(oldString, testString);
+           assertThat(testString).isEqualTo(oldString);
                 // new impl should read bytes from old one
                 String newString =
                         deserializeBytes(oldBytes, StringSerializationTest::newReadString);
-                Assertions.assertEquals(newString, testString);
+           assertThat(testString).isEqualTo(newString);
                 // it should roundtrip over new impl
                 String roundtrip =
                         deserializeBytes(newBytes, StringSerializationTest::newReadString);
-                Assertions.assertEquals(roundtrip, testString);
+           assertThat(testString).isEqualTo(roundtrip);
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -176,7 +180,7 @@ public class StringSerializationTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -195,7 +199,7 @@ public class StringSerializationTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -220,7 +224,7 @@ public class StringSerializationTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -245,7 +249,7 @@ public class StringSerializationTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -285,12 +289,12 @@ public class StringSerializationTest {
         while (deserializer.available() > 0) {
             String deser = StringValue.readString(deserializer);
 
-            Assertions.assertEquals(
+       assertEquals(
                     values[num], deser, "DeserializedString differs from original string.");
             num++;
         }
 
-        Assertions.assertEquals(values.length, num, "Wrong number of deserialized values");
+   assertThat(num).isCloseTo(values.length, within("Wrong number of deserialized values"));
     }
 
     public static void testCopy(String[] values) throws IOException {
@@ -320,12 +324,12 @@ public class StringSerializationTest {
         while (validate.available() > 0) {
             String deser = StringValue.readString(validate);
 
-            Assertions.assertEquals(
+       assertEquals(
                     values[num], deser, "DeserializedString differs from original string.");
             num++;
         }
 
-        Assertions.assertEquals(values.length, num, "Wrong number of deserialized values");
+   assertThat(num).isCloseTo(values.length, within("Wrong number of deserialized values"));
     }
 
     // needed to test the binary compatibility for new/old string serialization code

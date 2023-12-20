@@ -21,16 +21,16 @@ import org.apache.flink.core.fs.Path;
 import org.apache.flink.core.testutils.CommonTestUtils;
 import org.apache.flink.util.OperatingSystem;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Collections;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.Assumptions.assumeThat;
 
-public class GlobFilePathFilterTest {
+class GlobFilePathFilterTest {
     @Test
     void testDefaultConstructorCreateMatchAllFilter() {
         GlobFilePathFilter matcher = new GlobFilePathFilter();
@@ -147,15 +147,14 @@ public class GlobFilePathFilterTest {
     }
 
     @Test
-    void testIncluePatternIsNull() {
-        Assertions.assertThatThrownBy(() -> new GlobFilePathFilter(null, Collections.emptyList()))
+    void testIncludePatternIsNull() {
+        assertThatThrownBy(() -> new GlobFilePathFilter(null, Collections.emptyList()))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @Test
     void testExcludePatternIsNull() {
-        Assertions.assertThatThrownBy(
-                        () -> new GlobFilePathFilter(Collections.singletonList("**"), null))
+        assertThatThrownBy(() -> new GlobFilePathFilter(Collections.singletonList("**"), null))
                 .isInstanceOf(NullPointerException.class);
     }
 

@@ -19,15 +19,16 @@
 package org.apache.flink.api.common.eventtime;
 
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
 import static org.apache.flink.api.common.eventtime.WatermarkMatchers.watermark;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /** Tests for the {@link WatermarkOutputMultiplexer}. */
 class WatermarkOutputMultiplexerTest {
@@ -317,8 +318,7 @@ class WatermarkOutputMultiplexerTest {
         multiplexer.unregisterOutput("lower");
         multiplexer.getImmediateOutput("higher").emitWatermark(new Watermark(highTimestamp));
 
-        Assertions.assertEquals(
-                highTimestamp, underlyingWatermarkOutput.lastWatermark().getTimestamp());
+        assertEquals(highTimestamp, underlyingWatermarkOutput.lastWatermark().getTimestamp());
     }
 
     @Test
@@ -336,8 +336,7 @@ class WatermarkOutputMultiplexerTest {
 
         multiplexer.unregisterOutput("lower");
 
-        Assertions.assertEquals(
-                lowTimestamp, underlyingWatermarkOutput.lastWatermark().getTimestamp());
+        assertEquals(lowTimestamp, underlyingWatermarkOutput.lastWatermark().getTimestamp());
     }
 
     @Test
@@ -355,8 +354,7 @@ class WatermarkOutputMultiplexerTest {
         multiplexer.registerNewOutput("lower", watermark -> {});
         multiplexer.getImmediateOutput("lower").emitWatermark(new Watermark(lowTimestamp));
 
-        Assertions.assertEquals(
-                highTimestamp, underlyingWatermarkOutput.lastWatermark().getTimestamp());
+        assertEquals(highTimestamp, underlyingWatermarkOutput.lastWatermark().getTimestamp());
     }
 
     @Test
@@ -368,7 +366,7 @@ class WatermarkOutputMultiplexerTest {
 
         final boolean unregistered = multiplexer.unregisterOutput("does-exist");
 
-        Assertions.assertTrue(unregistered);
+        assertThat(unregistered).isTrue();
     }
 
     @Test
@@ -379,7 +377,7 @@ class WatermarkOutputMultiplexerTest {
 
         final boolean unregistered = multiplexer.unregisterOutput("does-not-exist");
 
-        Assertions.assertFalse(unregistered);
+        assertThat(unregistered).isFalse();
     }
 
     @Test

@@ -23,8 +23,12 @@ import org.apache.flink.core.memory.DataOutputSerializer;
 
 import org.apache.flink.shaded.guava31.com.google.common.collect.ImmutableList;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -44,15 +48,15 @@ public class SimpleVersionedSerializationTest {
 
         final byte[] bytes =
                 SimpleVersionedSerialization.writeVersionAndSerialize(utfEncoder, testString);
-        Assertions.assertArrayEquals(bytes, outBytes);
+   assertThat(outBytes).isEqualTo(bytes);
 
         final DataInputDeserializer in = new DataInputDeserializer(bytes);
         final String deserialized =
                 SimpleVersionedSerialization.readVersionAndDeSerialize(utfEncoder, in);
         final String deserializedFromBytes =
                 SimpleVersionedSerialization.readVersionAndDeSerialize(utfEncoder, outBytes);
-        Assertions.assertEquals(testString, deserialized);
-        Assertions.assertEquals(testString, deserializedFromBytes);
+   assertThat(deserialized).isEqualTo(testString);
+   assertThat(deserializedFromBytes).isEqualTo(testString);
     }
 
     @Test
@@ -74,8 +78,8 @@ public class SimpleVersionedSerializationTest {
 
                     @Override
                     public String deserialize(int version, byte[] serialized) {
-                        Assertions.assertEquals(42, version);
-                        Assertions.assertEquals(0, serialized.length);
+                   assertThat(version).isEqualTo(42);
+                   assertThat(serialized.length).isEqualTo(0);
                         return testString;
                     }
                 };
@@ -86,15 +90,15 @@ public class SimpleVersionedSerializationTest {
 
         final byte[] bytes =
                 SimpleVersionedSerialization.writeVersionAndSerialize(emptySerializer, "abc");
-        Assertions.assertArrayEquals(bytes, outBytes);
+   assertThat(outBytes).isEqualTo(bytes);
 
         final DataInputDeserializer in = new DataInputDeserializer(bytes);
         final String deserialized =
                 SimpleVersionedSerialization.readVersionAndDeSerialize(emptySerializer, in);
         final String deserializedFromBytes =
                 SimpleVersionedSerialization.readVersionAndDeSerialize(emptySerializer, outBytes);
-        Assertions.assertEquals(testString, deserialized);
-        Assertions.assertEquals(testString, deserializedFromBytes);
+   assertThat(deserialized).isEqualTo(testString);
+   assertThat(deserializedFromBytes).isEqualTo(testString);
     }
 
     @Test
@@ -109,7 +113,7 @@ public class SimpleVersionedSerializationTest {
         final DataInputDeserializer in = new DataInputDeserializer(outBytes);
         final List<String> deserialized =
                 SimpleVersionedSerialization.readVersionAndDeserializeList(utfEncoder, in);
-        Assertions.assertEquals(datums, deserialized);
+   assertThat(deserialized).isEqualTo(datums);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -137,7 +141,7 @@ public class SimpleVersionedSerializationTest {
 
         @Override
         public String deserialize(int version, byte[] serialized) {
-            Assertions.assertEquals(VERSION, version);
+       assertThat(version).isEqualTo(VERSION);
             return new String(serialized, StandardCharsets.UTF_8);
         }
     }

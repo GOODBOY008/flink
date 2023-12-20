@@ -24,7 +24,11 @@ import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.common.typeutils.SerializerTestInstance;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** A serialization test for multidimensional arrays. */
 public class MultidimensionalArraySerializerTest {

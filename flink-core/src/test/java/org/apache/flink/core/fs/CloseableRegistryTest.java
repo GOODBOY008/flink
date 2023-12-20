@@ -20,8 +20,12 @@ package org.apache.flink.core.fs;
 
 import org.apache.flink.util.AbstractAutoCloseableRegistry;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.annotation.Nullable;
 
@@ -96,13 +100,13 @@ class CloseableRegistryTest
                             checksum += Integer.parseInt(throwable.getMessage());
                         }
                         // Checksum is sum from 1..6 = 15
-                        Assertions.assertEquals(15, checksum);
+                   assertThat(checksum).isEqualTo(15);
                     });
 
             // Check that unregistered Closable isn't closed.
             TestClosable unregisteredClosable = new TestClosable();
             closeableRegistry.unregisterAndCloseAll(unregisteredClosable);
-            Assertions.assertEquals(0, unregisteredClosable.getCallsToClose());
+       assertThat(unregisteredClosable.getCallsToClose()).isEqualTo(0);
         }
     }
 
@@ -119,7 +123,7 @@ class CloseableRegistryTest
             closeableRegistry.unregisterAndCloseAll(
                     registeredClosableList.toArray(new Closeable[0]));
             if (exceptionCheck != null) {
-                Assertions.fail("Exception expected");
+           fail("Exception expected");
             }
         } catch (IOException expected) {
             if (exceptionCheck != null) {
@@ -128,7 +132,7 @@ class CloseableRegistryTest
         }
 
         for (TestClosable testClosable : registeredClosableList) {
-            Assertions.assertEquals(1, testClosable.getCallsToClose());
+       assertThat(testClosable.getCallsToClose()).isEqualTo(1);
             testClosable.resetCallsToClose();
         }
     }

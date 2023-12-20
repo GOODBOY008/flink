@@ -31,7 +31,6 @@ import org.apache.flink.core.fs.Path;
 import org.apache.flink.metrics.groups.UnregisteredMetricsGroup;
 import org.apache.flink.util.Collector;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
@@ -41,6 +40,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InnerJoinOperatorBaseTest implements Serializable {
 
@@ -78,11 +81,11 @@ class InnerJoinOperatorBaseTest implements Serializable {
             List<Integer> resultRegular =
                     base.executeOnCollections(inputData1, inputData2, null, executionConfig);
 
-            Assertions.assertEquals(expected, resultSafe);
-            Assertions.assertEquals(expected, resultRegular);
+            assertThat(resultSafe).isEqualTo(expected);
+            assertThat(resultRegular).isEqualTo(expected);
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -97,9 +100,8 @@ class InnerJoinOperatorBaseTest implements Serializable {
                     @Override
                     public void open(OpenContext openContext) {
                         opened.compareAndSet(false, true);
-                        Assertions.assertEquals(0, getRuntimeContext().getIndexOfThisSubtask());
-                        Assertions.assertEquals(
-                                1, getRuntimeContext().getNumberOfParallelSubtasks());
+                        assertThat(getRuntimeContext().getIndexOfThisSubtask()).isZero();
+                        assertEquals(1, getRuntimeContext().getNumberOfParallelSubtasks());
                     }
 
                     @Override
@@ -166,14 +168,14 @@ class InnerJoinOperatorBaseTest implements Serializable {
                                     UnregisteredMetricsGroup.createOperatorMetricGroup()),
                             executionConfig);
 
-            Assertions.assertEquals(expected, resultSafe);
-            Assertions.assertEquals(expected, resultRegular);
+            assertThat(resultSafe).isEqualTo(expected);
+            assertThat(resultRegular).isEqualTo(expected);
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+            fail(e.getMessage());
         }
 
-        Assertions.assertTrue(opened.get());
-        Assertions.assertTrue(closed.get());
+        assertThat(opened.get()).isTrue();
+        assertThat(closed.get()).isTrue();
     }
 }

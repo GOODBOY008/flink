@@ -19,8 +19,12 @@
 package org.apache.flink.util;
 
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.Matchers.equalTo;
@@ -31,22 +35,22 @@ public class ExceptionUtilsTest extends TestLogger {
 
     @Test
     void testStringifyNullException() {
-        Assertions.assertNotNull(ExceptionUtils.STRINGIFIED_NULL_EXCEPTION);
-        Assertions.assertEquals(
+   assertThat(ExceptionUtils.STRINGIFIED_NULL_EXCEPTION).isNotNull();
+   assertEquals(
                 ExceptionUtils.STRINGIFIED_NULL_EXCEPTION, ExceptionUtils.stringifyException(null));
     }
 
     @Test
     void testJvmFatalError() {
         // not all errors are fatal
-        Assertions.assertFalse(ExceptionUtils.isJvmFatalError(new Error()));
+   assertThat(ExceptionUtils.isJvmFatalError(new Error())).isFalse();
 
         // linkage errors are not fatal
-        Assertions.assertFalse(ExceptionUtils.isJvmFatalError(new LinkageError()));
+   assertThat(ExceptionUtils.isJvmFatalError(new LinkageError())).isFalse();
 
         // some errors are fatal
-        Assertions.assertTrue(ExceptionUtils.isJvmFatalError(new InternalError()));
-        Assertions.assertTrue(ExceptionUtils.isJvmFatalError(new UnknownError()));
+   assertThat(ExceptionUtils.isJvmFatalError(new InternalError())).isTrue();
+   assertThat(ExceptionUtils.isJvmFatalError(new UnknownError())).isTrue();
     }
 
     @Test
@@ -54,7 +58,7 @@ public class ExceptionUtilsTest extends TestLogger {
         // fatal error is rethrown
         try {
             ExceptionUtils.rethrowIfFatalError(new InternalError());
-            Assertions.fail();
+       fail();
         } catch (InternalError ignored) {
         }
 
@@ -64,7 +68,7 @@ public class ExceptionUtilsTest extends TestLogger {
 
     @Test
     void testFindThrowableByType() {
-        Assertions.assertTrue(
+   assertTrue(
                 ExceptionUtils.findThrowable(
                                 new RuntimeException(new IllegalStateException()),
                                 IllegalStateException.class)
@@ -154,11 +158,11 @@ public class ExceptionUtilsTest extends TestLogger {
 
     @Test
     void testIsMetaspaceOutOfMemoryErrorCanHandleNullValue() {
-        Assertions.assertFalse(ExceptionUtils.isMetaspaceOutOfMemoryError(null));
+   assertThat(ExceptionUtils.isMetaspaceOutOfMemoryError(null)).isFalse();
     }
 
     @Test
     void testIsDirectOutOfMemoryErrorCanHandleNullValue() {
-        Assertions.assertFalse(ExceptionUtils.isDirectOutOfMemoryError(null));
+   assertThat(ExceptionUtils.isDirectOutOfMemoryError(null)).isFalse();
     }
 }

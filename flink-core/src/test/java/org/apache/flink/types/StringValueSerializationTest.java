@@ -22,8 +22,12 @@ import org.apache.flink.core.memory.DataInputViewStreamWrapper;
 import org.apache.flink.core.memory.DataOutputViewStreamWrapper;
 import org.apache.flink.util.StringUtils;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -45,7 +49,7 @@ public class StringValueSerializationTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -64,7 +68,7 @@ public class StringValueSerializationTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -86,7 +90,7 @@ public class StringValueSerializationTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -108,7 +112,7 @@ public class StringValueSerializationTest {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -132,14 +136,14 @@ public class StringValueSerializationTest {
             StringValue deser = new StringValue();
             deser.read(deserializer);
 
-            Assertions.assertEquals(
+       assertEquals(
                     values[num],
                     deser.getValue(),
                     "DeserializedString differs from original string.");
             num++;
         }
 
-        Assertions.assertEquals(values.length, num, "Wrong number of deserialized values");
+   assertThat(num).isCloseTo(values.length, within("Wrong number of deserialized values"));
     }
 
     public static void testCopy(String[] values) throws IOException {
@@ -173,13 +177,13 @@ public class StringValueSerializationTest {
         while (validateInput.available() > 0) {
             sValue.read(validate);
 
-            Assertions.assertEquals(
+       assertEquals(
                     values[num],
                     sValue.getValue(),
                     "DeserializedString differs from original string.");
             num++;
         }
 
-        Assertions.assertEquals(values.length, num, "Wrong number of deserialized values");
+   assertThat(num).isCloseTo(values.length, within("Wrong number of deserialized values"));
     }
 }

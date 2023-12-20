@@ -27,9 +27,13 @@ import org.apache.flink.shaded.guava31.com.google.common.collect.ImmutableMap;
 import org.hamcrest.MatcherAssert;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.BeforeAll;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
@@ -77,6 +81,6 @@ public class PluginConfigTest extends TestLogger {
                                 .getAbsolutePath());
         CommonTestUtils.setEnv(envVariables);
 
-        Assertions.assertFalse(PluginConfig.getPluginsDir().isPresent());
+   assertThat(PluginConfig.getPluginsDir().isPresent()).isFalse();
     }
 }

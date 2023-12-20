@@ -21,8 +21,13 @@ package org.apache.flink.api.java.typeutils;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.common.typeutils.CompositeType;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PojoTypeInformationTest {
 
@@ -51,7 +56,7 @@ public class PojoTypeInformationTest {
     @Test
     void testSimplePojoTypeExtraction() {
         TypeInformation<SimplePojo> type = TypeExtractor.getForClass(SimplePojo.class);
-      Assertions.assertInstanceOf(
+ assertInstanceOf(
           CompositeType.class,
           type,
           "Extracted type is not a composite/pojo type but should be.");
@@ -69,7 +74,7 @@ public class PojoTypeInformationTest {
     @Test
     void testNestedPojoTypeExtraction() {
         TypeInformation<NestedPojoOuter> type = TypeExtractor.getForClass(NestedPojoOuter.class);
-      Assertions.assertInstanceOf(CompositeType.class, type, "Extracted type is not a Pojo type but should be.");
+ assertInstanceOf(CompositeType.class, type, "Extracted type is not a Pojo type but should be.");
     }
 
     public static class Recursive1Pojo {
@@ -88,12 +93,12 @@ public class PojoTypeInformationTest {
         // types in the type extractor. The recursive field will be handled using the generic
         // serializer.
         TypeInformation<Recursive1Pojo> type = TypeExtractor.getForClass(Recursive1Pojo.class);
-      Assertions.assertInstanceOf(CompositeType.class, type, "Extracted type is not a Pojo type but should be.");
+ assertInstanceOf(CompositeType.class, type, "Extracted type is not a Pojo type but should be.");
     }
 
     @Test
     void testRecursivePojoObjectTypeExtraction() {
         TypeInformation<Recursive1Pojo> type = TypeExtractor.getForObject(new Recursive1Pojo());
-      Assertions.assertInstanceOf(CompositeType.class, type, "Extracted type is not a Pojo type but should be.");
+ assertInstanceOf(CompositeType.class, type, "Extracted type is not a Pojo type but should be.");
     }
 }

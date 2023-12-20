@@ -23,15 +23,16 @@ import org.apache.flink.api.common.state.StateTtlConfig.RocksdbCompactFilterClea
 import org.apache.flink.api.common.time.Time;
 
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.assertj.core.api.Fail.fail;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /** Tests for the {@link StateTtlConfig}. */
 class StateTtlConfigTest {
@@ -88,7 +89,7 @@ class StateTtlConfigTest {
                         StateTtlConfig.newBuilder(Time.seconds(1))
                                 .cleanupIncrementally(illegalCleanUpSize, false)
                                 .build();
-                Assertions.fail();
+                fail();
             } catch (IllegalArgumentException e) {
             }
         }

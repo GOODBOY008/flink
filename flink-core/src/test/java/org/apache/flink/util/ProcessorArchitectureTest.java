@@ -18,8 +18,12 @@
 
 package org.apache.flink.util;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Tests for the {@link ProcessorArchitecture}. */
 public class ProcessorArchitectureTest {
@@ -27,13 +31,13 @@ public class ProcessorArchitectureTest {
     @Test
     void testArchitectureNotUnknown() {
         final ProcessorArchitecture arch = ProcessorArchitecture.getProcessorArchitecture();
-        Assertions.assertNotEquals(ProcessorArchitecture.UNKNOWN, arch);
+   assertThat(arch).isNotEqualTo(ProcessorArchitecture.UNKNOWN);
     }
 
     @Test
     void testNamesNotNull() {
         final ProcessorArchitecture arch = ProcessorArchitecture.getProcessorArchitecture();
-        Assertions.assertNotNull(arch.getArchitectureName());
-        Assertions.assertNotNull(arch.getAlternativeNames());
+   assertThat(arch.getArchitectureName()).isNotNull();
+   assertThat(arch.getAlternativeNames()).isNotNull();
     }
 }

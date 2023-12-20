@@ -24,7 +24,11 @@ import org.apache.flink.core.fs.local.LocalFileSystem;
 import org.apache.flink.util.WrappingProxy;
 import org.apache.flink.util.WrappingProxyUtil;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.net.URI;

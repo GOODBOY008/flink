@@ -21,8 +21,12 @@ package org.apache.flink.core.plugin;
 import org.apache.flink.util.Preconditions;
 
 import org.junit.Rule;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.rules.TemporaryFolder;
 
 import javax.annotation.Nonnull;
@@ -50,7 +54,7 @@ public class DirectoryBasedPluginFinderTest {
         PluginFinder descriptorsFactory = new DirectoryBasedPluginFinder(rootFolder.toPath());
         Collection<PluginDescriptor> actual = descriptorsFactory.findPlugins();
 
-        Assertions.assertTrue(actual.isEmpty(), "empty root dir -> expected no actual");
+   assertThat(actual.isEmpty()).as("empty root dir -> expected no actual").isTrue();
 
         List<File> subDirs =
                 Stream.of("A", "B", "C")
@@ -63,9 +67,9 @@ public class DirectoryBasedPluginFinderTest {
 
         try {
             descriptorsFactory.findPlugins();
-            Assertions.fail("all empty plugin sub-dirs");
+       fail("all empty plugin sub-dirs");
         } catch (RuntimeException expected) {
-          Assertions.assertInstanceOf(IOException.class, expected.getCause());
+     assertInstanceOf(IOException.class, expected.getCause());
         }
 
         for (File subDir : subDirs) {
@@ -76,9 +80,9 @@ public class DirectoryBasedPluginFinderTest {
 
         try {
             descriptorsFactory.findPlugins();
-            Assertions.fail("still no jars in plugin sub-dirs");
+       fail("still no jars in plugin sub-dirs");
         } catch (RuntimeException expected) {
-          Assertions.assertInstanceOf(IOException.class, expected.getCause());
+     assertInstanceOf(IOException.class, expected.getCause());
         }
 
         List<PluginDescriptor> expected = new ArrayList<>(3);
@@ -99,7 +103,7 @@ public class DirectoryBasedPluginFinderTest {
 
         actual = descriptorsFactory.findPlugins();
 
-        Assertions.assertTrue(equalsIgnoreOrder(expected, new ArrayList<>(actual)));
+   assertThat(equalsIgnoreOrder(expected, new ArrayList<>(actual))).isTrue();
     }
 
     private boolean equalsIgnoreOrder(List<PluginDescriptor> a, List<PluginDescriptor> b) {

@@ -23,7 +23,11 @@ import org.apache.flink.util.ExceptionUtils;
 import org.apache.flink.shaded.jackson2.org.yaml.snakeyaml.error.YAMLException;
 
 import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
@@ -86,7 +90,7 @@ class YamlParserUtilsTest {
                 .isInstanceOf(YAMLException.class)
                 .satisfies(
                         e ->
-                                Assertions.assertThat(ExceptionUtils.stringifyException(e))
+                           assertThat(ExceptionUtils.stringifyException(e))
                                         .doesNotContain("secret"));
     }
 
@@ -103,7 +107,7 @@ class YamlParserUtilsTest {
                 .isInstanceOf(YAMLException.class)
                 .satisfies(
                         e ->
-                                Assertions.assertThat(ExceptionUtils.stringifyException(e))
+                           assertThat(ExceptionUtils.stringifyException(e))
                                         .doesNotContain("secret1", "secret2"));
     }
 

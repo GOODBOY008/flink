@@ -26,8 +26,9 @@ import org.apache.flink.configuration.ConfigConstants;
 import org.apache.flink.core.testutils.CommonTestUtils;
 import org.apache.flink.util.TestLogger;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 /** Tests for the {@link ValueStateDescriptor}. */
 public class ValueStateDescriptorTest extends TestLogger {
@@ -43,22 +44,22 @@ public class ValueStateDescriptorTest extends TestLogger {
 
         // test that hashCode() works on state descriptors with initialized and uninitialized
         // serializers
-        Assertions.assertEquals(original.hashCode(), same.hashCode());
-        Assertions.assertEquals(original.hashCode(), sameBySerializer.hashCode());
+        assertThat(same.hashCode()).isEqualTo(original.hashCode());
+        assertThat(sameBySerializer.hashCode()).isEqualTo(original.hashCode());
 
-        Assertions.assertEquals(original, same);
-        Assertions.assertEquals(original, sameBySerializer);
+        assertThat(same).isEqualTo(original);
+        assertThat(sameBySerializer).isEqualTo(original);
 
         // equality with a clone
         ValueStateDescriptor<String> clone = CommonTestUtils.createCopySerializable(original);
-        Assertions.assertEquals(original, clone);
+        assertThat(clone).isEqualTo(original);
 
         // equality with an initialized
         clone.initializeSerializerUnlessSet(new ExecutionConfig());
-        Assertions.assertEquals(original, clone);
+        assertThat(clone).isEqualTo(original);
 
         original.initializeSerializerUnlessSet(new ExecutionConfig());
-        Assertions.assertEquals(original, same);
+        assertThat(same).isEqualTo(original);
     }
 
     @Test
@@ -78,16 +79,16 @@ public class ValueStateDescriptorTest extends TestLogger {
         ValueStateDescriptor<String> descr =
                 new ValueStateDescriptor<>("testName", serializer, defaultValue);
 
-        Assertions.assertEquals("testName", descr.getName());
-        Assertions.assertEquals(defaultValue, descr.getDefaultValue());
-        Assertions.assertNotNull(descr.getSerializer());
-        Assertions.assertEquals(serializer, descr.getSerializer());
+        assertThat(descr.getName()).isEqualTo("testName");
+        assertThat(descr.getDefaultValue()).isEqualTo(defaultValue);
+        assertThat(descr.getSerializer()).isNotNull();
+        assertThat(descr.getSerializer()).isEqualTo(serializer);
 
         ValueStateDescriptor<String> copy = CommonTestUtils.createCopySerializable(descr);
 
-        Assertions.assertEquals("testName", copy.getName());
-        Assertions.assertEquals(defaultValue, copy.getDefaultValue());
-        Assertions.assertNotNull(copy.getSerializer());
-        Assertions.assertEquals(serializer, copy.getSerializer());
+        assertThat(copy.getName()).isEqualTo("testName");
+        assertThat(copy.getDefaultValue()).isEqualTo(defaultValue);
+        assertThat(copy.getSerializer()).isNotNull();
+        assertThat(copy.getSerializer()).isEqualTo(serializer);
     }
 }

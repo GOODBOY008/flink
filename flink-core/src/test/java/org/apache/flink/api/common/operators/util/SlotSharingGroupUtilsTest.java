@@ -24,6 +24,7 @@ import org.apache.flink.api.common.resources.ExternalResource;
 
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 

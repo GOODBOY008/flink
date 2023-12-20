@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * This class contains test for the configuration package. In particular, the serialization of
@@ -521,7 +521,7 @@ public class ConfigurationTest {
         ConfigOption<List<String>> secret =
                 ConfigOptions.key("secret").stringType().asList().noDefaultValue();
 
-        Assertions.assertThat(GlobalConfiguration.isSensitive(secret.key())).isTrue();
+   assertThat(GlobalConfiguration.isSensitive(secret.key())).isTrue();
 
         final Configuration cfg = new Configuration(standardYaml);
         // missing closing quote
@@ -531,7 +531,7 @@ public class ConfigurationTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .satisfies(
                         e ->
-                                Assertions.assertThat(ExceptionUtils.stringifyException(e))
+                           assertThat(ExceptionUtils.stringifyException(e))
                                         .doesNotContain("secret_value"));
     }
 
@@ -540,7 +540,7 @@ public class ConfigurationTest {
         ConfigOption<Map<String, String>> secret =
                 ConfigOptions.key("secret").mapType().noDefaultValue();
 
-        Assertions.assertThat(GlobalConfiguration.isSensitive(secret.key())).isTrue();
+   assertThat(GlobalConfiguration.isSensitive(secret.key())).isTrue();
 
         final Configuration cfg = new Configuration(standardYaml);
         // malformed map representation
@@ -550,7 +550,7 @@ public class ConfigurationTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .satisfies(
                         e ->
-                                Assertions.assertThat(ExceptionUtils.stringifyException(e))
+                           assertThat(ExceptionUtils.stringifyException(e))
                                         .doesNotContain("secret_value"));
     }
 

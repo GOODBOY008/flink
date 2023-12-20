@@ -18,7 +18,11 @@
 
 package org.apache.flink.core.memory;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -52,19 +56,19 @@ class OnHeapMemorySegmentTest extends MemorySegmentTestBase {
         final byte[] buffer = new byte[411];
         MemorySegment seg = new MemorySegment(buffer, null);
 
-        assertFalse(seg.isFreed());
-        assertFalse(seg.isOffHeap());
-        assertEquals(buffer.length, seg.size());
-        assertSame(buffer, seg.getArray());
+        assertThat(seg.isFreed()).isFalse();
+        assertThat(seg.isOffHeap()).isFalse();
+        assertThat(seg.size()).isEqualTo(buffer.length);
+        assertThat(seg.getArray()).isSameAs(buffer);
 
         ByteBuffer buf1 = seg.wrap(1, 2);
         ByteBuffer buf2 = seg.wrap(3, 4);
 
-        assertNotSame(buf1, buf2);
-        assertEquals(1, buf1.position());
-        assertEquals(3, buf1.limit());
-        assertEquals(3, buf2.position());
-        assertEquals(7, buf2.limit());
+        assertThat(buf2).isNotSameAs(buf1);
+        assertThat(buf1.position()).isEqualTo(1);
+        assertThat(buf1.limit()).isEqualTo(3);
+        assertThat(buf2.position()).isEqualTo(3);
+        assertThat(buf2.limit()).isEqualTo(7);
     }
 
     @Test
@@ -81,22 +85,22 @@ class OnHeapMemorySegmentTest extends MemorySegmentTestBase {
         int numBytes = 5;
 
         ByteBuffer readOnlyBuf = bb.asReadOnlyBuffer();
-        assertFalse(readOnlyBuf.isDirect());
-        assertFalse(readOnlyBuf.hasArray());
+        assertThat(readOnlyBuf.isDirect()).isFalse();
+        assertThat(readOnlyBuf.hasArray()).isFalse();
 
         seg.put(offset, readOnlyBuf, numBytes);
 
         // verify the area before the written region.
         for (int i = 0; i < offset; i++) {
-            assertEquals(0, buffer[i]);
+            assertThat(buffer[i]).isEqualTo(0);
         }
 
         // verify the region that is written.
-        assertEquals("hello", new String(buffer, offset, numBytes));
+        assertThat(new String(buffer, offset, numBytes)).isEqualTo("hello");
 
         // verify the area after the written region.
         for (int i = offset + numBytes; i < buffer.length; i++) {
-            assertEquals(0, buffer[i]);
+            assertThat(buffer[i]).isEqualTo(0);
         }
     }
 }

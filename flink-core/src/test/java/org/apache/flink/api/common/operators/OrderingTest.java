@@ -21,6 +21,8 @@ package org.apache.flink.api.common.operators;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 public class OrderingTest {
 
     @Test
@@ -29,15 +31,15 @@ public class OrderingTest {
 
         // add a field
         ordering.appendOrdering(3, Integer.class, Order.ASCENDING);
-        Assertions.assertEquals(1, ordering.getNumberOfFields());
+        assertThat(ordering.getNumberOfFields()).isEqualTo(1);
 
         // add a second field
         ordering.appendOrdering(1, Long.class, Order.DESCENDING);
-        Assertions.assertEquals(2, ordering.getNumberOfFields());
+        assertThat(ordering.getNumberOfFields()).isEqualTo(2);
 
         // duplicate field index does not change Ordering
         ordering.appendOrdering(1, String.class, Order.ASCENDING);
-        Assertions.assertEquals(2, ordering.getNumberOfFields());
+        assertThat(ordering.getNumberOfFields()).isEqualTo(2);
 
         // verify field positions, types, and orderings
         Assertions.assertArrayEquals(new int[] {3, 1}, ordering.getFieldPositions());

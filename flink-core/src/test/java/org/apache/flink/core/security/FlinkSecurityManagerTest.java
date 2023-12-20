@@ -28,9 +28,13 @@ import org.apache.flink.util.TestLogger;
 import org.hamcrest.MatcherAssert;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.BeforeEach;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.security.Permission;
 import java.util.concurrent.CompletableFuture;
@@ -76,7 +80,7 @@ public class FlinkSecurityManagerTest extends TestLogger {
         flinkSecurityManager.monitorUserSystemExit();
         try {
             flinkSecurityManager.checkExit(TEST_EXIT_CODE);
-            Assertions.fail();
+       fail();
         } catch (UserSystemExitException ignored) {
         }
         flinkSecurityManager.unmonitorUserSystemExit();
@@ -97,7 +101,7 @@ public class FlinkSecurityManagerTest extends TestLogger {
         flinkSecurityManager.monitorUserSystemExit();
         try {
             flinkSecurityManager.checkExit(TEST_EXIT_CODE);
-            Assertions.fail();
+       fail();
         } catch (UserSystemExitException ignored) {
         }
         // This threaded exit should be allowed as thread is not spawned while monitor is enabled.
@@ -114,7 +118,7 @@ public class FlinkSecurityManagerTest extends TestLogger {
         flinkSecurityManager.monitorUserSystemExit();
         try {
             flinkSecurityManager.checkExit(TEST_EXIT_CODE);
-            Assertions.fail();
+       fail();
         } catch (UserSystemExitException ignored) {
         }
         CheckedThread thread =
@@ -123,10 +127,10 @@ public class FlinkSecurityManagerTest extends TestLogger {
                     public void go() {
                         try {
                             flinkSecurityManager.checkExit(TEST_EXIT_CODE);
-                            Assertions.fail();
+                       fail();
                         } catch (UserSystemExitException ignored) {
                         } catch (Throwable t) {
-                            Assertions.fail();
+                       fail();
                         }
                     }
                 };
@@ -151,19 +155,19 @@ public class FlinkSecurityManagerTest extends TestLogger {
         Configuration configuration = new Configuration();
         FlinkSecurityManager flinkSecurityManager =
                 FlinkSecurityManager.fromConfiguration(configuration);
-        Assertions.assertNull(flinkSecurityManager);
+   assertThat(flinkSecurityManager).isNull();
 
         // Disabled case (same as default)
         configuration.set(
                 ClusterOptions.INTERCEPT_USER_SYSTEM_EXIT,
                 ClusterOptions.UserSystemExitMode.DISABLED);
         flinkSecurityManager = FlinkSecurityManager.fromConfiguration(configuration);
-        Assertions.assertNull(flinkSecurityManager);
+   assertThat(flinkSecurityManager).isNull();
 
         // No halt (same as default)
         configuration.set(ClusterOptions.HALT_ON_FATAL_ERROR, false);
         flinkSecurityManager = FlinkSecurityManager.fromConfiguration(configuration);
-        Assertions.assertNull(flinkSecurityManager);
+   assertThat(flinkSecurityManager).isNull();
     }
 
     @Test
@@ -174,13 +178,13 @@ public class FlinkSecurityManagerTest extends TestLogger {
                 ClusterOptions.INTERCEPT_USER_SYSTEM_EXIT, ClusterOptions.UserSystemExitMode.LOG);
         FlinkSecurityManager flinkSecurityManager =
                 FlinkSecurityManager.fromConfiguration(configuration);
-        Assertions.assertNotNull(flinkSecurityManager);
-        Assertions.assertFalse(flinkSecurityManager.userSystemExitMonitored());
+   assertThat(flinkSecurityManager).isNotNull();
+   assertThat(flinkSecurityManager.userSystemExitMonitored()).isFalse();
         flinkSecurityManager.monitorUserSystemExit();
-        Assertions.assertTrue(flinkSecurityManager.userSystemExitMonitored());
+   assertThat(flinkSecurityManager.userSystemExitMonitored()).isTrue();
         flinkSecurityManager.checkExit(TEST_EXIT_CODE);
         flinkSecurityManager.unmonitorUserSystemExit();
-        Assertions.assertFalse(flinkSecurityManager.userSystemExitMonitored());
+   assertThat(flinkSecurityManager.userSystemExitMonitored()).isFalse();
     }
 
     @Test
@@ -191,17 +195,17 @@ public class FlinkSecurityManagerTest extends TestLogger {
                 ClusterOptions.INTERCEPT_USER_SYSTEM_EXIT, ClusterOptions.UserSystemExitMode.THROW);
         FlinkSecurityManager flinkSecurityManager =
                 FlinkSecurityManager.fromConfiguration(configuration);
-        Assertions.assertNotNull(flinkSecurityManager);
-        Assertions.assertFalse(flinkSecurityManager.userSystemExitMonitored());
+   assertThat(flinkSecurityManager).isNotNull();
+   assertThat(flinkSecurityManager.userSystemExitMonitored()).isFalse();
         flinkSecurityManager.monitorUserSystemExit();
-        Assertions.assertTrue(flinkSecurityManager.userSystemExitMonitored());
+   assertThat(flinkSecurityManager.userSystemExitMonitored()).isTrue();
         try {
             flinkSecurityManager.checkExit(TEST_EXIT_CODE);
-            Assertions.fail();
+       fail();
         } catch (UserSystemExitException ignored) {
         }
         flinkSecurityManager.unmonitorUserSystemExit();
-        Assertions.assertFalse(flinkSecurityManager.userSystemExitMonitored());
+   assertThat(flinkSecurityManager.userSystemExitMonitored()).isFalse();
 
         // Test for disabled test to check if exit is still allowed (fromConfiguration gives null
         // since currently
@@ -209,7 +213,7 @@ public class FlinkSecurityManagerTest extends TestLogger {
         flinkSecurityManager =
                 new FlinkSecurityManager(ClusterOptions.UserSystemExitMode.DISABLED, false);
         flinkSecurityManager.monitorUserSystemExit();
-        Assertions.assertTrue(flinkSecurityManager.userSystemExitMonitored());
+   assertThat(flinkSecurityManager.userSystemExitMonitored()).isTrue();
         flinkSecurityManager.checkExit(TEST_EXIT_CODE);
     }
 
@@ -220,7 +224,7 @@ public class FlinkSecurityManagerTest extends TestLogger {
         configuration.set(ClusterOptions.HALT_ON_FATAL_ERROR, true);
         FlinkSecurityManager flinkSecurityManager =
                 FlinkSecurityManager.fromConfiguration(configuration);
-        Assertions.assertNotNull(flinkSecurityManager);
+   assertThat(flinkSecurityManager).isNotNull();
     }
 
     @Test(expected = NullPointerException.class)
@@ -303,7 +307,7 @@ public class FlinkSecurityManagerTest extends TestLogger {
         FlinkSecurityManager.monitorUserSystemExitForCurrentThread();
         try {
             newSecurityManager.checkExit(TEST_EXIT_CODE);
-            Assertions.fail("Expect exception to be thrown");
+       fail("Expect exception to be thrown");
         } catch (UserSystemExitException ue) {
         }
         MatcherAssert.assertThat(newSecurityManager.getExitStatus(), is(TEST_EXIT_CODE));
@@ -325,10 +329,10 @@ public class FlinkSecurityManagerTest extends TestLogger {
         FlinkSecurityManager.monitorUserSystemExitForCurrentThread();
         try {
             System.getSecurityManager().checkExit(TEST_EXIT_CODE);
-            Assertions.fail("Expect exception to be thrown");
+       fail("Expect exception to be thrown");
         } catch (UserSystemExitException ue) {
         }
-        Assertions.assertNull(oldSecurityManager.getExitStatus());
+   assertThat(oldSecurityManager.getExitStatus()).isNull();
     }
 
     @Test

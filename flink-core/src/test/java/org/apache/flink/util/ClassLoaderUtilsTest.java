@@ -18,8 +18,12 @@
 
 package org.apache.flink.util;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -49,7 +53,7 @@ public class ClassLoaderUtilsTest {
             try (JarFile jarFile = new JarFile(validJar.getAbsolutePath())) {
             } catch (Exception e) {
                 e.printStackTrace();
-                Assertions.fail("test setup broken: cannot create a valid jar file");
+           fail("test setup broken: cannot create a valid jar file");
             }
 
             // file with some random contents
@@ -63,7 +67,7 @@ public class ClassLoaderUtilsTest {
 
             // non existing file
             File nonExisting = File.createTempFile("flink-url-test", ".tmp");
-            Assertions.assertTrue(nonExisting.delete(), "Cannot create and delete temp file");
+       assertThat(nonExisting.delete()).as("Cannot create and delete temp file").isTrue();
 
             // create a URL classloader with
             // - a HTTP URL
@@ -81,14 +85,14 @@ public class ClassLoaderUtilsTest {
             URLClassLoader loader = new URLClassLoader(urls, getClass().getClassLoader());
             String info = ClassLoaderUtil.getUserCodeClassLoaderInfo(loader);
 
-            Assertions.assertTrue(info.indexOf("/some/file/path") > 0);
-            Assertions.assertTrue(info.indexOf(validJar.getAbsolutePath() + "' (valid") > 0);
-            Assertions.assertTrue(
+       assertTrue(info.indexOf("/some/file/path") > 0);
+       assertThat(info.indexOf(validJar.getAbsolutePath().isTrue() + "' (valid") > 0);
+       assertTrue(
                     info.indexOf(invalidJar.getAbsolutePath() + "' (invalid JAR") > 0);
-            Assertions.assertTrue(info.indexOf(nonExisting.getAbsolutePath() + "' (missing") > 0);
+       assertThat(info.indexOf(nonExisting.getAbsolutePath().isTrue() + "' (missing") > 0);
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+       fail(e.getMessage());
         } finally {
             if (validJar != null) {
                 //noinspection ResultOfMethodCallIgnored
@@ -131,10 +135,10 @@ public class ClassLoaderUtilsTest {
         try {
             String result =
                     ClassLoaderUtil.getUserCodeClassLoaderInfo(ClassLoader.getSystemClassLoader());
-            Assertions.assertTrue(result.toLowerCase().contains("system classloader"));
+       assertThat(result.toLowerCase().contains("system classloader")).isTrue();
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+       fail(e.getMessage());
         }
     }
 
@@ -142,10 +146,10 @@ public class ClassLoaderUtilsTest {
     void testInvalidClassLoaders() {
         try {
             // must return something when invoked with 'null'
-            Assertions.assertNotNull(ClassLoaderUtil.getUserCodeClassLoaderInfo(null));
+       assertThat(ClassLoaderUtil.getUserCodeClassLoaderInfo(null)).isNotNull();
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+       fail(e.getMessage());
         }
     }
 }
