@@ -87,7 +87,7 @@ class KryoSerializerClassLoadingTest extends SerializerTestBase<Object> {
     @Override
     protected Object[] getTestData() {
         return new Object[] {
-            new Integer(7),
+            Integer.valueOf(7),
 
             // an object whose class is not on the classpath
             OUTSIDE_CLASS_LOADING.getObject(),

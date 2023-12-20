@@ -34,15 +34,12 @@ import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple1;
 import org.apache.flink.api.java.tuple.Tuple2;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 
 import static org.apache.flink.api.java.typeutils.TypeExtractionUtils.checkAndExtractLambda;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the type extractor for lambda functions. Many tests only work if the compiler supports
@@ -90,14 +87,14 @@ public class LambdaExtractionTest {
         MapFunction<Integer, String> instanceLambda = Object::toString;
         MapFunction<String, Integer> constructorLambda = Integer::new;
 
-        assertNull(checkAndExtractLambda(anonymousFromInterface));
-        assertNull(checkAndExtractLambda(anonymousFromClass));
-        assertNull(checkAndExtractLambda(fromProperClass));
-        assertNull(checkAndExtractLambda(fromDerived));
-        assertNotNull(checkAndExtractLambda(staticLambda));
-        assertNotNull(checkAndExtractLambda(instanceLambda));
-        assertNotNull(checkAndExtractLambda(constructorLambda));
-        assertNotNull(checkAndExtractLambda(STATIC_LAMBDA));
+        Assertions.assertNull(checkAndExtractLambda(anonymousFromInterface));
+        Assertions.assertNull(checkAndExtractLambda(anonymousFromClass));
+        Assertions.assertNull(checkAndExtractLambda(fromProperClass));
+        Assertions.assertNull(checkAndExtractLambda(fromDerived));
+        Assertions.assertNotNull(checkAndExtractLambda(staticLambda));
+        Assertions.assertNotNull(checkAndExtractLambda(instanceLambda));
+        Assertions.assertNotNull(checkAndExtractLambda(constructorLambda));
+        Assertions.assertNotNull(checkAndExtractLambda(STATIC_LAMBDA));
     }
 
     private static class StaticMapper implements MapFunction<String, Integer> {
@@ -109,13 +106,13 @@ public class LambdaExtractionTest {
 
     private interface ToTuple<T> extends MapFunction<T, Tuple2<T, Long>> {
         @Override
-        Tuple2<T, Long> map(T value) throws Exception;
+        Tuple2<T, Long> map(T value);
     }
 
     private static final MapFunction<String, Integer> STATIC_LAMBDA = Integer::parseInt;
 
     private static class MyClass {
-        private String s = "mystring";
+        private final String s = "mystring";
 
         public MapFunction<Integer, String> getMapFunction() {
             return (i) -> s;
@@ -123,14 +120,14 @@ public class LambdaExtractionTest {
     }
 
     @Test
-    public void testLambdaWithMemberVariable() {
+    void testLambdaWithMemberVariable() {
         TypeInformation<?> ti =
                 TypeExtractor.getMapReturnTypes(new MyClass().getMapFunction(), Types.INT);
-        assertEquals(ti, BasicTypeInfo.STRING_TYPE_INFO);
+        Assertions.assertEquals(ti, BasicTypeInfo.STRING_TYPE_INFO);
     }
 
     @Test
-    public void testLambdaWithLocalVariable() {
+    void testLambdaWithLocalVariable() {
         String s = "mystring";
         final int k = 24;
         int j = 26;
@@ -138,66 +135,69 @@ public class LambdaExtractionTest {
         MapFunction<Integer, String> f = (i) -> s + k + j;
 
         TypeInformation<?> ti = TypeExtractor.getMapReturnTypes(f, Types.INT);
-        assertEquals(ti, BasicTypeInfo.STRING_TYPE_INFO);
+        Assertions.assertEquals(ti, BasicTypeInfo.STRING_TYPE_INFO);
     }
 
     @Test
-    public void testLambdaWithNonGenericResultType() {
+    void testLambdaWithNonGenericResultType() {
         MapFunction<Tuple2<Tuple1<Integer>, Boolean>, Boolean> f = (i) -> null;
 
         TypeInformation<?> ti =
                 TypeExtractor.getMapReturnTypes(f, NESTED_TUPLE_BOOLEAN_TYPE, null, true);
-        assertTrue(ti instanceof BasicTypeInfo);
-        assertEquals(BasicTypeInfo.BOOLEAN_TYPE_INFO, ti);
+        Assertions.assertInstanceOf(BasicTypeInfo.class, ti);
+        Assertions.assertEquals(BasicTypeInfo.BOOLEAN_TYPE_INFO, ti);
     }
 
     @Test
-    public void testMapLambda() {
+    void testMapLambda() {
         MapFunction<Tuple2<Tuple1<Integer>, Boolean>, Tuple2<Tuple1<Integer>, String>> f =
                 (i) -> null;
 
         TypeInformation<?> ti =
                 TypeExtractor.getMapReturnTypes(f, NESTED_TUPLE_BOOLEAN_TYPE, null, true);
         if (!(ti instanceof MissingTypeInfo)) {
-            assertTrue(ti.isTupleType());
-            assertEquals(2, ti.getArity());
-            assertTrue(((TupleTypeInfo<?>) ti).getTypeAt(0).isTupleType());
-            assertEquals(((TupleTypeInfo<?>) ti).getTypeAt(1), BasicTypeInfo.STRING_TYPE_INFO);
+            Assertions.assertTrue(ti.isTupleType());
+            Assertions.assertEquals(2, ti.getArity());
+            Assertions.assertTrue(((TupleTypeInfo<?>) ti).getTypeAt(0).isTupleType());
+            Assertions.assertEquals(
+                    ((TupleTypeInfo<?>) ti).getTypeAt(1), BasicTypeInfo.STRING_TYPE_INFO);
         }
     }
 
     @Test
-    public void testFlatMapLambda() {
+    void testFlatMapLambda() {
         FlatMapFunction<Tuple2<Tuple1<Integer>, Boolean>, Tuple2<Tuple1<Integer>, String>> f =
                 (i, out) -> out.collect(null);
 
         TypeInformation<?> ti =
                 TypeExtractor.getFlatMapReturnTypes(f, NESTED_TUPLE_BOOLEAN_TYPE, null, true);
         if (!(ti instanceof MissingTypeInfo)) {
-            assertTrue(ti.isTupleType());
-            assertEquals(2, ti.getArity());
-            assertTrue(((TupleTypeInfo<?>) ti).getTypeAt(0).isTupleType());
-            assertEquals(((TupleTypeInfo<?>) ti).getTypeAt(1), BasicTypeInfo.STRING_TYPE_INFO);
+            Assertions.assertTrue(ti.isTupleType());
+            Assertions.assertEquals(2, ti.getArity());
+            Assertions.assertTrue(((TupleTypeInfo<?>) ti).getTypeAt(0).isTupleType());
+            Assertions.assertEquals(
+                    ((TupleTypeInfo<?>) ti).getTypeAt(1), BasicTypeInfo.STRING_TYPE_INFO);
         }
     }
 
     @Test
-    public void testMapPartitionLambda() {
+    void testMapPartitionLambda() {
         MapPartitionFunction<Tuple2<Tuple1<Integer>, Boolean>, Tuple2<Tuple1<Integer>, String>> f =
                 (i, o) -> {};
 
         TypeInformation<?> ti =
                 TypeExtractor.getMapPartitionReturnTypes(f, NESTED_TUPLE_BOOLEAN_TYPE, null, true);
         if (!(ti instanceof MissingTypeInfo)) {
-            assertTrue(ti.isTupleType());
-            assertEquals(2, ti.getArity());
-            assertTrue(((TupleTypeInfo<?>) ti).getTypeAt(0).isTupleType());
-            assertEquals(((TupleTypeInfo<?>) ti).getTypeAt(1), BasicTypeInfo.STRING_TYPE_INFO);
+            Assertions.assertTrue(ti.isTupleType());
+            Assertions.assertEquals(2, ti.getArity());
+            Assertions.assertTrue(((TupleTypeInfo<?>) ti).getTypeAt(0).isTupleType());
+            Assertions.assertEquals(
+                    ((TupleTypeInfo<?>) ti).getTypeAt(1), BasicTypeInfo.STRING_TYPE_INFO);
         }
     }
 
     @Test
-    public void testJoinLambda() {
+    void testJoinLambda() {
         JoinFunction<
                         Tuple2<Tuple1<Integer>, Boolean>,
                         Tuple2<Tuple1<Integer>, Double>,
@@ -208,15 +208,16 @@ public class LambdaExtractionTest {
                 TypeExtractor.getJoinReturnTypes(
                         f, NESTED_TUPLE_BOOLEAN_TYPE, NESTED_TUPLE_DOUBLE_TYPE, null, true);
         if (!(ti instanceof MissingTypeInfo)) {
-            assertTrue(ti.isTupleType());
-            assertEquals(2, ti.getArity());
-            assertTrue(((TupleTypeInfo<?>) ti).getTypeAt(0).isTupleType());
-            assertEquals(((TupleTypeInfo<?>) ti).getTypeAt(1), BasicTypeInfo.STRING_TYPE_INFO);
+            Assertions.assertTrue(ti.isTupleType());
+            Assertions.assertEquals(2, ti.getArity());
+            Assertions.assertTrue(((TupleTypeInfo<?>) ti).getTypeAt(0).isTupleType());
+            Assertions.assertEquals(
+                    ((TupleTypeInfo<?>) ti).getTypeAt(1), BasicTypeInfo.STRING_TYPE_INFO);
         }
     }
 
     @Test
-    public void testCoGroupLambda() {
+    void testCoGroupLambda() {
         CoGroupFunction<
                         Tuple2<Tuple1<Integer>, Boolean>,
                         Tuple2<Tuple1<Integer>, Double>,
@@ -227,57 +228,61 @@ public class LambdaExtractionTest {
                 TypeExtractor.getCoGroupReturnTypes(
                         f, NESTED_TUPLE_BOOLEAN_TYPE, NESTED_TUPLE_DOUBLE_TYPE, null, true);
         if (!(ti instanceof MissingTypeInfo)) {
-            assertTrue(ti.isTupleType());
-            assertEquals(2, ti.getArity());
-            assertTrue(((TupleTypeInfo<?>) ti).getTypeAt(0).isTupleType());
-            assertEquals(((TupleTypeInfo<?>) ti).getTypeAt(1), BasicTypeInfo.STRING_TYPE_INFO);
+            Assertions.assertTrue(ti.isTupleType());
+            Assertions.assertEquals(2, ti.getArity());
+            Assertions.assertTrue(((TupleTypeInfo<?>) ti).getTypeAt(0).isTupleType());
+            Assertions.assertEquals(
+                    ((TupleTypeInfo<?>) ti).getTypeAt(1), BasicTypeInfo.STRING_TYPE_INFO);
         }
     }
 
     @Test
-    public void testKeySelectorLambda() {
+    void testKeySelectorLambda() {
         KeySelector<Tuple2<Tuple1<Integer>, Boolean>, Tuple2<Tuple1<Integer>, String>> f =
                 (i) -> null;
 
         TypeInformation<?> ti =
                 TypeExtractor.getKeySelectorTypes(f, NESTED_TUPLE_BOOLEAN_TYPE, null, true);
         if (!(ti instanceof MissingTypeInfo)) {
-            assertTrue(ti.isTupleType());
-            assertEquals(2, ti.getArity());
-            assertTrue(((TupleTypeInfo<?>) ti).getTypeAt(0).isTupleType());
-            assertEquals(((TupleTypeInfo<?>) ti).getTypeAt(1), BasicTypeInfo.STRING_TYPE_INFO);
+            Assertions.assertTrue(ti.isTupleType());
+            Assertions.assertEquals(2, ti.getArity());
+            Assertions.assertTrue(((TupleTypeInfo<?>) ti).getTypeAt(0).isTupleType());
+            Assertions.assertEquals(
+                    ((TupleTypeInfo<?>) ti).getTypeAt(1), BasicTypeInfo.STRING_TYPE_INFO);
         }
     }
 
     @SuppressWarnings("rawtypes")
     @Test
-    public void testLambdaTypeErasure() {
+    void testLambdaTypeErasure() {
         MapFunction<Tuple1<Integer>, Tuple1> f = (i) -> null;
         TypeInformation<?> ti =
                 TypeExtractor.getMapReturnTypes(
                         f, new TypeHint<Tuple1<Integer>>() {}.getTypeInfo(), null, true);
-        assertTrue(ti instanceof MissingTypeInfo);
+        Assertions.assertInstanceOf(MissingTypeInfo.class, ti);
     }
 
     @Test
-    public void testLambdaWithoutTypeErasure() {
+    void testLambdaWithoutTypeErasure() {
         TypeInformation<?> ti =
                 TypeExtractor.getMapReturnTypes(
                         Tuple1::of, BasicTypeInfo.STRING_TYPE_INFO, null, true);
-        assertTrue(ti instanceof MissingTypeInfo);
+        Assertions.assertInstanceOf(MissingTypeInfo.class, ti);
     }
 
     @Test
-    public void testPartitionerLambda() {
+    void testPartitionerLambda() {
         Partitioner<Tuple2<Integer, String>> partitioner =
                 (key, numPartitions) -> key.f1.length() % numPartitions;
         final TypeInformation<?> ti = TypeExtractor.getPartitionerTypes(partitioner, null, true);
 
         if (!(ti instanceof MissingTypeInfo)) {
-            assertTrue(ti.isTupleType());
-            assertEquals(2, ti.getArity());
-            assertEquals(((TupleTypeInfo<?>) ti).getTypeAt(0), BasicTypeInfo.INT_TYPE_INFO);
-            assertEquals(((TupleTypeInfo<?>) ti).getTypeAt(1), BasicTypeInfo.STRING_TYPE_INFO);
+            Assertions.assertTrue(ti.isTupleType());
+            Assertions.assertEquals(2, ti.getArity());
+            Assertions.assertEquals(
+                    ((TupleTypeInfo<?>) ti).getTypeAt(0), BasicTypeInfo.INT_TYPE_INFO);
+            Assertions.assertEquals(
+                    ((TupleTypeInfo<?>) ti).getTypeAt(1), BasicTypeInfo.STRING_TYPE_INFO);
         }
     }
 
@@ -298,18 +303,18 @@ public class LambdaExtractionTest {
     }
 
     @Test
-    public void testInstanceMethodRefSameType() {
+    void testInstanceMethodRefSameType() {
         MapFunction<MyType, Integer> f = MyType::getKey;
         TypeInformation<?> ti =
                 TypeExtractor.getMapReturnTypes(f, TypeExtractor.createTypeInfo(MyType.class));
-        assertEquals(BasicTypeInfo.INT_TYPE_INFO, ti);
+        Assertions.assertEquals(BasicTypeInfo.INT_TYPE_INFO, ti);
     }
 
     @Test
-    public void testInstanceMethodRefSuperType() {
+    void testInstanceMethodRefSuperType() {
         MapFunction<Integer, String> f = Object::toString;
         TypeInformation<?> ti = TypeExtractor.getMapReturnTypes(f, BasicTypeInfo.INT_TYPE_INFO);
-        assertEquals(BasicTypeInfo.STRING_TYPE_INFO, ti);
+        Assertions.assertEquals(BasicTypeInfo.STRING_TYPE_INFO, ti);
     }
 
     private static class MySubtype extends MyType {
@@ -317,18 +322,18 @@ public class LambdaExtractionTest {
     }
 
     @Test
-    public void testInstanceMethodRefSuperTypeProtected() {
+    void testInstanceMethodRefSuperTypeProtected() {
         MapFunction<MySubtype, Integer> f = MyType::getKey2;
         TypeInformation<?> ti =
                 TypeExtractor.getMapReturnTypes(f, TypeExtractor.createTypeInfo(MySubtype.class));
-        assertEquals(BasicTypeInfo.INT_TYPE_INFO, ti);
+        Assertions.assertEquals(BasicTypeInfo.INT_TYPE_INFO, ti);
     }
 
     @Test
-    public void testConstructorMethodRef() {
+    void testConstructorMethodRef() {
         MapFunction<String, Integer> f = Integer::new;
         TypeInformation<?> ti = TypeExtractor.getMapReturnTypes(f, BasicTypeInfo.STRING_TYPE_INFO);
-        assertEquals(BasicTypeInfo.INT_TYPE_INFO, ti);
+        Assertions.assertEquals(BasicTypeInfo.INT_TYPE_INFO, ti);
     }
 
     private interface InterfaceWithDefaultMethod {
@@ -338,11 +343,11 @@ public class LambdaExtractionTest {
     }
 
     @Test
-    public void testSamMethodExtractionInterfaceWithDefaultMethod() {
+    void testSamMethodExtractionInterfaceWithDefaultMethod() {
         final Method sam =
                 TypeExtractionUtils.getSingleAbstractMethod(InterfaceWithDefaultMethod.class);
-        assertNotNull(sam);
-        assertEquals("samMethod", sam.getName());
+        Assertions.assertNotNull(sam);
+        Assertions.assertEquals("samMethod", sam.getName());
     }
 
     private interface InterfaceWithMultipleMethods {

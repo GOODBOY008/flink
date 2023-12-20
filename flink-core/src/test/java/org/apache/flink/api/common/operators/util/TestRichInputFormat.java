@@ -41,7 +41,6 @@ public class TestRichInputFormat extends GenericInputFormat<String> implements N
         count++;
         return NAMES[count - 1]
                 + getRuntimeContext().getIndexOfThisSubtask()
-                + ""
                 + getRuntimeContext().getNumberOfParallelSubtasks();
     }
 

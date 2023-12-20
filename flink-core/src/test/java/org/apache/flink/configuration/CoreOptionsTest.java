@@ -18,8 +18,8 @@
 
 package org.apache.flink.configuration;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,7 +29,7 @@ import java.util.function.Function;
 /** Tests for {@link CoreOptions}. */
 public class CoreOptionsTest {
     @Test
-    public void testGetParentFirstLoaderPatterns() {
+    void testGetParentFirstLoaderPatterns() {
         testParentFirst(
                 CoreOptions::getParentFirstLoaderPatterns,
                 CoreOptions.ALWAYS_PARENT_FIRST_LOADER_PATTERNS,
@@ -37,7 +37,7 @@ public class CoreOptionsTest {
     }
 
     @Test
-    public void testGetPluginParentFirstLoaderPatterns() {
+    void testGetPluginParentFirstLoaderPatterns() {
         testParentFirst(
                 CoreOptions::getPluginParentFirstLoaderPatterns,
                 CoreOptions.PLUGIN_ALWAYS_PARENT_FIRST_LOADER_PATTERNS,
@@ -49,20 +49,21 @@ public class CoreOptionsTest {
             ConfigOption<List<String>> patternOption,
             ConfigOption<List<String>> additionalOption) {
         Configuration config = new Configuration();
-        Assert.assertArrayEquals(
+        Assertions.assertArrayEquals(
                 patternOption.defaultValue().toArray(new String[0]), patternGetter.apply(config));
 
         config.set(patternOption, Arrays.asList("hello", "world"));
 
-        Assert.assertArrayEquals(new String[] {"hello", "world"}, patternGetter.apply(config));
+        Assertions.assertArrayEquals(new String[] {"hello", "world"}, patternGetter.apply(config));
 
         config.set(additionalOption, Arrays.asList("how", "are", "you"));
 
-        Assert.assertArrayEquals(
+        Assertions.assertArrayEquals(
                 new String[] {"hello", "world", "how", "are", "you"}, patternGetter.apply(config));
 
         config.set(patternOption, Collections.emptyList());
 
-        Assert.assertArrayEquals(new String[] {"how", "are", "you"}, patternGetter.apply(config));
+        Assertions.assertArrayEquals(
+                new String[] {"how", "are", "you"}, patternGetter.apply(config));
     }
 }

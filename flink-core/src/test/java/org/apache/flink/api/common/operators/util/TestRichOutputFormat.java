@@ -42,7 +42,6 @@ public class TestRichOutputFormat extends RichOutputFormat<String> {
         output.add(
                 record
                         + getRuntimeContext().getIndexOfThisSubtask()
-                        + ""
                         + getRuntimeContext().getNumberOfParallelSubtasks());
     }
 

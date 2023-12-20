@@ -20,27 +20,27 @@ package org.apache.flink.api.java.tuple;
 
 import org.apache.flink.types.NullFieldException;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /** Tests for {@link Tuple2}. */
-public class Tuple2Test {
+class Tuple2Test {
 
     @Test
-    public void testSwapValues() {
+    void testSwapValues() {
         Tuple2<String, Integer> toSwap = new Tuple2<>("Test case", 25);
         Tuple2<Integer, String> swapped = toSwap.swap();
 
-        Assert.assertEquals(swapped.f0, toSwap.f1);
+        Assertions.assertEquals(swapped.f0, toSwap.f1);
 
-        Assert.assertEquals(swapped.f1, toSwap.f0);
+        Assertions.assertEquals(swapped.f1, toSwap.f0);
     }
 
     @Test(expected = NullFieldException.class)
     public void testGetFieldNotNull() {
         Tuple2<String, Integer> tuple = new Tuple2<>("Test case", null);
 
-        Assert.assertEquals("Test case", tuple.getFieldNotNull(0));
+        Assertions.assertEquals("Test case", tuple.getFieldNotNull(0));
         tuple.getFieldNotNull(1);
     }
 }

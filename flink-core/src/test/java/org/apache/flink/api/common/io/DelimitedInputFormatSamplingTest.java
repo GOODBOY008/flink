@@ -278,7 +278,7 @@ public class DelimitedInputFormatSamplingTest {
         try {
             final String tempFile =
                     TestFileUtils.createTempFile(
-                            2 * OptimizerOptions.DELIMITED_FORMAT_MAX_SAMPLE_LEN.defaultValue());
+                            2L * OptimizerOptions.DELIMITED_FORMAT_MAX_SAMPLE_LEN.defaultValue());
             final Configuration conf = new Configuration();
 
             final TestDelimitedInputFormat format = new TestDelimitedInputFormat(CONFIG);
@@ -316,11 +316,12 @@ public class DelimitedInputFormatSamplingTest {
 
             TestFileSystem.resetStreamOpenCounter();
             BaseStatistics stats2 = format2.getStatistics(stats);
-            Assertions.assertTrue(
-                    0 == TestFileSystem.getNumtimeStreamOpened(),
+            Assertions.assertEquals(
+                    0,
+                    TestFileSystem.getNumtimeStreamOpened(),
                     "Using cached statistics should cicumvent sampling.");
-            Assertions.assertTrue(
-                    stats == stats2, "Using cached statistics should cicumvent sampling.");
+            Assertions.assertSame(
+                    stats, stats2, "Using cached statistics should cicumvent sampling.");
 
         } catch (Exception e) {
             e.printStackTrace();

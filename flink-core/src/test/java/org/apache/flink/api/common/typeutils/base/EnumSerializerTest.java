@@ -32,7 +32,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
 
 public class EnumSerializerTest extends TestLogger {
 
@@ -158,7 +157,7 @@ public class EnumSerializerTest extends TestLogger {
         Assertions.assertEquals(
                 PublicEnum.PAULA.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.PAULA).intValue());
-        Assertions.assertTrue(Arrays.equals(PublicEnum.values(), serializer.getValues()));
+        Assertions.assertArrayEquals(PublicEnum.values(), serializer.getValues());
     }
 
     @Test
@@ -184,7 +183,7 @@ public class EnumSerializerTest extends TestLogger {
         Assertions.assertEquals(
                 PublicEnum.PAULA.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.PAULA).intValue());
-        Assertions.assertTrue(Arrays.equals(PublicEnum.values(), serializer.getValues()));
+        Assertions.assertArrayEquals(PublicEnum.values(), serializer.getValues());
 
         byte[] serializedSerializer = InstantiationUtil.serializeObject(serializer);
 
@@ -210,7 +209,7 @@ public class EnumSerializerTest extends TestLogger {
         Assertions.assertEquals(
                 PublicEnum.PAULA.ordinal(),
                 serializer.getValueToOrdinal().get(PublicEnum.PAULA).intValue());
-        Assertions.assertTrue(Arrays.equals(PublicEnum.values(), serializer.getValues()));
+        Assertions.assertArrayEquals(PublicEnum.values(), serializer.getValues());
     }
 
     @Test

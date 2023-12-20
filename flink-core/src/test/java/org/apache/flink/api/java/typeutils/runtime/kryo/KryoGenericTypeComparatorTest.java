@@ -25,6 +25,6 @@ import org.apache.flink.api.java.typeutils.runtime.AbstractGenericTypeComparator
 public class KryoGenericTypeComparatorTest extends AbstractGenericTypeComparatorTest {
     @Override
     protected <T> TypeSerializer<T> createSerializer(Class<T> type) {
-        return new KryoSerializer<T>(type, new ExecutionConfig());
+        return new KryoSerializer<>(type, new ExecutionConfig());
     }
 }

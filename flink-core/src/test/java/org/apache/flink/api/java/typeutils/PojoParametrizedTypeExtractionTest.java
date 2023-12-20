@@ -22,33 +22,33 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.common.typeinfo.Types;
 
-import org.junit.Test;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 /** Tests concerning type extraction of Parametrized Pojo and its superclasses. */
 public class PojoParametrizedTypeExtractionTest {
     @Test
-    public void testDirectlyCreateTypeInfo() {
+    void testDirectlyCreateTypeInfo() {
         final TypeInformation<ParameterizedParentImpl> directTypeInfo =
                 TypeExtractor.createTypeInfo(ParameterizedParentImpl.class);
 
-        assertThat(directTypeInfo, equalTo(getParameterizedParentTypeInformation()));
+        MatcherAssert.assertThat(directTypeInfo, equalTo(getParameterizedParentTypeInformation()));
     }
 
     @Test
-    public void testMapReturnTypeInfo() {
+    void testMapReturnTypeInfo() {
         TypeInformation<ParameterizedParentImpl> expectedTypeInfo =
                 getParameterizedParentTypeInformation();
 
         TypeInformation<ParameterizedParentImpl> mapReturnTypeInfo =
                 TypeExtractor.getMapReturnTypes(new ConcreteMapFunction(), Types.INT);
 
-        assertThat(mapReturnTypeInfo, equalTo(expectedTypeInfo));
+        MatcherAssert.assertThat(mapReturnTypeInfo, equalTo(expectedTypeInfo));
     }
 
     private TypeInformation<ParameterizedParentImpl> getParameterizedParentTypeInformation() {
@@ -82,7 +82,7 @@ public class PojoParametrizedTypeExtractionTest {
     public static class ConcreteMapFunction
             implements MapFunction<Integer, ParameterizedParentImpl> {
         @Override
-        public ParameterizedParentImpl map(Integer value) throws Exception {
+        public ParameterizedParentImpl map(Integer value) {
             return null;
         }
     }

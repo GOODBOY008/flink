@@ -19,7 +19,7 @@
 package org.apache.flink.configuration;
 
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -49,7 +49,7 @@ public class StructuredOptionsSplitterEscapeTest {
     @Parameterized.Parameter public TestSpec testSpec;
 
     @Test
-    public void testEscapeWithSingleQuote() {
+    void testEscapeWithSingleQuote() {
         String encoded =
                 StructuredOptionsSplitter.escapeWithSingleQuote(
                         testSpec.getString(), testSpec.getEscapeChars());

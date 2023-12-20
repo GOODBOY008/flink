@@ -24,8 +24,10 @@ import org.apache.flink.core.testutils.CheckedThread;
 import org.apache.flink.core.testutils.OneShotLatch;
 import org.apache.flink.util.TestLogger;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,21 +37,19 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 /** Tests for {@link Transformation}. */
 public class TransformationTest extends TestLogger {
 
     private Transformation<Void> transformation;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         transformation = new TestTransformation<>("t", null, 1);
     }
 
     @Test
-    public void testGetNewNodeIdIsThreadSafe() throws Exception {
+    void testGetNewNodeIdIsThreadSafe() throws Exception {
         final int numThreads = 10;
         final int numIdsPerThread = 100;
 
@@ -84,20 +84,20 @@ public class TransformationTest extends TestLogger {
         final Set<Integer> deduplicatedIds =
                 idLists.stream().flatMap(List::stream).collect(Collectors.toSet());
 
-        assertEquals(numThreads * numIdsPerThread, deduplicatedIds.size());
+        Assertions.assertEquals(numThreads * numIdsPerThread, deduplicatedIds.size());
     }
 
     @Test
-    public void testDeclareManagedMemoryUseCase() {
+    void testDeclareManagedMemoryUseCase() {
         transformation.declareManagedMemoryUseCaseAtOperatorScope(
                 ManagedMemoryUseCase.OPERATOR, 123);
         transformation.declareManagedMemoryUseCaseAtSlotScope(ManagedMemoryUseCase.STATE_BACKEND);
-        assertThat(
+        MatcherAssert.assertThat(
                 transformation
                         .getManagedMemoryOperatorScopeUseCaseWeights()
                         .get(ManagedMemoryUseCase.OPERATOR),
                 is(123));
-        assertThat(
+        MatcherAssert.assertThat(
                 transformation.getManagedMemorySlotScopeUseCases(),
                 contains(ManagedMemoryUseCase.STATE_BACKEND));
     }

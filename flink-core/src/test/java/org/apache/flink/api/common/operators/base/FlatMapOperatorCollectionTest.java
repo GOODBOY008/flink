@@ -54,11 +54,11 @@ public class FlatMapOperatorCollectionTest implements Serializable {
             Assertions.assertTrue(udf.isClosed);
 
             udf = new IdRichFlatMap<>();
-            testExecuteOnCollection(udf, Collections.<String>emptyList(), true);
+            testExecuteOnCollection(udf, Collections.emptyList(), true);
             Assertions.assertTrue(udf.isClosed);
 
             udf = new IdRichFlatMap<>();
-            testExecuteOnCollection(udf, Collections.<String>emptyList(), false);
+            testExecuteOnCollection(udf, Collections.emptyList(), false);
             Assertions.assertTrue(udf.isClosed);
         } catch (Exception e) {
             e.printStackTrace();

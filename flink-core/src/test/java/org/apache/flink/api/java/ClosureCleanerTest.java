@@ -24,8 +24,8 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple1;
 import org.apache.flink.util.function.SerializableSupplier;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -43,33 +43,33 @@ public class ClosureCleanerTest {
         ClosureCleaner.ensureSerializable(map);
 
         int result = map.map(3);
-        Assert.assertEquals(result, 4);
+        Assertions.assertEquals(result, 4);
     }
 
     @Test
-    public void testCleanedNonSerializable() throws Exception {
+    void testCleanedNonSerializable() throws Exception {
         MapCreator creator = new NonSerializableMapCreator();
         MapFunction<Integer, Integer> map = creator.getMap();
 
         ClosureCleaner.clean(map, ExecutionConfig.ClosureCleanerLevel.RECURSIVE, true);
 
         int result = map.map(3);
-        Assert.assertEquals(result, 4);
+        Assertions.assertEquals(result, 4);
     }
 
     @Test
-    public void testSerializable() throws Exception {
+    void testSerializable() throws Exception {
         MapCreator creator = new SerializableMapCreator(1);
         MapFunction<Integer, Integer> map = creator.getMap();
 
         ClosureCleaner.clean(map, ExecutionConfig.ClosureCleanerLevel.RECURSIVE, true);
 
         int result = map.map(3);
-        Assert.assertEquals(result, 4);
+        Assertions.assertEquals(result, 4);
     }
 
     @Test
-    public void testNestedSerializable() throws Exception {
+    void testNestedSerializable() throws Exception {
         MapCreator creator = new NestedSerializableMapCreator(1);
         MapFunction<Integer, Integer> map = creator.getMap();
 
@@ -78,7 +78,7 @@ public class ClosureCleanerTest {
         ClosureCleaner.ensureSerializable(map);
 
         int result = map.map(3);
-        Assert.assertEquals(result, 4);
+        Assertions.assertEquals(result, 4);
     }
 
     @Test(expected = InvalidProgramException.class)
@@ -91,11 +91,11 @@ public class ClosureCleanerTest {
         ClosureCleaner.ensureSerializable(map);
 
         int result = map.map(3);
-        Assert.assertEquals(result, 4);
+        Assertions.assertEquals(result, 4);
     }
 
     @Test
-    public void testWrapperClass() throws Exception {
+    void testWrapperClass() throws Exception {
         MapCreator creator = new NonSerializableMapCreator();
         MapFunction<Integer, Integer> notCleanedMap = creator.getMap();
 
@@ -106,11 +106,11 @@ public class ClosureCleanerTest {
         ClosureCleaner.ensureSerializable(wrapped);
 
         int result = wrapped.map(3);
-        Assert.assertEquals(result, 4);
+        Assertions.assertEquals(result, 4);
     }
 
     @Test
-    public void testComplexTopLevelClassClean() throws Exception {
+    void testComplexTopLevelClassClean() throws Exception {
         MapFunction<Integer, Integer> complexMap =
                 new ComplexMap((MapFunction<Integer, Integer>) value -> value + 1);
 
@@ -118,11 +118,11 @@ public class ClosureCleanerTest {
 
         int result = complexMap.map(3);
 
-        Assert.assertEquals(result, 5);
+        Assertions.assertEquals(result, 5);
     }
 
     @Test
-    public void testComplexInnerClassClean() throws Exception {
+    void testComplexInnerClassClean() throws Exception {
         MapFunction<Integer, Integer> complexMap =
                 new InnerComplexMap((MapFunction<Integer, Integer>) value -> value + 1);
 
@@ -130,11 +130,11 @@ public class ClosureCleanerTest {
 
         int result = complexMap.map(3);
 
-        Assert.assertEquals(result, 4);
+        Assertions.assertEquals(result, 4);
     }
 
     @Test
-    public void testSelfReferencingClean() {
+    void testSelfReferencingClean() {
         final NestedSelfReferencing selfReferencing = new NestedSelfReferencing();
         ClosureCleaner.clean(selfReferencing, ExecutionConfig.ClosureCleanerLevel.RECURSIVE, true);
     }
@@ -142,7 +142,7 @@ public class ClosureCleanerTest {
     class InnerCustomMap implements MapFunction<Integer, Integer> {
 
         @Override
-        public Integer map(Integer value) throws Exception {
+        public Integer map(Integer value) {
             return value + 1;
         }
 
@@ -154,12 +154,12 @@ public class ClosureCleanerTest {
     // Inner class
     class InnerComplexMap implements MapFunction<Integer, Integer> {
 
-        InnerCustomMap map1;
-        LocalMap map3;
+        final InnerCustomMap map1;
+        final LocalMap map3;
 
         class LocalMap implements MapFunction<Integer, Integer> {
 
-            MapFunction<Integer, Integer> map2;
+            final MapFunction<Integer, Integer> map2;
 
             public LocalMap(MapFunction<Integer, Integer> map2) {
                 this.map2 = map2;
@@ -177,13 +177,13 @@ public class ClosureCleanerTest {
         }
 
         @Override
-        public Integer map(Integer value) throws Exception {
+        public Integer map(Integer value) {
             return map1.map(value);
         }
     }
 
     @Test
-    public void testOuterStaticClassInnerStaticClassInnerAnonymousOrLocalClass() {
+    void testOuterStaticClassInnerStaticClassInnerAnonymousOrLocalClass() {
         MapFunction<Integer, Integer> nestedMap = new OuterMapCreator().getMap();
 
         MapFunction<Integer, Integer> wrappedMap = new WrapperMapFunction(nestedMap);
@@ -194,7 +194,7 @@ public class ClosureCleanerTest {
     }
 
     @Test
-    public void testRealOuterStaticClassInnerStaticClassInnerAnonymousOrLocalClass() {
+    void testRealOuterStaticClassInnerStaticClassInnerAnonymousOrLocalClass() {
         MapFunction<Integer, Integer> nestedMap = new OuterMapCreator().getMap();
 
         MapFunction<Integer, Integer> wrappedMap = new WrapperMapFunction(nestedMap);
@@ -207,7 +207,7 @@ public class ClosureCleanerTest {
     }
 
     @Test
-    public void testRecursiveClass() {
+    void testRecursiveClass() {
         RecursiveClass recursiveClass = new RecursiveClass(new RecursiveClass());
 
         ClosureCleaner.clean(recursiveClass, ExecutionConfig.ClosureCleanerLevel.RECURSIVE, true);
@@ -216,17 +216,17 @@ public class ClosureCleanerTest {
     }
 
     @Test
-    public void testWriteReplace() {
+    void testWriteReplace() {
         WithWriteReplace.SerializablePayload writeReplace =
                 new WithWriteReplace.SerializablePayload(new WithWriteReplace.Payload("text"));
-        Assert.assertEquals("text", writeReplace.get().getRaw());
+        Assertions.assertEquals("text", writeReplace.get().getRaw());
         ClosureCleaner.clean(writeReplace, ExecutionConfig.ClosureCleanerLevel.TOP_LEVEL, true);
     }
 
     @Test
-    public void testWriteReplaceRecursive() {
+    void testWriteReplaceRecursive() {
         WithWriteReplace writeReplace = new WithWriteReplace(new WithWriteReplace.Payload("text"));
-        Assert.assertEquals("text", writeReplace.getPayload().getRaw());
+        Assertions.assertEquals("text", writeReplace.getPayload().getRaw());
         ClosureCleaner.clean(writeReplace, ExecutionConfig.ClosureCleanerLevel.RECURSIVE, true);
     }
 
@@ -243,7 +243,7 @@ public class ClosureCleanerTest {
 class CustomMap implements MapFunction<Integer, Integer> {
 
     @Override
-    public Integer map(Integer value) throws Exception {
+    public Integer map(Integer value) {
         return value + 1;
     }
 
@@ -255,13 +255,13 @@ class ComplexMap implements MapFunction<Integer, Integer> {
 
     private static MapFunction<Integer, Integer> map1;
 
-    private transient MapFunction<Integer, Integer> map2;
-    private CustomMap map3;
-    private LocalMap map4;
+    private final transient MapFunction<Integer, Integer> map2;
+    private final CustomMap map3;
+    private final LocalMap map4;
 
     class LocalMap implements MapFunction<Integer, Integer> {
 
-        MapFunction<Integer, Integer> map4;
+        final MapFunction<Integer, Integer> map4;
 
         public LocalMap(MapFunction<Integer, Integer> map4) {
             this.map4 = map4;
@@ -303,7 +303,7 @@ interface MapCreator {
 
 class WrapperMapFunction implements MapFunction<Integer, Integer> {
 
-    private MapFunction<Integer, Integer> innerMapFuc;
+    private final MapFunction<Integer, Integer> innerMapFuc;
 
     WrapperMapFunction(MapFunction<Integer, Integer> mapFunction) {
         innerMapFuc = mapFunction;
@@ -320,12 +320,7 @@ class NonSerializableMapCreator implements MapCreator {
 
     @Override
     public MapFunction<Integer, Integer> getMap() {
-        return new MapFunction<Integer, Integer>() {
-            @Override
-            public Integer map(Integer value) throws Exception {
-                return value + 1;
-            }
-        };
+        return value -> value + 1;
     }
 }
 
@@ -340,12 +335,7 @@ class SerializableMapCreator implements MapCreator, Serializable {
 
     @Override
     public MapFunction<Integer, Integer> getMap() {
-        return new MapFunction<Integer, Integer>() {
-            @Override
-            public Integer map(Integer value) throws Exception {
-                return value + add;
-            }
-        };
+        return value -> value + add;
     }
 }
 
@@ -353,7 +343,7 @@ class SerializableMapCreator implements MapCreator, Serializable {
 class NestedSerializableMapCreator implements MapCreator, Serializable {
 
     private int add = 0;
-    private InnerSerializableMapCreator inner;
+    private final InnerSerializableMapCreator inner;
 
     NestedSerializableMapCreator(int add) {
         this.add = add;
@@ -369,12 +359,7 @@ class NestedSerializableMapCreator implements MapCreator, Serializable {
 
         @Override
         public MapFunction<Integer, Integer> getMap() {
-            return new MapFunction<Integer, Integer>() {
-                @Override
-                public Integer map(Integer value) throws Exception {
-                    return value + add;
-                }
-            };
+            return value -> value + add;
         }
     }
 }
@@ -382,7 +367,7 @@ class NestedSerializableMapCreator implements MapCreator, Serializable {
 class NestedNonSerializableMapCreator implements MapCreator {
 
     private int add = 0;
-    private InnerSerializableMapCreator inner;
+    private final InnerSerializableMapCreator inner;
 
     NestedNonSerializableMapCreator(int add) {
         this.add = add;
@@ -399,12 +384,7 @@ class NestedNonSerializableMapCreator implements MapCreator {
 
         @Override
         public MapFunction<Integer, Integer> getMap() {
-            return new MapFunction<Integer, Integer>() {
-                @Override
-                public Integer map(Integer value) throws Exception {
-                    return value + getMeTheAdd();
-                }
-            };
+            return value -> value + getMeTheAdd();
         }
 
         public int getMeTheAdd() {
@@ -421,12 +401,7 @@ class OuterMapCreator implements MapCreator {
 
             @Override
             public MapFunction<Integer, Integer> getMap() {
-                return new MapFunction<Integer, Integer>() {
-                    @Override
-                    public Integer map(Integer value) throws Exception {
-                        return value + 1;
-                    }
-                };
+                return value -> value + 1;
             }
         }
 

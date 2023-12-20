@@ -19,7 +19,7 @@
 package org.apache.flink.configuration;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -27,14 +27,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 /** Tests for the {@link DelegatingConfiguration}. */
 public class DelegatingConfigurationTest {
 
     @Test
-    public void testIfDelegatesImplementAllMethods() throws IllegalArgumentException {
+    void testIfDelegatesImplementAllMethods() throws IllegalArgumentException {
 
         // For each method in the Configuration class...
         Method[] confMethods = Configuration.class.getDeclaredMethods();
@@ -70,27 +67,27 @@ public class DelegatingConfigurationTest {
                 }
             }
 
-            assertTrue(
+            org.junit.jupiter.api.Assertions.assertTrue(
+                    hasMethod,
                     "Configuration method '"
                             + configurationMethod.getName()
-                            + "' has not been wrapped correctly in DelegatingConfiguration wrapper",
-                    hasMethod);
+                            + "' has not been wrapped correctly in DelegatingConfiguration wrapper");
         }
     }
 
     @Test
-    public void testDelegationConfigurationWithNullPrefix() {
+    void testDelegationConfigurationWithNullPrefix() {
         Configuration backingConf = new Configuration();
         backingConf.setValueInternal("test-key", "value", false);
 
         DelegatingConfiguration configuration = new DelegatingConfiguration(backingConf, null);
         Set<String> keySet = configuration.keySet();
 
-        assertEquals(keySet, backingConf.keySet());
+        org.junit.jupiter.api.Assertions.assertEquals(keySet, backingConf.keySet());
     }
 
     @Test
-    public void testDelegationConfigurationWithPrefix() {
+    void testDelegationConfigurationWithPrefix() {
         String prefix = "pref-";
         String expectedKey = "key";
 
@@ -103,8 +100,8 @@ public class DelegatingConfigurationTest {
         DelegatingConfiguration configuration = new DelegatingConfiguration(backingConf, prefix);
         Set<String> keySet = configuration.keySet();
 
-        assertEquals(keySet.size(), 1);
-        assertEquals(keySet.iterator().next(), expectedKey);
+        org.junit.jupiter.api.Assertions.assertEquals(keySet.size(), 1);
+        org.junit.jupiter.api.Assertions.assertEquals(keySet.iterator().next(), expectedKey);
 
         /*
          * Key does not match the prefix
@@ -115,11 +112,11 @@ public class DelegatingConfigurationTest {
         configuration = new DelegatingConfiguration(backingConf, prefix);
         keySet = configuration.keySet();
 
-        assertTrue(keySet.isEmpty());
+        org.junit.jupiter.api.Assertions.assertTrue(keySet.isEmpty());
     }
 
     @Test
-    public void testDelegationConfigurationToMapConsistentWithAddAllToProperties() {
+    void testDelegationConfigurationToMapConsistentWithAddAllToProperties() {
         Configuration conf = new Configuration();
         conf.setString("k0", "v0");
         conf.setString("prefix.k1", "v1");
@@ -132,15 +129,13 @@ public class DelegatingConfigurationTest {
         // Convert the Map<String, String> object into a Properties object
         Map<String, String> map = dc.toMap();
         Properties mapProperties = new Properties();
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            mapProperties.put(entry.getKey(), entry.getValue());
-        }
+      mapProperties.putAll(map);
         // Verification
-        assertEquals(properties, mapProperties);
+        org.junit.jupiter.api.Assertions.assertEquals(properties, mapProperties);
     }
 
     @Test
-    public void testSetReturnsDelegatingConfiguration() {
+    void testSetReturnsDelegatingConfiguration() {
         final Configuration conf = new Configuration();
         final DelegatingConfiguration delegatingConf = new DelegatingConfiguration(conf, "prefix.");
 

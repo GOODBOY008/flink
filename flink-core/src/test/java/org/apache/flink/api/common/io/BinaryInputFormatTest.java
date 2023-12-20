@@ -35,7 +35,7 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
 
-public class BinaryInputFormatTest {
+class BinaryInputFormatTest {
 
     @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
@@ -167,7 +167,7 @@ public class BinaryInputFormatTest {
 
         assertThat(stats.getTotalInputSize())
                 .as("The file size statistics is wrong")
-                .isEqualTo(blockSize * (numBlocks1 + numBlocks2));
+                .isEqualTo((long) blockSize * (numBlocks1 + numBlocks2));
     }
 
     @Test

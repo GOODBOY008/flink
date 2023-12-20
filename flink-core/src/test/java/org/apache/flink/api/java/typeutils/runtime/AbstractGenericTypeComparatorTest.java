@@ -22,16 +22,17 @@ import org.apache.flink.api.common.typeutils.ComparatorTestBase;
 import org.apache.flink.api.common.typeutils.TypeComparator;
 import org.apache.flink.api.common.typeutils.TypeSerializer;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class AbstractGenericTypeComparatorTest {
 
     @Test
-    public void testString() {
+    void testString() {
         runTests(
                 "",
                 "Lorem Ipsum Dolor Omit Longer",
@@ -44,7 +45,7 @@ public abstract class AbstractGenericTypeComparatorTest {
     }
 
     @Test
-    public void testSimpleTypesObjects() {
+    void testSimpleTypesObjects() {
         runTests(
                 new SimpleTypes(0, 1, (byte) 2, "", (short) 3, 4.0),
                 new SimpleTypes(1, 1, (byte) 2, "", (short) 3, 4.0),
@@ -57,7 +58,7 @@ public abstract class AbstractGenericTypeComparatorTest {
     }
 
     @Test
-    public void testCompositeObject() {
+    void testCompositeObject() {
         ComplexNestedObject1 o1 = new ComplexNestedObject1(-1100);
         ComplexNestedObject1 o2 = new ComplexNestedObject1(0);
         ComplexNestedObject1 o3 = new ComplexNestedObject1(44);
@@ -68,7 +69,7 @@ public abstract class AbstractGenericTypeComparatorTest {
     }
 
     @Test
-    public void testBeanStyleObjects() {
+    void testBeanStyleObjects() {
         {
             Book b111 = new Book(-1L, "A Low level interfaces", 0xC);
             Book b122 = new Book(-1L, "Low level interfaces", 0xC);
@@ -81,9 +82,9 @@ public abstract class AbstractGenericTypeComparatorTest {
         }
 
         {
-            BookAuthor b1 = new BookAuthor(976243875L, new ArrayList<String>(), "Arno Nym");
+            BookAuthor b1 = new BookAuthor(976243875L, new ArrayList<>(), "Arno Nym");
 
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             list.add("A");
             list.add("B");
             list.add("C");
@@ -99,7 +100,7 @@ public abstract class AbstractGenericTypeComparatorTest {
     // ------------------------------------------------------------------------
 
     private <T> void runTests(T... sortedTestData) {
-        ComparatorTestInstance<T> testBase = new ComparatorTestInstance<T>(sortedTestData);
+        ComparatorTestInstance<T> testBase = new ComparatorTestInstance<>(sortedTestData);
         testBase.testAll();
     }
 
@@ -109,7 +110,7 @@ public abstract class AbstractGenericTypeComparatorTest {
     // test instance
     // ------------------------------------------------------------------------
 
-    @Ignore("Prevents this class from being considered a test class by JUnit.")
+    @Disabled("Prevents this class from being considered a test class by JUnit.")
     private class ComparatorTestInstance<T> extends ComparatorTestBase<T> {
 
         private final T[] testData;
@@ -248,10 +249,8 @@ public abstract class AbstractGenericTypeComparatorTest {
         public ComplexNestedObject1(double value, String... listElements) {
             this.doubleValue = value;
 
-            this.stringList = new ArrayList<String>();
-            for (String str : listElements) {
-                this.stringList.add(str);
-            }
+            this.stringList = new ArrayList<>();
+            Collections.addAll(this.stringList, listElements);
         }
 
         @Override

@@ -383,8 +383,7 @@ public class GenericCsvInputFormatTest {
             format.setFieldDelimiter("|");
             format.setFieldsGeneric(
                     new int[] {0, 3, 7},
-                    (Class<? extends Value>[])
-                            new Class[] {IntValue.class, IntValue.class, IntValue.class});
+                    new Class[] {IntValue.class, IntValue.class, IntValue.class});
             format.configure(parameters);
             format.open(split);
 
@@ -428,8 +427,7 @@ public class GenericCsvInputFormatTest {
             format.setFieldDelimiter("|-|");
             format.setFieldsGeneric(
                     new int[] {0, 3, 7},
-                    (Class<? extends Value>[])
-                            new Class[] {IntValue.class, IntValue.class, IntValue.class});
+                    new Class[] {IntValue.class, IntValue.class, IntValue.class});
             format.configure(parameters);
             format.open(split);
 

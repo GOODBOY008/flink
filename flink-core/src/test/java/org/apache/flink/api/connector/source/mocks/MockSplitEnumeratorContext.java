@@ -202,7 +202,7 @@ public class MockSplitEnumeratorContext<SplitT extends SourceSplit>
     @Override
     public void setIsProcessingBacklog(boolean isProcessingBacklog) {}
 
-    public void close() throws Exception {
+    public void close() {
         stoppedAcceptAsyncCalls.set(true);
         workerExecutor.shutdownNow();
         mainExecutor.shutdownNow();

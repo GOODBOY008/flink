@@ -344,7 +344,7 @@ public class FileInputFormatTest {
             format.configure(new Configuration());
 
             FileBaseStatistics newStats = format.getStatistics(stats);
-            Assertions.assertTrue(newStats == stats, "Statistics object was changed");
+            Assertions.assertSame(newStats, stats, "Statistics object was changed");
 
             // insert fake stats with the correct modification time. the call should return the fake
             // stats
@@ -421,7 +421,7 @@ public class FileInputFormatTest {
             format.configure(new Configuration());
 
             FileBaseStatistics newStats = format.getStatistics(stats);
-            Assertions.assertTrue(newStats == stats, "Statistics object was changed");
+            Assertions.assertSame(newStats, stats, "Statistics object was changed");
 
             // insert fake stats with the correct modification time. the call should return the fake
             // stats
@@ -555,7 +555,7 @@ public class FileInputFormatTest {
         format.configure(new Configuration());
 
         FileBaseStatistics newStats = format.getStatistics(stats);
-        Assertions.assertTrue(newStats == stats, "Statistics object was changed");
+        Assertions.assertSame(newStats, stats, "Statistics object was changed");
 
         // insert fake stats with the correct modification time. the call should return the fake
         // stats

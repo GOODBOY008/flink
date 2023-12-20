@@ -26,8 +26,6 @@ import org.apache.flink.types.Value;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /** Test for {@link ListTypeInfo}. */
@@ -53,10 +51,10 @@ class ValueTypeInfoTest extends TypeInformationTestBase<ValueTypeInfo<?>> {
         private static final long serialVersionUID = -492760806806568285L;
 
         @Override
-        public void write(DataOutputView out) throws IOException {}
+        public void write(DataOutputView out) {}
 
         @Override
-        public void read(DataInputView in) throws IOException {}
+        public void read(DataInputView in) {}
     }
 
     public static class AlternativeClass implements Value {
@@ -64,9 +62,9 @@ class ValueTypeInfoTest extends TypeInformationTestBase<ValueTypeInfo<?>> {
         private static final long serialVersionUID = -163437084575260172L;
 
         @Override
-        public void write(DataOutputView out) throws IOException {}
+        public void write(DataOutputView out) {}
 
         @Override
-        public void read(DataInputView in) throws IOException {}
+        public void read(DataInputView in) {}
     }
 }
