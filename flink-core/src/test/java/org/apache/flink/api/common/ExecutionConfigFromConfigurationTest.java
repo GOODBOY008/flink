@@ -20,7 +20,7 @@ package org.apache.flink.api.common;
 
 import org.apache.flink.configuration.Configuration;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -30,6 +30,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -141,7 +142,7 @@ public class ExecutionConfigFromConfigurationTest {
     @Parameterized.Parameter public TestSpec spec;
 
     @Test
-    public void testLoadingFromConfiguration() {
+    void testLoadingFromConfiguration() {
         ExecutionConfig configFromSetters = new ExecutionConfig();
         ExecutionConfig configFromFile = new ExecutionConfig();
 
@@ -154,7 +155,7 @@ public class ExecutionConfigFromConfigurationTest {
     }
 
     @Test
-    public void testNotOverridingIfNotSet() {
+    void testNotOverridingIfNotSet() {
         ExecutionConfig executionConfig = new ExecutionConfig();
 
         spec.setNonDefaultValue(executionConfig);
