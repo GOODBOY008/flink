@@ -27,13 +27,15 @@ import org.apache.flink.testutils.ClassLoaderUtils;
 import org.apache.flink.util.TestLogger;
 
 import org.junit.ClassRule;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EnumSerializerCompatibilityTest extends TestLogger {
 
@@ -49,27 +51,25 @@ public class EnumSerializerCompatibilityTest extends TestLogger {
     /** Check that identical enums don't require migration */
     @Test
     void checkIndenticalEnums() throws Exception {
-        Assertions.assertTrue(checkCompatibility(ENUM_A, ENUM_A).isCompatibleAsIs());
+        assertThat(checkCompatibility(ENUM_A, ENUM_A).isCompatibleAsIs()).isTrue();
     }
 
     /** Check that appending fields to the enum does not require migration */
     @Test
     void checkAppendedField() throws Exception {
-        Assertions.assertTrue(
-                checkCompatibility(ENUM_A, ENUM_B).isCompatibleWithReconfiguredSerializer());
+        assertTrue(checkCompatibility(ENUM_A, ENUM_B).isCompatibleWithReconfiguredSerializer());
     }
 
     /** Check that removing enum fields makes the snapshot incompatible */
     @Test(expected = IllegalStateException.class)
     void removingFieldShouldBeIncompatible() throws Exception {
-        Assertions.assertTrue(checkCompatibility(ENUM_A, ENUM_C).isIncompatible());
+        assertThat(checkCompatibility(ENUM_A, ENUM_C).isIncompatible()).isTrue();
     }
 
     /** Check that changing the enum field order don't require migration */
     @Test
     void checkDifferentFieldOrder() throws Exception {
-        Assertions.assertTrue(
-                checkCompatibility(ENUM_A, ENUM_D).isCompatibleWithReconfiguredSerializer());
+        assertTrue(checkCompatibility(ENUM_A, ENUM_D).isCompatibleWithReconfiguredSerializer());
     }
 
     @SuppressWarnings("unchecked")

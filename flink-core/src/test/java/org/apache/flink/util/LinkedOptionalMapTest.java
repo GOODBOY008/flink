@@ -21,8 +21,12 @@ package org.apache.flink.util;
 import org.apache.flink.util.LinkedOptionalMap.MergeResult;
 
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.LinkedHashMap;
 
@@ -169,7 +173,7 @@ class LinkedOptionalMapTest {
 
         right.put("c", Boolean.class, "bbb");
 
-        Assertions.assertTrue(LinkedOptionalMap.isLeftPrefixOfRight(left, right));
+   assertThat(LinkedOptionalMap.isLeftPrefixOfRight(left, right)).isTrue();
     }
 
     @Test
@@ -184,7 +188,7 @@ class LinkedOptionalMapTest {
         right.put("b", Boolean.class, "bbb");
         right.put("c", Boolean.class, "bbb");
 
-        Assertions.assertFalse(LinkedOptionalMap.isLeftPrefixOfRight(left, right));
+   assertThat(LinkedOptionalMap.isLeftPrefixOfRight(left, right)).isFalse();
     }
 
     @Test

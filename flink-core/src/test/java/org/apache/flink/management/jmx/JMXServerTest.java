@@ -19,9 +19,13 @@
 package org.apache.flink.management.jmx;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.BeforeEach;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
@@ -56,7 +60,7 @@ public class JMXServerTest {
 
         try {
             Optional<JMXServer> server = JMXService.getInstance();
-            Assertions.assertTrue(server.isPresent());
+       assertThat(server.isPresent()).isTrue();
             mBeanServer.registerMBean(testObject, testObjectName);
 
             JMXServiceURL url =
@@ -69,13 +73,13 @@ public class JMXServerTest {
             JMXConnector jmxConn = JMXConnectorFactory.connect(url);
             MBeanServerConnection mbeanConnConn = jmxConn.getMBeanServerConnection();
 
-            Assertions.assertEquals(1, mbeanConnConn.getAttribute(testObjectName, "Foo"));
+       assertThat(mbeanConnConn.getAttribute(testObjectName).isCloseTo(1, within("Foo")));
             mBeanServer.unregisterMBean(testObjectName);
             try {
                 mbeanConnConn.getAttribute(testObjectName, "Foo");
             } catch (Exception e) {
                 // expected for unregistered objects.
-              Assertions.assertInstanceOf(InstanceNotFoundException.class, e);
+         assertInstanceOf(InstanceNotFoundException.class, e);
             }
         } finally {
             JMXService.stopInstance();

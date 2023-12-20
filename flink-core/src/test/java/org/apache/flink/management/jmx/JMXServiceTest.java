@@ -18,8 +18,12 @@
 
 package org.apache.flink.management.jmx;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.ServerSocket;
 
@@ -31,7 +35,7 @@ public class JMXServiceTest {
     void testJMXServiceInit() throws Exception {
         try {
             JMXService.startInstance("23456-23466");
-            Assertions.assertTrue(JMXService.getPort().isPresent());
+       assertThat(JMXService.getPort().isPresent()).isTrue();
         } finally {
             JMXService.stopInstance();
         }
@@ -42,7 +46,7 @@ public class JMXServiceTest {
     void testJMXServiceInitWithOccupiedPort() throws Exception {
         try (ServerSocket socket = new ServerSocket(0)) {
             JMXService.startInstance(String.valueOf(socket.getLocalPort()));
-            Assertions.assertFalse(JMXService.getInstance().isPresent());
+       assertThat(JMXService.getInstance().isPresent()).isFalse();
         }
     }
 }

@@ -22,7 +22,11 @@ import org.apache.flink.configuration.IllegalConfigurationException;
 
 import org.assertj.core.api.Assertions;
 import org.hamcrest.MatcherAssert;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -216,7 +220,7 @@ public class NetUtilsTest extends TestLogger {
                     ports.add(portsIter.next()), "Duplicate element");
         }
 
-        org.junit.jupiter.api.Assertions.assertEquals(51 + 101 + 1, ports.size());
+        org.junit.jupiter.api.Assertions.assertThat(ports.size()).isEqualTo(51 + 101 + 1);
         // check first range
         MatcherAssert.assertThat(ports, hasItems(50000, 50001, 50002, 50050));
         // check second range and last point
@@ -226,19 +230,19 @@ public class NetUtilsTest extends TestLogger {
 
         // test single port "range":
         portsIter = NetUtils.getPortRangeFromString(" 51234");
-        org.junit.jupiter.api.Assertions.assertTrue(portsIter.hasNext());
-        org.junit.jupiter.api.Assertions.assertEquals(51234, (int) portsIter.next());
-        org.junit.jupiter.api.Assertions.assertFalse(portsIter.hasNext());
+        org.junit.jupiter.api.Assertions.assertThat(portsIter.hasNext()).isTrue();
+        org.junit.jupiter.api.Assertions.assertThat((int) portsIter.next()).isEqualTo(51234);
+        org.junit.jupiter.api.Assertions.assertThat(portsIter.hasNext()).isFalse();
 
         // test port list
         portsIter = NetUtils.getPortRangeFromString("5,1,2,3,4");
-        org.junit.jupiter.api.Assertions.assertTrue(portsIter.hasNext());
-        org.junit.jupiter.api.Assertions.assertEquals(5, (int) portsIter.next());
-        org.junit.jupiter.api.Assertions.assertEquals(1, (int) portsIter.next());
-        org.junit.jupiter.api.Assertions.assertEquals(2, (int) portsIter.next());
-        org.junit.jupiter.api.Assertions.assertEquals(3, (int) portsIter.next());
-        org.junit.jupiter.api.Assertions.assertEquals(4, (int) portsIter.next());
-        org.junit.jupiter.api.Assertions.assertFalse(portsIter.hasNext());
+        org.junit.jupiter.api.Assertions.assertThat(portsIter.hasNext()).isTrue();
+        org.junit.jupiter.api.Assertions.assertThat((int) portsIter.next()).isEqualTo(5);
+        org.junit.jupiter.api.Assertions.assertThat((int) portsIter.next()).isEqualTo(1);
+        org.junit.jupiter.api.Assertions.assertThat((int) portsIter.next()).isEqualTo(2);
+        org.junit.jupiter.api.Assertions.assertThat((int) portsIter.next()).isEqualTo(3);
+        org.junit.jupiter.api.Assertions.assertThat((int) portsIter.next()).isEqualTo(4);
+        org.junit.jupiter.api.Assertions.assertThat(portsIter.hasNext()).isFalse();
 
         Throwable error = null;
 
@@ -402,7 +406,7 @@ public class NetUtilsTest extends TestLogger {
         InetSocketAddress socketAddress = new InetSocketAddress("foo.com", 8080);
         URL expectedResult = new URL("http://foo.com:8080");
 
-        Assertions.assertThat(socketToUrl(socketAddress)).isEqualTo(expectedResult);
+   assertThat(socketToUrl(socketAddress)).isEqualTo(expectedResult);
     }
 
     @Test
@@ -410,7 +414,7 @@ public class NetUtilsTest extends TestLogger {
         InetSocketAddress socketAddress = new InetSocketAddress("[2001:1db8::ff00:42:8329]", 8080);
         URL expectedResult = new URL("http://[2001:1db8::ff00:42:8329]:8080");
 
-        Assertions.assertThat(socketToUrl(socketAddress)).isEqualTo(expectedResult);
+   assertThat(socketToUrl(socketAddress)).isEqualTo(expectedResult);
     }
 
     @Test
@@ -418,6 +422,6 @@ public class NetUtilsTest extends TestLogger {
         InetSocketAddress socketAddress = new InetSocketAddress("192.168.0.1", 8080);
         URL expectedResult = new URL("http://192.168.0.1:8080");
 
-        Assertions.assertThat(socketToUrl(socketAddress)).isEqualTo(expectedResult);
+   assertThat(socketToUrl(socketAddress)).isEqualTo(expectedResult);
     }
 }

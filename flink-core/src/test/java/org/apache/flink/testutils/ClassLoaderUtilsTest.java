@@ -18,8 +18,12 @@
 
 package org.apache.flink.testutils;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.function.Supplier;
 
@@ -55,12 +59,12 @@ public class ClassLoaderUtilsTest {
         final ClassLoaderUtils.ObjectAndClassLoader<X> objectAndClassLoader = supplier.get();
         final Object o = objectAndClassLoader.getObject();
 
-        Assertions.assertNotEquals(
+   assertNotEquals(
                 ClassLoader.getSystemClassLoader(), o.getClass().getClassLoader());
 
         try {
             Class.forName(o.getClass().getName());
-            Assertions.fail("should not be able to load class from the system class loader");
+       fail("should not be able to load class from the system class loader");
         } catch (ClassNotFoundException ignored) {
         }
     }
@@ -69,9 +73,9 @@ public class ClassLoaderUtilsTest {
             Supplier<ClassLoaderUtils.ObjectAndClassLoader<X>> supplier) {
         final ClassLoaderUtils.ObjectAndClassLoader<X> objectAndClassLoader = supplier.get();
 
-        Assertions.assertNotEquals(
+   assertNotEquals(
                 ClassLoader.getSystemClassLoader(), objectAndClassLoader.getClassLoader());
-        Assertions.assertEquals(
+   assertEquals(
                 ClassLoader.getSystemClassLoader(),
                 objectAndClassLoader.getClassLoader().getParent());
     }

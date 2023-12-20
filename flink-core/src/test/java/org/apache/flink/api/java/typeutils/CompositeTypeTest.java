@@ -23,8 +23,9 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.tuple.Tuple4;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class CompositeTypeTest {
 
@@ -74,115 +75,114 @@ public class CompositeTypeTest {
 
     @Test
     void testGetFlatFields() {
-        Assertions.assertEquals(0, tupleTypeInfo.getFlatFields("0").get(0).getPosition());
-        Assertions.assertEquals(1, tupleTypeInfo.getFlatFields("1").get(0).getPosition());
-        Assertions.assertEquals(2, tupleTypeInfo.getFlatFields("2").get(0).getPosition());
-        Assertions.assertEquals(3, tupleTypeInfo.getFlatFields("3").get(0).getPosition());
-        Assertions.assertEquals(0, tupleTypeInfo.getFlatFields("f0").get(0).getPosition());
-        Assertions.assertEquals(1, tupleTypeInfo.getFlatFields("f1").get(0).getPosition());
-        Assertions.assertEquals(2, tupleTypeInfo.getFlatFields("f2").get(0).getPosition());
-        Assertions.assertEquals(3, tupleTypeInfo.getFlatFields("f3").get(0).getPosition());
+        assertThat(tupleTypeInfo.getFlatFields("0").get(0).getPosition()).isEqualTo(0);
+        assertThat(tupleTypeInfo.getFlatFields("1").get(0).getPosition()).isEqualTo(1);
+        assertThat(tupleTypeInfo.getFlatFields("2").get(0).getPosition()).isEqualTo(2);
+        assertThat(tupleTypeInfo.getFlatFields("3").get(0).getPosition()).isEqualTo(3);
+        assertThat(tupleTypeInfo.getFlatFields("f0").get(0).getPosition()).isEqualTo(0);
+        assertThat(tupleTypeInfo.getFlatFields("f1").get(0).getPosition()).isEqualTo(1);
+        assertThat(tupleTypeInfo.getFlatFields("f2").get(0).getPosition()).isEqualTo(2);
+        assertThat(tupleTypeInfo.getFlatFields("f3").get(0).getPosition()).isEqualTo(3);
 
-        Assertions.assertEquals(0, nestedTypeInfo.getFlatFields("0").get(0).getPosition());
-        Assertions.assertEquals(1, nestedTypeInfo.getFlatFields("1.0").get(0).getPosition());
-        Assertions.assertEquals(2, nestedTypeInfo.getFlatFields("1.1").get(0).getPosition());
-        Assertions.assertEquals(3, nestedTypeInfo.getFlatFields("1.2").get(0).getPosition());
-        Assertions.assertEquals(4, nestedTypeInfo.getFlatFields("2").get(0).getPosition());
-        Assertions.assertEquals(5, nestedTypeInfo.getFlatFields("3.0").get(0).getPosition());
-        Assertions.assertEquals(6, nestedTypeInfo.getFlatFields("3.1").get(0).getPosition());
-        Assertions.assertEquals(4, nestedTypeInfo.getFlatFields("f2").get(0).getPosition());
-        Assertions.assertEquals(5, nestedTypeInfo.getFlatFields("f3.f0").get(0).getPosition());
-        Assertions.assertEquals(3, nestedTypeInfo.getFlatFields("1").size());
-        Assertions.assertEquals(1, nestedTypeInfo.getFlatFields("1").get(0).getPosition());
-        Assertions.assertEquals(2, nestedTypeInfo.getFlatFields("1").get(1).getPosition());
-        Assertions.assertEquals(3, nestedTypeInfo.getFlatFields("1").get(2).getPosition());
-        Assertions.assertEquals(3, nestedTypeInfo.getFlatFields("1.*").size());
-        Assertions.assertEquals(1, nestedTypeInfo.getFlatFields("1.*").get(0).getPosition());
-        Assertions.assertEquals(2, nestedTypeInfo.getFlatFields("1.*").get(1).getPosition());
-        Assertions.assertEquals(3, nestedTypeInfo.getFlatFields("1.*").get(2).getPosition());
-        Assertions.assertEquals(2, nestedTypeInfo.getFlatFields("3").size());
-        Assertions.assertEquals(5, nestedTypeInfo.getFlatFields("3").get(0).getPosition());
-        Assertions.assertEquals(6, nestedTypeInfo.getFlatFields("3").get(1).getPosition());
-        Assertions.assertEquals(3, nestedTypeInfo.getFlatFields("f1").size());
-        Assertions.assertEquals(1, nestedTypeInfo.getFlatFields("f1").get(0).getPosition());
-        Assertions.assertEquals(2, nestedTypeInfo.getFlatFields("f1").get(1).getPosition());
-        Assertions.assertEquals(3, nestedTypeInfo.getFlatFields("f1").get(2).getPosition());
-        Assertions.assertEquals(2, nestedTypeInfo.getFlatFields("f3").size());
-        Assertions.assertEquals(5, nestedTypeInfo.getFlatFields("f3").get(0).getPosition());
-        Assertions.assertEquals(6, nestedTypeInfo.getFlatFields("f3").get(1).getPosition());
-        Assertions.assertEquals(
+        assertThat(nestedTypeInfo.getFlatFields("0").get(0).getPosition()).isEqualTo(0);
+        assertThat(nestedTypeInfo.getFlatFields("1.0").get(0).getPosition()).isEqualTo(1);
+        assertThat(nestedTypeInfo.getFlatFields("1.1").get(0).getPosition()).isEqualTo(2);
+        assertThat(nestedTypeInfo.getFlatFields("1.2").get(0).getPosition()).isEqualTo(3);
+        assertThat(nestedTypeInfo.getFlatFields("2").get(0).getPosition()).isEqualTo(4);
+        assertThat(nestedTypeInfo.getFlatFields("3.0").get(0).getPosition()).isEqualTo(5);
+        assertThat(nestedTypeInfo.getFlatFields("3.1").get(0).getPosition()).isEqualTo(6);
+        assertThat(nestedTypeInfo.getFlatFields("f2").get(0).getPosition()).isEqualTo(4);
+        assertThat(nestedTypeInfo.getFlatFields("f3.f0").get(0).getPosition()).isEqualTo(5);
+        assertThat(nestedTypeInfo.getFlatFields("1")).hasSize(3);
+        assertThat(nestedTypeInfo.getFlatFields("1").get(0).getPosition()).isEqualTo(1);
+        assertThat(nestedTypeInfo.getFlatFields("1").get(1).getPosition()).isEqualTo(2);
+        assertThat(nestedTypeInfo.getFlatFields("1").get(2).getPosition()).isEqualTo(3);
+        assertThat(nestedTypeInfo.getFlatFields("1.*")).hasSize(3);
+        assertThat(nestedTypeInfo.getFlatFields("1.*").get(0).getPosition()).isEqualTo(1);
+        assertThat(nestedTypeInfo.getFlatFields("1.*").get(1).getPosition()).isEqualTo(2);
+        assertThat(nestedTypeInfo.getFlatFields("1.*").get(2).getPosition()).isEqualTo(3);
+        assertThat(nestedTypeInfo.getFlatFields("3")).hasSize(2);
+        assertThat(nestedTypeInfo.getFlatFields("3").get(0).getPosition()).isEqualTo(5);
+        assertThat(nestedTypeInfo.getFlatFields("3").get(1).getPosition()).isEqualTo(6);
+        assertThat(nestedTypeInfo.getFlatFields("f1")).hasSize(3);
+        assertThat(nestedTypeInfo.getFlatFields("f1").get(0).getPosition()).isEqualTo(1);
+        assertThat(nestedTypeInfo.getFlatFields("f1").get(1).getPosition()).isEqualTo(2);
+        assertThat(nestedTypeInfo.getFlatFields("f1").get(2).getPosition()).isEqualTo(3);
+        assertThat(nestedTypeInfo.getFlatFields("f3")).hasSize(2);
+        assertThat(nestedTypeInfo.getFlatFields("f3").get(0).getPosition()).isEqualTo(5);
+        assertThat(nestedTypeInfo.getFlatFields("f3").get(1).getPosition()).isEqualTo(6);
+        assertEquals(
                 BasicTypeInfo.INT_TYPE_INFO, nestedTypeInfo.getFlatFields("0").get(0).getType());
-        Assertions.assertEquals(
+        assertEquals(
                 BasicTypeInfo.STRING_TYPE_INFO,
                 nestedTypeInfo.getFlatFields("1.1").get(0).getType());
-        Assertions.assertEquals(
+        assertEquals(
                 BasicTypeInfo.LONG_TYPE_INFO, nestedTypeInfo.getFlatFields("1").get(2).getType());
-        Assertions.assertEquals(
+        assertEquals(
                 BasicTypeInfo.DOUBLE_TYPE_INFO, nestedTypeInfo.getFlatFields("3").get(1).getType());
 
-        Assertions.assertEquals(3, deepNestedTupleTypeInfo.getFlatFields("1").size());
-        Assertions.assertEquals(1, deepNestedTupleTypeInfo.getFlatFields("1").get(0).getPosition());
-        Assertions.assertEquals(2, deepNestedTupleTypeInfo.getFlatFields("1").get(1).getPosition());
-        Assertions.assertEquals(3, deepNestedTupleTypeInfo.getFlatFields("1").get(2).getPosition());
-        Assertions.assertEquals(5, deepNestedTupleTypeInfo.getFlatFields("*").size());
-        Assertions.assertEquals(0, deepNestedTupleTypeInfo.getFlatFields("*").get(0).getPosition());
-        Assertions.assertEquals(1, deepNestedTupleTypeInfo.getFlatFields("*").get(1).getPosition());
-        Assertions.assertEquals(2, deepNestedTupleTypeInfo.getFlatFields("*").get(2).getPosition());
-        Assertions.assertEquals(3, deepNestedTupleTypeInfo.getFlatFields("*").get(3).getPosition());
-        Assertions.assertEquals(4, deepNestedTupleTypeInfo.getFlatFields("*").get(4).getPosition());
+        assertThat(deepNestedTupleTypeInfo.getFlatFields("1")).hasSize(3);
+        assertThat(deepNestedTupleTypeInfo.getFlatFields("1").get(0).getPosition()).isEqualTo(1);
+        assertThat(deepNestedTupleTypeInfo.getFlatFields("1").get(1).getPosition()).isEqualTo(2);
+        assertThat(deepNestedTupleTypeInfo.getFlatFields("1").get(2).getPosition()).isEqualTo(3);
+        assertThat(deepNestedTupleTypeInfo.getFlatFields("*")).hasSize(5);
+        assertThat(deepNestedTupleTypeInfo.getFlatFields("*").get(0).getPosition()).isEqualTo(0);
+        assertThat(deepNestedTupleTypeInfo.getFlatFields("*").get(1).getPosition()).isEqualTo(1);
+        assertThat(deepNestedTupleTypeInfo.getFlatFields("*").get(2).getPosition()).isEqualTo(2);
+        assertThat(deepNestedTupleTypeInfo.getFlatFields("*").get(3).getPosition()).isEqualTo(3);
+        assertThat(deepNestedTupleTypeInfo.getFlatFields("*").get(4).getPosition()).isEqualTo(4);
 
-        Assertions.assertEquals(0, pojoTypeInfo.getFlatFields("a").get(0).getPosition());
-        Assertions.assertEquals(1, pojoTypeInfo.getFlatFields("b").get(0).getPosition());
-        Assertions.assertEquals(2, pojoTypeInfo.getFlatFields("*").size());
-        Assertions.assertEquals(0, pojoTypeInfo.getFlatFields("*").get(0).getPosition());
-        Assertions.assertEquals(1, pojoTypeInfo.getFlatFields("*").get(1).getPosition());
+        assertThat(pojoTypeInfo.getFlatFields("a").get(0).getPosition()).isEqualTo(0);
+        assertThat(pojoTypeInfo.getFlatFields("b").get(0).getPosition()).isEqualTo(1);
+        assertThat(pojoTypeInfo.getFlatFields("*")).hasSize(2);
+        assertThat(pojoTypeInfo.getFlatFields("*").get(0).getPosition()).isEqualTo(0);
+        assertThat(pojoTypeInfo.getFlatFields("*").get(1).getPosition()).isEqualTo(1);
 
-        Assertions.assertEquals(1, pojoInTupleTypeInfo.getFlatFields("f1.a").get(0).getPosition());
-        Assertions.assertEquals(2, pojoInTupleTypeInfo.getFlatFields("1.b").get(0).getPosition());
-        Assertions.assertEquals(2, pojoInTupleTypeInfo.getFlatFields("1").size());
-        Assertions.assertEquals(1, pojoInTupleTypeInfo.getFlatFields("1.*").get(0).getPosition());
-        Assertions.assertEquals(2, pojoInTupleTypeInfo.getFlatFields("1").get(1).getPosition());
-        Assertions.assertEquals(2, pojoInTupleTypeInfo.getFlatFields("f1.*").size());
-        Assertions.assertEquals(1, pojoInTupleTypeInfo.getFlatFields("f1.*").get(0).getPosition());
-        Assertions.assertEquals(2, pojoInTupleTypeInfo.getFlatFields("f1").get(1).getPosition());
-        Assertions.assertEquals(3, pojoInTupleTypeInfo.getFlatFields("*").size());
-        Assertions.assertEquals(0, pojoInTupleTypeInfo.getFlatFields("*").get(0).getPosition());
-        Assertions.assertEquals(1, pojoInTupleTypeInfo.getFlatFields("*").get(1).getPosition());
-        Assertions.assertEquals(2, pojoInTupleTypeInfo.getFlatFields("*").get(2).getPosition());
+        assertThat(pojoInTupleTypeInfo.getFlatFields("f1.a").get(0).getPosition()).isEqualTo(1);
+        assertThat(pojoInTupleTypeInfo.getFlatFields("1.b").get(0).getPosition()).isEqualTo(2);
+        assertThat(pojoInTupleTypeInfo.getFlatFields("1")).hasSize(2);
+        assertThat(pojoInTupleTypeInfo.getFlatFields("1.*").get(0).getPosition()).isEqualTo(1);
+        assertThat(pojoInTupleTypeInfo.getFlatFields("1").get(1).getPosition()).isEqualTo(2);
+        assertThat(pojoInTupleTypeInfo.getFlatFields("f1.*")).hasSize(2);
+        assertThat(pojoInTupleTypeInfo.getFlatFields("f1.*").get(0).getPosition()).isEqualTo(1);
+        assertThat(pojoInTupleTypeInfo.getFlatFields("f1").get(1).getPosition()).isEqualTo(2);
+        assertThat(pojoInTupleTypeInfo.getFlatFields("*")).hasSize(3);
+        assertThat(pojoInTupleTypeInfo.getFlatFields("*").get(0).getPosition()).isEqualTo(0);
+        assertThat(pojoInTupleTypeInfo.getFlatFields("*").get(1).getPosition()).isEqualTo(1);
+        assertThat(pojoInTupleTypeInfo.getFlatFields("*").get(2).getPosition()).isEqualTo(2);
     }
 
     @Test
     void testFieldAtStringRef() {
 
-        Assertions.assertEquals(BasicTypeInfo.INT_TYPE_INFO, tupleTypeInfo.getTypeAt("0"));
-        Assertions.assertEquals(BasicTypeInfo.INT_TYPE_INFO, tupleTypeInfo.getTypeAt("2"));
-        Assertions.assertEquals(BasicTypeInfo.INT_TYPE_INFO, tupleTypeInfo.getTypeAt("f1"));
-        Assertions.assertEquals(BasicTypeInfo.INT_TYPE_INFO, tupleTypeInfo.getTypeAt("f3"));
+        assertThat(tupleTypeInfo.getTypeAt("0")).isEqualTo(BasicTypeInfo.INT_TYPE_INFO);
+        assertThat(tupleTypeInfo.getTypeAt("2")).isEqualTo(BasicTypeInfo.INT_TYPE_INFO);
+        assertThat(tupleTypeInfo.getTypeAt("f1")).isEqualTo(BasicTypeInfo.INT_TYPE_INFO);
+        assertThat(tupleTypeInfo.getTypeAt("f3")).isEqualTo(BasicTypeInfo.INT_TYPE_INFO);
 
-        Assertions.assertEquals(BasicTypeInfo.INT_TYPE_INFO, nestedTypeInfo.getTypeAt("0"));
-        Assertions.assertEquals(BasicTypeInfo.INT_TYPE_INFO, nestedTypeInfo.getTypeAt("1.0"));
-        Assertions.assertEquals(BasicTypeInfo.STRING_TYPE_INFO, nestedTypeInfo.getTypeAt("1.1"));
-        Assertions.assertEquals(BasicTypeInfo.LONG_TYPE_INFO, nestedTypeInfo.getTypeAt("1.2"));
-        Assertions.assertEquals(BasicTypeInfo.INT_TYPE_INFO, nestedTypeInfo.getTypeAt("2"));
-        Assertions.assertEquals(BasicTypeInfo.DOUBLE_TYPE_INFO, nestedTypeInfo.getTypeAt("3.0"));
-        Assertions.assertEquals(BasicTypeInfo.DOUBLE_TYPE_INFO, nestedTypeInfo.getTypeAt("3.1"));
-        Assertions.assertEquals(BasicTypeInfo.INT_TYPE_INFO, nestedTypeInfo.getTypeAt("f2"));
-        Assertions.assertEquals(BasicTypeInfo.DOUBLE_TYPE_INFO, nestedTypeInfo.getTypeAt("f3.f0"));
-        Assertions.assertEquals(inNestedTuple1, nestedTypeInfo.getTypeAt("1"));
-        Assertions.assertEquals(inNestedTuple2, nestedTypeInfo.getTypeAt("3"));
-        Assertions.assertEquals(inNestedTuple1, nestedTypeInfo.getTypeAt("f1"));
-        Assertions.assertEquals(inNestedTuple2, nestedTypeInfo.getTypeAt("f3"));
+        assertThat(nestedTypeInfo.getTypeAt("0")).isEqualTo(BasicTypeInfo.INT_TYPE_INFO);
+        assertThat(nestedTypeInfo.getTypeAt("1.0")).isEqualTo(BasicTypeInfo.INT_TYPE_INFO);
+        assertThat(nestedTypeInfo.getTypeAt("1.1")).isEqualTo(BasicTypeInfo.STRING_TYPE_INFO);
+        assertThat(nestedTypeInfo.getTypeAt("1.2")).isEqualTo(BasicTypeInfo.LONG_TYPE_INFO);
+        assertThat(nestedTypeInfo.getTypeAt("2")).isEqualTo(BasicTypeInfo.INT_TYPE_INFO);
+        assertThat(nestedTypeInfo.getTypeAt("3.0")).isEqualTo(BasicTypeInfo.DOUBLE_TYPE_INFO);
+        assertThat(nestedTypeInfo.getTypeAt("3.1")).isEqualTo(BasicTypeInfo.DOUBLE_TYPE_INFO);
+        assertThat(nestedTypeInfo.getTypeAt("f2")).isEqualTo(BasicTypeInfo.INT_TYPE_INFO);
+        assertThat(nestedTypeInfo.getTypeAt("f3.f0")).isEqualTo(BasicTypeInfo.DOUBLE_TYPE_INFO);
+        assertThat(nestedTypeInfo.getTypeAt("1")).isEqualTo(inNestedTuple1);
+        assertThat(nestedTypeInfo.getTypeAt("3")).isEqualTo(inNestedTuple2);
+        assertThat(nestedTypeInfo.getTypeAt("f1")).isEqualTo(inNestedTuple1);
+        assertThat(nestedTypeInfo.getTypeAt("f3")).isEqualTo(inNestedTuple2);
 
-        Assertions.assertEquals(inNestedTuple3, deepNestedTupleTypeInfo.getTypeAt("1"));
+        assertThat(deepNestedTupleTypeInfo.getTypeAt("1")).isEqualTo(inNestedTuple3);
 
-        Assertions.assertEquals(BasicTypeInfo.STRING_TYPE_INFO, pojoTypeInfo.getTypeAt("a"));
-        Assertions.assertEquals(BasicTypeInfo.INT_TYPE_INFO, pojoTypeInfo.getTypeAt("b"));
+        assertThat(pojoTypeInfo.getTypeAt("a")).isEqualTo(BasicTypeInfo.STRING_TYPE_INFO);
+        assertThat(pojoTypeInfo.getTypeAt("b")).isEqualTo(BasicTypeInfo.INT_TYPE_INFO);
 
-        Assertions.assertEquals(
-                BasicTypeInfo.STRING_TYPE_INFO, pojoInTupleTypeInfo.getTypeAt("f1.a"));
-        Assertions.assertEquals(BasicTypeInfo.INT_TYPE_INFO, pojoInTupleTypeInfo.getTypeAt("1.b"));
-        Assertions.assertEquals(pojoTypeInfo, pojoInTupleTypeInfo.getTypeAt("1"));
-        Assertions.assertEquals(pojoTypeInfo, pojoInTupleTypeInfo.getTypeAt("f1"));
+        assertEquals(BasicTypeInfo.STRING_TYPE_INFO, pojoInTupleTypeInfo.getTypeAt("f1.a"));
+        assertThat(pojoInTupleTypeInfo.getTypeAt("1.b")).isEqualTo(BasicTypeInfo.INT_TYPE_INFO);
+        assertThat(pojoInTupleTypeInfo.getTypeAt("1")).isEqualTo(pojoTypeInfo);
+        assertThat(pojoInTupleTypeInfo.getTypeAt("f1")).isEqualTo(pojoTypeInfo);
     }
 
     public static class MyPojo {

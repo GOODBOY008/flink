@@ -28,8 +28,12 @@ import org.apache.flink.api.common.typeutils.base.StringSerializer;
 import org.apache.flink.testutils.migration.SchemaCompatibilityTestingSerializer;
 import org.apache.flink.testutils.migration.SchemaCompatibilityTestingSerializer.SchemaCompatibilityTestingSnapshot;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -116,17 +120,17 @@ public class PojoSerializerSnapshotTest {
                 buildTestSnapshot(Arrays.asList(ID_FIELD, NAME_FIELD, HEIGHT_FIELD));
 
         final TypeSerializer<TestPojo> restoredSerializer = testSnapshot.restoreSerializer();
-        Assertions.assertSame(restoredSerializer.getClass(), PojoSerializer.class);
+   assertThat(PojoSerializer.class).isSameAs(restoredSerializer.getClass());
         final PojoSerializer<TestPojo> restoredPojoSerializer =
                 (PojoSerializer<TestPojo>) restoredSerializer;
 
         final Field[] restoredFields = restoredPojoSerializer.getFields();
-        Assertions.assertArrayEquals(
+   assertArrayEquals(
                 new Field[] {ID_FIELD.field, NAME_FIELD.field, HEIGHT_FIELD.field}, restoredFields);
 
         final TypeSerializer<?>[] restoredFieldSerializers =
                 restoredPojoSerializer.getFieldSerializers();
-        Assertions.assertArrayEquals(
+   assertArrayEquals(
                 new TypeSerializer[] {
                     IntSerializer.INSTANCE, StringSerializer.INSTANCE, DoubleSerializer.INSTANCE
                 },
@@ -143,16 +147,16 @@ public class PojoSerializerSnapshotTest {
                                 mockRemovedField(HEIGHT_FIELD)));
 
         final TypeSerializer<TestPojo> restoredSerializer = testSnapshot.restoreSerializer();
-        Assertions.assertSame(restoredSerializer.getClass(), PojoSerializer.class);
+   assertThat(PojoSerializer.class).isSameAs(restoredSerializer.getClass());
         final PojoSerializer<TestPojo> restoredPojoSerializer =
                 (PojoSerializer<TestPojo>) restoredSerializer;
 
         final Field[] restoredFields = restoredPojoSerializer.getFields();
-        Assertions.assertArrayEquals(new Field[] {null, NAME_FIELD.field, null}, restoredFields);
+   assertArrayEquals(new Field[] {null, NAME_FIELD.field, null}, restoredFields);
 
         final TypeSerializer<?>[] restoredFieldSerializers =
                 restoredPojoSerializer.getFieldSerializers();
-        Assertions.assertArrayEquals(
+   assertArrayEquals(
                 new TypeSerializer[] {
                     IntSerializer.INSTANCE, StringSerializer.INSTANCE, DoubleSerializer.INSTANCE
                 },
@@ -165,16 +169,16 @@ public class PojoSerializerSnapshotTest {
                 buildTestSnapshot(Collections.singletonList(HEIGHT_FIELD));
 
         final TypeSerializer<TestPojo> restoredSerializer = testSnapshot.restoreSerializer();
-        Assertions.assertSame(restoredSerializer.getClass(), PojoSerializer.class);
+   assertThat(PojoSerializer.class).isSameAs(restoredSerializer.getClass());
         final PojoSerializer<TestPojo> restoredPojoSerializer =
                 (PojoSerializer<TestPojo>) restoredSerializer;
 
         final Field[] restoredFields = restoredPojoSerializer.getFields();
-        Assertions.assertArrayEquals(new Field[] {HEIGHT_FIELD.field}, restoredFields);
+   assertThat(restoredFields).isEqualTo(new Field[] {HEIGHT_FIELD.field});
 
         final TypeSerializer<?>[] restoredFieldSerializers =
                 restoredPojoSerializer.getFieldSerializers();
-        Assertions.assertArrayEquals(
+   assertArrayEquals(
                 new TypeSerializer[] {DoubleSerializer.INSTANCE}, restoredFieldSerializers);
     }
 
@@ -193,7 +197,7 @@ public class PojoSerializerSnapshotTest {
         final TypeSerializerSchemaCompatibility<TestPojo> resultCompatibility =
                 testSnapshot.resolveSchemaCompatibility(newPojoSerializer);
 
-        Assertions.assertTrue(resultCompatibility.isCompatibleAsIs());
+   assertThat(resultCompatibility.isCompatibleAsIs()).isTrue();
     }
 
     @Test
@@ -211,7 +215,7 @@ public class PojoSerializerSnapshotTest {
         final TypeSerializerSchemaCompatibility<TestPojo> resultCompatibility =
                 testSnapshot.resolveSchemaCompatibility(newPojoSerializer);
 
-        Assertions.assertTrue(resultCompatibility.isCompatibleAfterMigration());
+   assertThat(resultCompatibility.isCompatibleAfterMigration()).isTrue();
     }
 
     @Test
@@ -225,7 +229,7 @@ public class PojoSerializerSnapshotTest {
         final TypeSerializerSchemaCompatibility<TestPojo> resultCompatibility =
                 testSnapshot.resolveSchemaCompatibility(newPojoSerializer);
 
-        Assertions.assertTrue(resultCompatibility.isCompatibleAfterMigration());
+   assertThat(resultCompatibility.isCompatibleAfterMigration()).isTrue();
     }
 
     @Test
@@ -239,7 +243,7 @@ public class PojoSerializerSnapshotTest {
         final TypeSerializerSchemaCompatibility<TestPojo> resultCompatibility =
                 testSnapshot.resolveSchemaCompatibility(newPojoSerializer);
 
-        Assertions.assertTrue(resultCompatibility.isCompatibleAfterMigration());
+   assertThat(resultCompatibility.isCompatibleAfterMigration()).isTrue();
     }
 
     @Test
@@ -265,7 +269,7 @@ public class PojoSerializerSnapshotTest {
         final TypeSerializerSchemaCompatibility<TestPojo> resultCompatibility =
                 testSnapshot.resolveSchemaCompatibility(newPojoSerializer);
 
-        Assertions.assertTrue(resultCompatibility.isIncompatible());
+   assertThat(resultCompatibility.isIncompatible()).isTrue();
     }
 
     @Test
@@ -291,7 +295,7 @@ public class PojoSerializerSnapshotTest {
         final TypeSerializerSchemaCompatibility<TestPojo> resultCompatibility =
                 testSnapshot.resolveSchemaCompatibility(newPojoSerializer);
 
-        Assertions.assertTrue(resultCompatibility.isCompatibleAfterMigration());
+   assertThat(resultCompatibility.isCompatibleAfterMigration()).isTrue();
     }
 
     @Test
@@ -317,17 +321,17 @@ public class PojoSerializerSnapshotTest {
         final TypeSerializerSchemaCompatibility<TestPojo> resultCompatibility =
                 testSnapshot.resolveSchemaCompatibility(newPojoSerializer);
 
-        Assertions.assertTrue(resultCompatibility.isCompatibleWithReconfiguredSerializer());
+   assertThat(resultCompatibility.isCompatibleWithReconfiguredSerializer()).isTrue();
 
         final TypeSerializer<TestPojo> reconfiguredSerializer =
                 resultCompatibility.getReconfiguredSerializer();
-        Assertions.assertSame(reconfiguredSerializer.getClass(), PojoSerializer.class);
+   assertThat(PojoSerializer.class).isSameAs(reconfiguredSerializer.getClass());
         final PojoSerializer<TestPojo> reconfiguredPojoSerializer =
                 (PojoSerializer<TestPojo>) reconfiguredSerializer;
 
         final TypeSerializer<?>[] reconfiguredFieldSerializers =
                 reconfiguredPojoSerializer.getFieldSerializers();
-        Assertions.assertArrayEquals(
+   assertArrayEquals(
                 new TypeSerializer[] {
                     new SchemaCompatibilityTestingSerializer(),
                     StringSerializer.INSTANCE,

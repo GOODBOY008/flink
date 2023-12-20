@@ -21,10 +21,13 @@ package org.apache.flink.api.common.operators;
 import org.apache.flink.api.common.operators.SemanticProperties.InvalidSemanticAnnotationException;
 import org.apache.flink.api.common.operators.util.FieldSet;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class SingleInputSemanticPropertiesTest {
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class SingleInputSemanticPropertiesTest {
 
     @Test
     void testGetTargetFields() {
@@ -35,16 +38,16 @@ public class SingleInputSemanticPropertiesTest {
         sp.addForwardedField(2, 3);
         sp.addForwardedField(3, 2);
 
-        Assertions.assertEquals(1, sp.getForwardingTargetFields(0, 0).size());
-        Assertions.assertEquals(1, sp.getForwardingTargetFields(0, 1).size());
-        Assertions.assertEquals(1, sp.getForwardingTargetFields(0, 2).size());
-        Assertions.assertEquals(1, sp.getForwardingTargetFields(0, 3).size());
-        Assertions.assertTrue(sp.getForwardingTargetFields(0, 0).contains(1));
-        Assertions.assertTrue(sp.getForwardingTargetFields(0, 1).contains(4));
-        Assertions.assertTrue(sp.getForwardingTargetFields(0, 2).contains(3));
-        Assertions.assertTrue(sp.getForwardingTargetFields(0, 3).contains(2));
-        Assertions.assertNotNull(sp.getForwardingTargetFields(0, 4));
-        Assertions.assertEquals(0, sp.getForwardingTargetFields(0, 4).size());
+        assertThat(sp.getForwardingTargetFields(0, 0)).hasSize(1);
+        assertThat(sp.getForwardingTargetFields(0, 1)).hasSize(1);
+        assertThat(sp.getForwardingTargetFields(0, 2)).hasSize(1);
+        assertThat(sp.getForwardingTargetFields(0, 3)).hasSize(1);
+        assertThat(sp.getForwardingTargetFields(0, 0).contains(1)).isTrue();
+        assertThat(sp.getForwardingTargetFields(0, 1).contains(4)).isTrue();
+        assertThat(sp.getForwardingTargetFields(0, 2).contains(3)).isTrue();
+        assertThat(sp.getForwardingTargetFields(0, 3).contains(2)).isTrue();
+        assertThat(sp.getForwardingTargetFields(0, 4)).isNotNull();
+        assertThat(sp.getForwardingTargetFields(0, 4)).isEmpty();
 
         sp = new SingleInputSemanticProperties();
         sp.addForwardedField(0, 0);
@@ -53,15 +56,15 @@ public class SingleInputSemanticPropertiesTest {
         sp.addForwardedField(1, 2);
         sp.addForwardedField(1, 3);
 
-        Assertions.assertEquals(2, sp.getForwardingTargetFields(0, 0).size());
-        Assertions.assertEquals(3, sp.getForwardingTargetFields(0, 1).size());
-        Assertions.assertTrue(sp.getForwardingTargetFields(0, 0).contains(0));
-        Assertions.assertTrue(sp.getForwardingTargetFields(0, 0).contains(4));
-        Assertions.assertTrue(sp.getForwardingTargetFields(0, 1).contains(1));
-        Assertions.assertTrue(sp.getForwardingTargetFields(0, 1).contains(2));
-        Assertions.assertTrue(sp.getForwardingTargetFields(0, 1).contains(3));
-        Assertions.assertNotNull(sp.getForwardingTargetFields(0, 2));
-        Assertions.assertEquals(0, sp.getForwardingTargetFields(0, 2).size());
+        assertThat(sp.getForwardingTargetFields(0, 0)).hasSize(2);
+        assertThat(sp.getForwardingTargetFields(0, 1)).hasSize(3);
+        assertThat(sp.getForwardingTargetFields(0, 0).contains(0)).isTrue();
+        assertThat(sp.getForwardingTargetFields(0, 0).contains(4)).isTrue();
+        assertThat(sp.getForwardingTargetFields(0, 1).contains(1)).isTrue();
+        assertThat(sp.getForwardingTargetFields(0, 1).contains(2)).isTrue();
+        assertThat(sp.getForwardingTargetFields(0, 1).contains(3)).isTrue();
+        assertThat(sp.getForwardingTargetFields(0, 2)).isNotNull();
+        assertThat(sp.getForwardingTargetFields(0, 2)).isEmpty();
     }
 
     @Test
@@ -73,12 +76,12 @@ public class SingleInputSemanticPropertiesTest {
         sp.addForwardedField(2, 3);
         sp.addForwardedField(3, 2);
 
-        Assertions.assertEquals(0, sp.getForwardingSourceField(0, 1));
-        Assertions.assertEquals(1, sp.getForwardingSourceField(0, 4));
-        Assertions.assertEquals(2, sp.getForwardingSourceField(0, 3));
-        Assertions.assertEquals(3, sp.getForwardingSourceField(0, 2));
-        Assertions.assertTrue(sp.getForwardingSourceField(0, 0) < 0);
-        Assertions.assertTrue(sp.getForwardingSourceField(0, 5) < 0);
+        assertThat(sp.getForwardingSourceField(0).isCloseTo(0, within(1)));
+        assertThat(sp.getForwardingSourceField(0).isCloseTo(1, within(4)));
+        assertThat(sp.getForwardingSourceField(0).isCloseTo(2, within(3)));
+        assertThat(sp.getForwardingSourceField(0).isCloseTo(3, within(2)));
+        assertTrue(sp.getForwardingSourceField(0, 0) < 0);
+        assertTrue(sp.getForwardingSourceField(0, 5) < 0);
 
         sp = new SingleInputSemanticProperties();
         sp.addForwardedField(0, 0);
@@ -87,12 +90,12 @@ public class SingleInputSemanticPropertiesTest {
         sp.addForwardedField(1, 2);
         sp.addForwardedField(1, 3);
 
-        Assertions.assertEquals(0, sp.getForwardingSourceField(0, 0));
-        Assertions.assertEquals(0, sp.getForwardingSourceField(0, 4));
-        Assertions.assertEquals(1, sp.getForwardingSourceField(0, 1));
-        Assertions.assertEquals(1, sp.getForwardingSourceField(0, 2));
-        Assertions.assertEquals(1, sp.getForwardingSourceField(0, 3));
-        Assertions.assertTrue(sp.getForwardingSourceField(0, 5) < 0);
+        assertThat(sp.getForwardingSourceField(0).isCloseTo(0, within(0)));
+        assertThat(sp.getForwardingSourceField(0).isCloseTo(0, within(4)));
+        assertThat(sp.getForwardingSourceField(0).isCloseTo(1, within(1)));
+        assertThat(sp.getForwardingSourceField(0).isCloseTo(1, within(2)));
+        assertThat(sp.getForwardingSourceField(0).isCloseTo(1, within(3)));
+        assertTrue(sp.getForwardingSourceField(0, 5) < 0);
     }
 
     @Test
@@ -101,16 +104,16 @@ public class SingleInputSemanticPropertiesTest {
         SingleInputSemanticProperties sp = new SingleInputSemanticProperties();
         sp.addReadFields(new FieldSet(0, 1));
 
-        Assertions.assertEquals(2, sp.getReadFields(0).size());
-        Assertions.assertTrue(sp.getReadFields(0).contains(0));
-        Assertions.assertTrue(sp.getReadFields(0).contains(1));
+        assertThat(sp.getReadFields(0)).hasSize(2);
+        assertThat(sp.getReadFields(0).contains(0)).isTrue();
+        assertThat(sp.getReadFields(0).contains(1)).isTrue();
 
         sp.addReadFields(new FieldSet(3));
 
-        Assertions.assertEquals(3, sp.getReadFields(0).size());
-        Assertions.assertTrue(sp.getReadFields(0).contains(0));
-        Assertions.assertTrue(sp.getReadFields(0).contains(1));
-        Assertions.assertTrue(sp.getReadFields(0).contains(3));
+        assertThat(sp.getReadFields(0)).hasSize(3);
+        assertThat(sp.getReadFields(0).contains(0)).isTrue();
+        assertThat(sp.getReadFields(0).contains(1)).isTrue();
+        assertThat(sp.getReadFields(0).contains(3)).isTrue();
     }
 
     @Test(expected = InvalidSemanticAnnotationException.class)
@@ -154,16 +157,16 @@ public class SingleInputSemanticPropertiesTest {
         SingleInputSemanticProperties sp =
                 new SingleInputSemanticProperties.AllFieldsForwardedProperties();
 
-        Assertions.assertEquals(1, sp.getForwardingTargetFields(0, 0).size());
-        Assertions.assertEquals(1, sp.getForwardingTargetFields(0, 1).size());
-        Assertions.assertEquals(1, sp.getForwardingTargetFields(0, 123).size());
-        Assertions.assertTrue(sp.getForwardingTargetFields(0, 0).contains(0));
-        Assertions.assertTrue(sp.getForwardingTargetFields(0, 1).contains(1));
-        Assertions.assertTrue(sp.getForwardingTargetFields(0, 123).contains(123));
+        assertThat(sp.getForwardingTargetFields(0, 0)).hasSize(1);
+        assertThat(sp.getForwardingTargetFields(0, 1)).hasSize(1);
+        assertThat(sp.getForwardingTargetFields(0, 123)).hasSize(1);
+        assertThat(sp.getForwardingTargetFields(0, 0).contains(0)).isTrue();
+        assertThat(sp.getForwardingTargetFields(0, 1).contains(1)).isTrue();
+        assertThat(sp.getForwardingTargetFields(0, 123).contains(123)).isTrue();
 
-        Assertions.assertEquals(0, sp.getForwardingSourceField(0, 0));
-        Assertions.assertEquals(2, sp.getForwardingSourceField(0, 2));
-        Assertions.assertEquals(123, sp.getForwardingSourceField(0, 123));
+        assertThat(sp.getForwardingSourceField(0).isCloseTo(0, within(0)));
+        assertThat(sp.getForwardingSourceField(0).isCloseTo(2, within(2)));
+        assertThat(sp.getForwardingSourceField(0).isCloseTo(123, within(123)));
     }
 
     @Test(expected = IndexOutOfBoundsException.class)

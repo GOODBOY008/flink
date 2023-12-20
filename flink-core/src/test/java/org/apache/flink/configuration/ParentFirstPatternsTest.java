@@ -20,8 +20,12 @@ package org.apache.flink.configuration;
 
 import org.apache.flink.util.TestLogger;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 
@@ -37,9 +41,9 @@ public class ParentFirstPatternsTest extends TestLogger {
     /** All java and Flink classes must be loaded parent first. */
     @Test
     void testAllCorePatterns() {
-        Assertions.assertTrue(PARENT_FIRST_PACKAGES.contains("java."));
-        Assertions.assertTrue(PARENT_FIRST_PACKAGES.contains("org.apache.flink."));
-        Assertions.assertTrue(PARENT_FIRST_PACKAGES.contains("javax.annotation."));
+   assertThat(PARENT_FIRST_PACKAGES.contains("java.")).isTrue();
+   assertThat(PARENT_FIRST_PACKAGES.contains("org.apache.flink.")).isTrue();
+   assertThat(PARENT_FIRST_PACKAGES.contains("javax.annotation.")).isTrue();
     }
 
     /**
@@ -48,11 +52,11 @@ public class ParentFirstPatternsTest extends TestLogger {
      */
     @Test
     void testLoggersParentFirst() {
-        Assertions.assertTrue(PARENT_FIRST_PACKAGES.contains("org.slf4j"));
-        Assertions.assertTrue(PARENT_FIRST_PACKAGES.contains("org.apache.log4j"));
-        Assertions.assertTrue(PARENT_FIRST_PACKAGES.contains("org.apache.logging"));
-        Assertions.assertTrue(PARENT_FIRST_PACKAGES.contains("org.apache.commons.logging"));
-        Assertions.assertTrue(PARENT_FIRST_PACKAGES.contains("ch.qos.logback"));
+   assertThat(PARENT_FIRST_PACKAGES.contains("org.slf4j")).isTrue();
+   assertThat(PARENT_FIRST_PACKAGES.contains("org.apache.log4j")).isTrue();
+   assertThat(PARENT_FIRST_PACKAGES.contains("org.apache.logging")).isTrue();
+   assertThat(PARENT_FIRST_PACKAGES.contains("org.apache.commons.logging")).isTrue();
+   assertThat(PARENT_FIRST_PACKAGES.contains("ch.qos.logback")).isTrue();
     }
 
     /**
@@ -61,7 +65,7 @@ public class ParentFirstPatternsTest extends TestLogger {
      */
     @Test
     void testScalaParentFirst() {
-        Assertions.assertTrue(PARENT_FIRST_PACKAGES.contains("scala."));
+   assertThat(PARENT_FIRST_PACKAGES.contains("scala.")).isTrue();
     }
 
     /**
@@ -70,6 +74,6 @@ public class ParentFirstPatternsTest extends TestLogger {
      */
     @Test
     void testHadoopParentFirst() {
-        Assertions.assertTrue(PARENT_FIRST_PACKAGES.contains("org.apache.hadoop."));
+   assertThat(PARENT_FIRST_PACKAGES.contains("org.apache.hadoop.")).isTrue();
     }
 }

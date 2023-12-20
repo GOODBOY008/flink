@@ -18,8 +18,12 @@
 
 package org.apache.flink.util;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -37,7 +41,7 @@ public class IOUtilsTest extends TestLogger {
         byte[] out = new byte[4];
         int read = IOUtils.tryReadFully(inputStream, out);
 
-        Assertions.assertArrayEquals(
+   assertArrayEquals(
                 "test".getBytes(StandardCharsets.UTF_8), Arrays.copyOfRange(out, 0, read));
     }
 
@@ -49,7 +53,7 @@ public class IOUtilsTest extends TestLogger {
         byte[] out = new byte[4];
         int read = IOUtils.tryReadFully(inputStream, out);
 
-        Assertions.assertArrayEquals(
+   assertArrayEquals(
                 "t".getBytes(StandardCharsets.UTF_8), Arrays.copyOfRange(out, 0, read));
     }
 }

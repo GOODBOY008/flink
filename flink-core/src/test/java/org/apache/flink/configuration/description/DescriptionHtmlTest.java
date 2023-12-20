@@ -18,8 +18,12 @@
 
 package org.apache.flink.configuration.description;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static org.apache.flink.configuration.description.LinkElement.link;
 import static org.apache.flink.configuration.description.TextElement.text;
@@ -35,7 +39,7 @@ public class DescriptionHtmlTest {
 
         String formattedDescription = new HtmlFormatter().format(description);
 
-        Assertions.assertEquals(
+   assertEquals(
                 "This is a text with a link <a href=\"https://somepage\">" + "to here</a>",
                 formattedDescription);
     }
@@ -49,7 +53,7 @@ public class DescriptionHtmlTest {
 
         String formattedDescription = new HtmlFormatter().format(description);
 
-        Assertions.assertEquals(
+   assertEquals(
                 "This is a text that has some percentage value of 20%.", formattedDescription);
     }
 
@@ -64,7 +68,7 @@ public class DescriptionHtmlTest {
 
         String formattedDescription = new HtmlFormatter().format(description);
 
-        Assertions.assertEquals(
+   assertEquals(
                 "This is a text with a link <a href=\"https://somepage\">to here</a> and another "
                         + "<a href=\"https://link\">https://link</a>",
                 formattedDescription);
@@ -84,7 +88,7 @@ public class DescriptionHtmlTest {
 
         String formattedDescription = new HtmlFormatter().format(description);
 
-        Assertions.assertEquals(
+   assertEquals(
                 "This is some list: <ul><li><a href=\"http://first_link\">http://first_link"
                         + "</a></li><li>this is second element of list "
                         + "with a <a href=\"https://link\">https://link</a></li></ul>",
@@ -102,7 +106,7 @@ public class DescriptionHtmlTest {
 
         String formattedDescription = new HtmlFormatter().format(description);
 
-        Assertions.assertEquals(
+   assertEquals(
                 "This is first line.<br />This is second line.", formattedDescription);
     }
 
@@ -116,7 +120,7 @@ public class DescriptionHtmlTest {
 
         String formattedDescription = new HtmlFormatter().format(description);
 
-        Assertions.assertEquals(
+   assertEquals(
                 "This is some list: <ul><li>this is first element with illegal character '&gt;' and '&lt;'</li></ul>",
                 formattedDescription);
     }

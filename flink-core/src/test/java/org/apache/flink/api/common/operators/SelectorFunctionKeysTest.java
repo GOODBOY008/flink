@@ -29,10 +29,12 @@ import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.typeutils.TupleTypeInfo;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class SelectorFunctionKeysTest {
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+
+class SelectorFunctionKeysTest {
 
     @Test
     void testAreCompatible1() throws Keys.IncompatibleKeysException {
@@ -47,8 +49,8 @@ public class SelectorFunctionKeysTest {
                 new Keys.SelectorFunctionKeys<>(
                         new KeySelector2(), t2, BasicTypeInfo.STRING_TYPE_INFO);
 
-        Assertions.assertTrue(k1.areCompatible(k2));
-        Assertions.assertTrue(k2.areCompatible(k1));
+        assertThat(k1.areCompatible(k2)).isTrue();
+        assertThat(k2.areCompatible(k1)).isTrue();
     }
 
     @Test
@@ -68,8 +70,8 @@ public class SelectorFunctionKeysTest {
         Keys<Tuple3<Long, Pojo1, Integer>> k2 =
                 new Keys.SelectorFunctionKeys<>(new KeySelector4(), t2, kt);
 
-        Assertions.assertTrue(k1.areCompatible(k2));
-        Assertions.assertTrue(k2.areCompatible(k1));
+        assertThat(k1.areCompatible(k2)).isTrue();
+        assertThat(k2.areCompatible(k1)).isTrue();
     }
 
     @Test
@@ -82,7 +84,7 @@ public class SelectorFunctionKeysTest {
                 new Keys.SelectorFunctionKeys<>(
                         new KeySelector1(), t2, BasicTypeInfo.STRING_TYPE_INFO);
 
-        Assertions.assertTrue(sk2.areCompatible(ek1));
+        assertThat(sk2.areCompatible(ek1)).isTrue();
     }
 
     @Test
@@ -104,7 +106,7 @@ public class SelectorFunctionKeysTest {
                         new TupleTypeInfo<>(
                                 BasicTypeInfo.INT_TYPE_INFO, BasicTypeInfo.STRING_TYPE_INFO));
 
-        Assertions.assertTrue(sk2.areCompatible(ek1));
+        assertThat(sk2.areCompatible(ek1)).isTrue();
     }
 
     @Test
@@ -116,7 +118,7 @@ public class SelectorFunctionKeysTest {
                 new Keys.SelectorFunctionKeys<>(
                         new KeySelector2(), t2, BasicTypeInfo.STRING_TYPE_INFO);
 
-        Assertions.assertArrayEquals(
+        assertArrayEquals(
                 new TypeInformation<?>[] {BasicTypeInfo.STRING_TYPE_INFO},
                 k.getOriginalKeyFieldTypes());
     }
@@ -131,10 +133,9 @@ public class SelectorFunctionKeysTest {
         Keys<PojoWithMultiplePojos> sk =
                 new Keys.SelectorFunctionKeys<>(new KeySelector3(), t2, t1);
 
-        Assertions.assertArrayEquals(new TypeInformation<?>[] {t1}, sk.getOriginalKeyFieldTypes());
+        assertThat(sk.getOriginalKeyFieldTypes()).isEqualTo(new TypeInformation<?>[] {t1});
     }
 
-    @SuppressWarnings("serial")
     public static class KeySelector1 implements KeySelector<Pojo2, String> {
 
         @Override
@@ -143,7 +144,6 @@ public class SelectorFunctionKeysTest {
         }
     }
 
-    @SuppressWarnings("serial")
     public static class KeySelector2 implements KeySelector<Tuple2<Integer, String>, String> {
 
         @Override
@@ -152,7 +152,6 @@ public class SelectorFunctionKeysTest {
         }
     }
 
-    @SuppressWarnings("serial")
     public static class KeySelector3
             implements KeySelector<PojoWithMultiplePojos, Tuple2<Integer, String>> {
 
@@ -162,7 +161,6 @@ public class SelectorFunctionKeysTest {
         }
     }
 
-    @SuppressWarnings("serial")
     public static class KeySelector4
             implements KeySelector<Tuple3<Long, Pojo1, Integer>, Tuple2<Integer, String>> {
 

@@ -21,8 +21,12 @@ package org.apache.flink.util;
 import org.apache.flink.api.common.time.Time;
 
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -36,87 +40,87 @@ public class TimeUtilsTest {
 
     @Test
     void testParseDurationNanos() {
-        Assertions.assertEquals(424562, TimeUtils.parseDuration("424562ns").getNano());
-        Assertions.assertEquals(424562, TimeUtils.parseDuration("424562nano").getNano());
-        Assertions.assertEquals(424562, TimeUtils.parseDuration("424562nanos").getNano());
-        Assertions.assertEquals(424562, TimeUtils.parseDuration("424562nanosecond").getNano());
-        Assertions.assertEquals(424562, TimeUtils.parseDuration("424562nanoseconds").getNano());
-        Assertions.assertEquals(424562, TimeUtils.parseDuration("424562 ns").getNano());
+   assertThat(TimeUtils.parseDuration("424562ns").getNano()).isEqualTo(424562);
+   assertThat(TimeUtils.parseDuration("424562nano").getNano()).isEqualTo(424562);
+   assertThat(TimeUtils.parseDuration("424562nanos").getNano()).isEqualTo(424562);
+   assertThat(TimeUtils.parseDuration("424562nanosecond").getNano()).isEqualTo(424562);
+   assertThat(TimeUtils.parseDuration("424562nanoseconds").getNano()).isEqualTo(424562);
+   assertThat(TimeUtils.parseDuration("424562 ns").getNano()).isEqualTo(424562);
     }
 
     @Test
     void testParseDurationMicros() {
-        Assertions.assertEquals(565731 * 1000L, TimeUtils.parseDuration("565731µs").getNano());
-        Assertions.assertEquals(565731 * 1000L, TimeUtils.parseDuration("565731micro").getNano());
-        Assertions.assertEquals(565731 * 1000L, TimeUtils.parseDuration("565731micros").getNano());
-        Assertions.assertEquals(
+   assertThat(TimeUtils.parseDuration("565731µs").getNano()).isEqualTo(565731 * 1000L);
+   assertThat(TimeUtils.parseDuration("565731micro").getNano()).isEqualTo(565731 * 1000L);
+   assertThat(TimeUtils.parseDuration("565731micros").getNano()).isEqualTo(565731 * 1000L);
+   assertEquals(
                 565731 * 1000L, TimeUtils.parseDuration("565731microsecond").getNano());
-        Assertions.assertEquals(
+   assertEquals(
                 565731 * 1000L, TimeUtils.parseDuration("565731microseconds").getNano());
-        Assertions.assertEquals(565731 * 1000L, TimeUtils.parseDuration("565731 µs").getNano());
+   assertThat(TimeUtils.parseDuration("565731 µs").getNano()).isEqualTo(565731 * 1000L);
     }
 
     @Test
     void testParseDurationMillis() {
-        Assertions.assertEquals(1234, TimeUtils.parseDuration("1234").toMillis());
-        Assertions.assertEquals(1234, TimeUtils.parseDuration("1234ms").toMillis());
-        Assertions.assertEquals(1234, TimeUtils.parseDuration("1234milli").toMillis());
-        Assertions.assertEquals(1234, TimeUtils.parseDuration("1234millis").toMillis());
-        Assertions.assertEquals(1234, TimeUtils.parseDuration("1234millisecond").toMillis());
-        Assertions.assertEquals(1234, TimeUtils.parseDuration("1234milliseconds").toMillis());
-        Assertions.assertEquals(1234, TimeUtils.parseDuration("1234 ms").toMillis());
+   assertThat(TimeUtils.parseDuration("1234").toMillis()).isEqualTo(1234);
+   assertThat(TimeUtils.parseDuration("1234ms").toMillis()).isEqualTo(1234);
+   assertThat(TimeUtils.parseDuration("1234milli").toMillis()).isEqualTo(1234);
+   assertThat(TimeUtils.parseDuration("1234millis").toMillis()).isEqualTo(1234);
+   assertThat(TimeUtils.parseDuration("1234millisecond").toMillis()).isEqualTo(1234);
+   assertThat(TimeUtils.parseDuration("1234milliseconds").toMillis()).isEqualTo(1234);
+   assertThat(TimeUtils.parseDuration("1234 ms").toMillis()).isEqualTo(1234);
     }
 
     @Test
     void testParseDurationSeconds() {
-        Assertions.assertEquals(667766, TimeUtils.parseDuration("667766s").getSeconds());
-        Assertions.assertEquals(667766, TimeUtils.parseDuration("667766sec").getSeconds());
-        Assertions.assertEquals(667766, TimeUtils.parseDuration("667766secs").getSeconds());
-        Assertions.assertEquals(667766, TimeUtils.parseDuration("667766second").getSeconds());
-        Assertions.assertEquals(667766, TimeUtils.parseDuration("667766seconds").getSeconds());
-        Assertions.assertEquals(667766, TimeUtils.parseDuration("667766 s").getSeconds());
+   assertThat(TimeUtils.parseDuration("667766s").getSeconds()).isEqualTo(667766);
+   assertThat(TimeUtils.parseDuration("667766sec").getSeconds()).isEqualTo(667766);
+   assertThat(TimeUtils.parseDuration("667766secs").getSeconds()).isEqualTo(667766);
+   assertThat(TimeUtils.parseDuration("667766second").getSeconds()).isEqualTo(667766);
+   assertThat(TimeUtils.parseDuration("667766seconds").getSeconds()).isEqualTo(667766);
+   assertThat(TimeUtils.parseDuration("667766 s").getSeconds()).isEqualTo(667766);
     }
 
     @Test
     void testParseDurationMinutes() {
-        Assertions.assertEquals(7657623, TimeUtils.parseDuration("7657623m").toMinutes());
-        Assertions.assertEquals(7657623, TimeUtils.parseDuration("7657623min").toMinutes());
-        Assertions.assertEquals(7657623, TimeUtils.parseDuration("7657623minute").toMinutes());
-        Assertions.assertEquals(7657623, TimeUtils.parseDuration("7657623minutes").toMinutes());
-        Assertions.assertEquals(7657623, TimeUtils.parseDuration("7657623 min").toMinutes());
+   assertThat(TimeUtils.parseDuration("7657623m").toMinutes()).isEqualTo(7657623);
+   assertThat(TimeUtils.parseDuration("7657623min").toMinutes()).isEqualTo(7657623);
+   assertThat(TimeUtils.parseDuration("7657623minute").toMinutes()).isEqualTo(7657623);
+   assertThat(TimeUtils.parseDuration("7657623minutes").toMinutes()).isEqualTo(7657623);
+   assertThat(TimeUtils.parseDuration("7657623 min").toMinutes()).isEqualTo(7657623);
     }
 
     @Test
     void testParseDurationHours() {
-        Assertions.assertEquals(987654, TimeUtils.parseDuration("987654h").toHours());
-        Assertions.assertEquals(987654, TimeUtils.parseDuration("987654hour").toHours());
-        Assertions.assertEquals(987654, TimeUtils.parseDuration("987654hours").toHours());
-        Assertions.assertEquals(987654, TimeUtils.parseDuration("987654 h").toHours());
+   assertThat(TimeUtils.parseDuration("987654h").toHours()).isEqualTo(987654);
+   assertThat(TimeUtils.parseDuration("987654hour").toHours()).isEqualTo(987654);
+   assertThat(TimeUtils.parseDuration("987654hours").toHours()).isEqualTo(987654);
+   assertThat(TimeUtils.parseDuration("987654 h").toHours()).isEqualTo(987654);
     }
 
     @Test
     void testParseDurationDays() {
-        Assertions.assertEquals(987654, TimeUtils.parseDuration("987654d").toDays());
-        Assertions.assertEquals(987654, TimeUtils.parseDuration("987654day").toDays());
-        Assertions.assertEquals(987654, TimeUtils.parseDuration("987654days").toDays());
-        Assertions.assertEquals(987654, TimeUtils.parseDuration("987654 d").toDays());
+   assertThat(TimeUtils.parseDuration("987654d").toDays()).isEqualTo(987654);
+   assertThat(TimeUtils.parseDuration("987654day").toDays()).isEqualTo(987654);
+   assertThat(TimeUtils.parseDuration("987654days").toDays()).isEqualTo(987654);
+   assertThat(TimeUtils.parseDuration("987654 d").toDays()).isEqualTo(987654);
     }
 
     @Test
     void testParseDurationUpperCase() {
-        Assertions.assertEquals(1L, TimeUtils.parseDuration("1 NS").toNanos());
-        Assertions.assertEquals(1000L, TimeUtils.parseDuration("1 MICRO").toNanos());
-        Assertions.assertEquals(1L, TimeUtils.parseDuration("1 MS").toMillis());
-        Assertions.assertEquals(1L, TimeUtils.parseDuration("1 S").getSeconds());
-        Assertions.assertEquals(1L, TimeUtils.parseDuration("1 MIN").toMinutes());
-        Assertions.assertEquals(1L, TimeUtils.parseDuration("1 H").toHours());
-        Assertions.assertEquals(1L, TimeUtils.parseDuration("1 D").toDays());
+   assertThat(TimeUtils.parseDuration("1 NS").toNanos()).isEqualTo(1L);
+   assertThat(TimeUtils.parseDuration("1 MICRO").toNanos()).isEqualTo(1000L);
+   assertThat(TimeUtils.parseDuration("1 MS").toMillis()).isEqualTo(1L);
+   assertThat(TimeUtils.parseDuration("1 S").getSeconds()).isEqualTo(1L);
+   assertThat(TimeUtils.parseDuration("1 MIN").toMinutes()).isEqualTo(1L);
+   assertThat(TimeUtils.parseDuration("1 H").toHours()).isEqualTo(1L);
+   assertThat(TimeUtils.parseDuration("1 D").toDays()).isEqualTo(1L);
     }
 
     @Test
     void testParseDurationTrim() {
-        Assertions.assertEquals(155L, TimeUtils.parseDuration("      155      ").toMillis());
-        Assertions.assertEquals(155L, TimeUtils.parseDuration("      155      ms   ").toMillis());
+   assertThat(TimeUtils.parseDuration("      155      ").toMillis()).isEqualTo(155L);
+   assertThat(TimeUtils.parseDuration("      155      ms   ").toMillis()).isEqualTo(155L);
     }
 
     @Test
@@ -124,49 +128,49 @@ public class TimeUtilsTest {
         // null
         try {
             TimeUtils.parseDuration(null);
-            Assertions.fail("exception expected");
+       fail("exception expected");
         } catch (NullPointerException ignored) {
         }
 
         // empty
         try {
             TimeUtils.parseDuration("");
-            Assertions.fail("exception expected");
+       fail("exception expected");
         } catch (IllegalArgumentException ignored) {
         }
 
         // blank
         try {
             TimeUtils.parseDuration("     ");
-            Assertions.fail("exception expected");
+       fail("exception expected");
         } catch (IllegalArgumentException ignored) {
         }
 
         // no number
         try {
             TimeUtils.parseDuration("foobar or fubar or foo bazz");
-            Assertions.fail("exception expected");
+       fail("exception expected");
         } catch (IllegalArgumentException ignored) {
         }
 
         // wrong unit
         try {
             TimeUtils.parseDuration("16 gjah");
-            Assertions.fail("exception expected");
+       fail("exception expected");
         } catch (IllegalArgumentException ignored) {
         }
 
         // multiple numbers
         try {
             TimeUtils.parseDuration("16 16 17 18 ms");
-            Assertions.fail("exception expected");
+       fail("exception expected");
         } catch (IllegalArgumentException ignored) {
         }
 
         // negative number
         try {
             TimeUtils.parseDuration("-100 ms");
-            Assertions.fail("exception expected");
+       fail("exception expected");
         } catch (IllegalArgumentException ignored) {
         }
     }
@@ -178,10 +182,10 @@ public class TimeUtilsTest {
 
     @Test
     void testGetStringInMillis() {
-        Assertions.assertEquals("4567ms", TimeUtils.getStringInMillis(Duration.ofMillis(4567L)));
-        Assertions.assertEquals(
+   assertThat(TimeUtils.getStringInMillis(Duration.ofMillis(4567L))).isEqualTo("4567ms");
+   assertEquals(
                 "4567000ms", TimeUtils.getStringInMillis(Duration.ofSeconds(4567L)));
-        Assertions.assertEquals(
+   assertEquals(
                 "4ms", TimeUtils.getStringInMillis(Duration.of(4567L, ChronoUnit.MICROS)));
     }
 

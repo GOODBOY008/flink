@@ -22,10 +22,12 @@ import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.typeutils.TupleTypeInfo;
 import org.apache.flink.util.FlinkRuntimeException;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /** Tests for the {@link TypeHint}. */
 class TypeHintTest {
@@ -37,11 +39,11 @@ class TypeHintTest {
         TypeHint<String> stringInfo1 = new TypeHint<String>() {};
         TypeHint<String> stringInfo2 = new TypeHint<String>() {};
 
-        Assertions.assertEquals(BasicTypeInfo.STRING_TYPE_INFO, stringInfo1.getTypeInfo());
+        assertThat(stringInfo1.getTypeInfo()).isEqualTo(BasicTypeInfo.STRING_TYPE_INFO);
 
-        Assertions.assertEquals(stringInfo1.hashCode(), stringInfo2.hashCode());
-        Assertions.assertEquals(stringInfo1, stringInfo2);
-        Assertions.assertEquals(stringInfo1.toString(), stringInfo2.toString());
+        assertThat(stringInfo2.hashCode()).isEqualTo(stringInfo1.hashCode());
+        assertThat(stringInfo2).isEqualTo(stringInfo1);
+        assertThat(stringInfo2.toString()).isEqualTo(stringInfo1.toString());
 
         // generic case
         TypeHint<Tuple3<String, Double, Boolean>> generic =
@@ -53,14 +55,14 @@ class TypeHintTest {
                         BasicTypeInfo.DOUBLE_TYPE_INFO,
                         BasicTypeInfo.BOOLEAN_TYPE_INFO);
 
-        Assertions.assertEquals(tupleInfo, generic.getTypeInfo());
+        assertThat(generic.getTypeInfo()).isEqualTo(tupleInfo);
     }
 
     @Test
     <T> void testWithGenericParameter() {
         try {
             new TypeHint<T>() {};
-            Assertions.fail();
+            fail();
         } catch (FlinkRuntimeException ignored) {
         }
 

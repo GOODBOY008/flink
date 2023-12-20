@@ -21,7 +21,7 @@ package org.apache.flink.core.io;
 import org.apache.flink.api.common.typeutils.SerializerTestBase;
 import org.apache.flink.api.common.typeutils.TypeSerializer;
 
-import org.junit.jupiter.api.Assertions;
+
 
 import java.nio.charset.StandardCharsets;
 
@@ -79,7 +79,7 @@ class SimpleVersionedSerializerTypeSerializerProxyTest extends SerializerTestBas
 
         @Override
         public String deserialize(int version, byte[] serialized) {
-            Assertions.assertEquals(VERSION, version);
+       assertThat(version).isEqualTo(VERSION);
             return new String(serialized, StandardCharsets.UTF_8);
         }
 

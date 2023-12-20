@@ -27,14 +27,17 @@ import org.apache.flink.types.IntValue;
 
 import org.junit.Rule;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 
-public class EnumerateNestedFilesTest {
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class EnumerateNestedFilesTest {
 
     @Rule public TemporaryFolder tempFolder = new TemporaryFolder();
 
@@ -66,10 +69,10 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             FileInputSplit[] splits = format.createInputSplits(1);
-            Assertions.assertEquals(1, splits.length);
+            assertThat(splits.length).isEqualTo(1);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assertions.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
 
@@ -93,10 +96,10 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             FileInputSplit[] splits = format.createInputSplits(1);
-            Assertions.assertEquals(3, splits.length);
+            assertThat(splits.length).isEqualTo(3);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assertions.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
 
@@ -120,10 +123,10 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             FileInputSplit[] splits = format.createInputSplits(1);
-            Assertions.assertEquals(1, splits.length);
+            assertThat(splits.length).isEqualTo(1);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assertions.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
 
@@ -152,10 +155,10 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             FileInputSplit[] splits = format.createInputSplits(1);
-            Assertions.assertEquals(4, splits.length);
+            assertThat(splits.length).isEqualTo(4);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assertions.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
 
@@ -184,10 +187,10 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             FileInputSplit[] splits = format.createInputSplits(1);
-            Assertions.assertEquals(4, splits.length);
+            assertThat(splits.length).isEqualTo(4);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assertions.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
 
@@ -231,10 +234,10 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             FileInputSplit[] splits = format.createInputSplits(1);
-            Assertions.assertEquals(4, splits.length);
+            assertThat(splits.length).isEqualTo(4);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assertions.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
 
@@ -256,11 +259,11 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             BaseStatistics stats = format.getStatistics(null);
-            Assertions.assertEquals(
+            assertEquals(
                     SIZE, stats.getTotalInputSize(), "The file size from the statistics is wrong.");
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assertions.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
 
@@ -292,7 +295,7 @@ public class EnumerateNestedFilesTest {
             format.configure(this.config);
 
             BaseStatistics stats = format.getStatistics(null);
-            Assertions.assertEquals(
+            assertEquals(
                     TOTAL,
                     stats.getTotalInputSize(),
                     "The file size from the statistics is wrong.");
@@ -302,15 +305,15 @@ public class EnumerateNestedFilesTest {
             TestFileUtils.createTempFileInDirectory(insideNestedDir.getAbsolutePath(), 42L);
 
             BaseStatistics stats2 = format.getStatistics(stats);
-            Assertions.assertNotEquals(stats2, stats);
-            Assertions.assertEquals(
+            assertThat(stats).isNotEqualTo(stats2);
+            assertEquals(
                     TOTAL + 42L,
                     stats2.getTotalInputSize(),
                     "The file size from the statistics is wrong.");
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assertions.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
 

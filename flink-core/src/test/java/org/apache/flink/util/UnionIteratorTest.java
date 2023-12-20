@@ -18,8 +18,12 @@
 
 package org.apache.flink.util;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,13 +39,13 @@ public class UnionIteratorTest {
             UnionIterator<Integer> iter = new UnionIterator<>();
 
             // should succeed and be empty
-            Assertions.assertFalse(iter.iterator().hasNext());
+       assertThat(iter.iterator().hasNext()).isFalse();
 
             iter.clear();
 
             try {
                 iter.iterator().next();
-                Assertions.fail("should fail with an exception");
+           fail("should fail with an exception");
             } catch (NoSuchElementException e) {
                 // expected
             }
@@ -53,11 +57,11 @@ public class UnionIteratorTest {
 
             int val = 1;
             for (int i : iter) {
-                Assertions.assertEquals(val++, i);
+           assertThat(i).isEqualTo(val++);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+       fail(e.getMessage());
         }
     }
 
@@ -72,7 +76,7 @@ public class UnionIteratorTest {
             // should fail
             try {
                 iter.iterator();
-                Assertions.fail("should fail with an exception");
+           fail("should fail with an exception");
             } catch (TraversableOnceException e) {
                 // expected
             }
@@ -80,7 +84,7 @@ public class UnionIteratorTest {
             // should fail again
             try {
                 iter.iterator();
-                Assertions.fail("should fail with an exception");
+           fail("should fail with an exception");
             } catch (TraversableOnceException e) {
                 // expected
             }
@@ -94,7 +98,7 @@ public class UnionIteratorTest {
             // should fail
             try {
                 iter.iterator();
-                Assertions.fail("should fail with an exception");
+           fail("should fail with an exception");
             } catch (TraversableOnceException e) {
                 // expected
             }
@@ -102,7 +106,7 @@ public class UnionIteratorTest {
             // should fail again
             try {
                 iter.iterator();
-                Assertions.fail("should fail with an exception");
+           fail("should fail with an exception");
             } catch (TraversableOnceException e) {
                 // expected
             }
@@ -113,14 +117,14 @@ public class UnionIteratorTest {
 
             // should succeed
             Iterator<Integer> ints = iter.iterator();
-            Assertions.assertNotNull(ints.next());
-            Assertions.assertNotNull(ints.next());
-            Assertions.assertNotNull(ints.next());
+       assertThat(ints.next()).isNotNull();
+       assertThat(ints.next()).isNotNull();
+       assertThat(ints.next()).isNotNull();
 
             // should fail if called in the middle of operations
             try {
                 iter.iterator();
-                Assertions.fail("should fail with an exception");
+           fail("should fail with an exception");
             } catch (TraversableOnceException e) {
                 // expected
             }
@@ -129,11 +133,11 @@ public class UnionIteratorTest {
             iter.clear();
 
             // should succeed again
-            Assertions.assertFalse(iter.iterator().hasNext());
+       assertThat(iter.iterator().hasNext()).isFalse();
 
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+       fail(e.getMessage());
         }
     }
 }

@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.is;
 
 /** Tests for {@link CPUResource}. */
-public class CPUResourceTest extends TestLogger {
+class CPUResourceTest extends TestLogger {
     @Test
     void toHumanReadableString() {
         MatcherAssert.assertThat(new CPUResource(0).toHumanReadableString(), is("0.00 cores"));

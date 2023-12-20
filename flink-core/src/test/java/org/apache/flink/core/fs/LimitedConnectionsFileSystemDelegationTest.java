@@ -21,8 +21,12 @@ package org.apache.flink.core.fs;
 import org.apache.flink.core.fs.FileSystem.WriteMode;
 
 import org.junit.Rule;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
@@ -156,7 +160,7 @@ public class LimitedConnectionsFileSystemDelegationTest {
             FileSystemKind kind =
                     rnd.nextBoolean() ? FileSystemKind.FILE_SYSTEM : FileSystemKind.OBJECT_STORE;
             when(fs.getKind()).thenReturn(kind);
-            Assertions.assertEquals(kind, lfs.getKind());
+       assertThat(lfs.getKind()).isEqualTo(kind);
             verify(fs).getKind();
         }
     }
@@ -186,7 +190,7 @@ public class LimitedConnectionsFileSystemDelegationTest {
             verify(mockOut).write(bytes, 100, 111);
         }
 
-        Assertions.assertEquals(outPos, out.getPos());
+   assertThat(out.getPos()).isEqualTo(outPos);
 
         out.flush();
         verify(mockOut).flush();
@@ -221,17 +225,17 @@ public class LimitedConnectionsFileSystemDelegationTest {
 
         // validate the input stream
 
-        Assertions.assertEquals(value, in.read());
-        Assertions.assertEquals(bytesRead, in.read(new byte[11], 2, 5));
+   assertThat(in.read()).isEqualTo(value);
+   assertThat(in.read(new byte[11], 2, 5)).isEqualTo(bytesRead);
 
-        Assertions.assertEquals(inPos, in.getPos());
+   assertThat(in.getPos()).isEqualTo(inPos);
 
         in.seek(17876);
         verify(mockIn).seek(17876);
 
-        Assertions.assertEquals(available, in.available());
+   assertThat(in.available()).isEqualTo(available);
 
-        Assertions.assertEquals(markSupported, in.markSupported());
+   assertThat(in.markSupported()).isEqualTo(markSupported);
 
         in.mark(9876);
         verify(mockIn).mark(9876);

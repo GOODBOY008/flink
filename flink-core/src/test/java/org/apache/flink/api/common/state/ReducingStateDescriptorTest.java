@@ -26,11 +26,12 @@ import org.apache.flink.api.java.typeutils.runtime.kryo.KryoSerializer;
 import org.apache.flink.core.testutils.CommonTestUtils;
 import org.apache.flink.util.TestLogger;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 /** Tests for the {@link ReducingStateDescriptor}. */
-public class ReducingStateDescriptorTest extends TestLogger {
+class ReducingStateDescriptorTest extends TestLogger {
 
     @Test
     void testReducingStateDescriptor() throws Exception {
@@ -43,16 +44,16 @@ public class ReducingStateDescriptorTest extends TestLogger {
         ReducingStateDescriptor<String> descr =
                 new ReducingStateDescriptor<>("testName", reducer, serializer);
 
-        Assertions.assertEquals("testName", descr.getName());
-        Assertions.assertNotNull(descr.getSerializer());
-        Assertions.assertEquals(serializer, descr.getSerializer());
-        Assertions.assertEquals(reducer, descr.getReduceFunction());
+        assertThat(descr.getName()).isEqualTo("testName");
+        assertThat(descr.getSerializer()).isNotNull();
+        assertThat(descr.getSerializer()).isEqualTo(serializer);
+        assertThat(descr.getReduceFunction()).isEqualTo(reducer);
 
         ReducingStateDescriptor<String> copy = CommonTestUtils.createCopySerializable(descr);
 
-        Assertions.assertEquals("testName", copy.getName());
-        Assertions.assertNotNull(copy.getSerializer());
-        Assertions.assertEquals(serializer, copy.getSerializer());
+        assertThat(copy.getName()).isEqualTo("testName");
+        assertThat(copy.getSerializer()).isNotNull();
+        assertThat(copy.getSerializer()).isEqualTo(serializer);
     }
 
     @Test
@@ -69,21 +70,21 @@ public class ReducingStateDescriptorTest extends TestLogger {
 
         // test that hashCode() works on state descriptors with initialized and uninitialized
         // serializers
-        Assertions.assertEquals(original.hashCode(), same.hashCode());
-        Assertions.assertEquals(original.hashCode(), sameBySerializer.hashCode());
+        assertThat(same.hashCode()).isEqualTo(original.hashCode());
+        assertThat(sameBySerializer.hashCode()).isEqualTo(original.hashCode());
 
-        Assertions.assertEquals(original, same);
-        Assertions.assertEquals(original, sameBySerializer);
+        assertThat(same).isEqualTo(original);
+        assertThat(sameBySerializer).isEqualTo(original);
 
         // equality with a clone
         ReducingStateDescriptor<String> clone = CommonTestUtils.createCopySerializable(original);
-        Assertions.assertEquals(original, clone);
+        assertThat(clone).isEqualTo(original);
 
         // equality with an initialized
         clone.initializeSerializerUnlessSet(new ExecutionConfig());
-        Assertions.assertEquals(original, clone);
+        assertThat(clone).isEqualTo(original);
 
         original.initializeSerializerUnlessSet(new ExecutionConfig());
-        Assertions.assertEquals(original, same);
+        assertThat(same).isEqualTo(original);
     }
 }

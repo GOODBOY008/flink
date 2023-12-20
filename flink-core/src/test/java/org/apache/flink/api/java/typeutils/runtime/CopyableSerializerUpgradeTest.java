@@ -29,7 +29,11 @@ import org.apache.flink.core.memory.DataOutputView;
 import org.apache.flink.types.CopyableValue;
 
 import org.hamcrest.Matcher;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;

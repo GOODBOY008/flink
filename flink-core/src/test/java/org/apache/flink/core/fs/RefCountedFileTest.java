@@ -19,8 +19,12 @@
 package org.apache.flink.core.fs;
 
 import org.junit.Rule;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
@@ -49,7 +53,7 @@ public class RefCountedFileTest {
         fileUnderTest.release();
 
         try (Stream<Path> files = Files.list(temporaryFolder.getRoot().toPath())) {
-            Assertions.assertEquals(0L, files.count());
+       assertThat(files.count()).isEqualTo(0L);
         }
     }
 
@@ -65,26 +69,26 @@ public class RefCountedFileTest {
         fileUnderTest.retain();
         fileUnderTest.retain();
 
-        Assertions.assertEquals(3, fileUnderTest.getReferenceCounter());
+   assertThat(fileUnderTest.getReferenceCounter()).isEqualTo(3);
 
         fileUnderTest.release();
-        Assertions.assertEquals(2, fileUnderTest.getReferenceCounter());
+   assertThat(fileUnderTest.getReferenceCounter()).isEqualTo(2);
         verifyTheFileIsStillThere();
 
         fileUnderTest.release();
-        Assertions.assertEquals(1, fileUnderTest.getReferenceCounter());
+   assertThat(fileUnderTest.getReferenceCounter()).isEqualTo(1);
         verifyTheFileIsStillThere();
 
         fileUnderTest.release();
         // the file is deleted now
         try (Stream<Path> files = Files.list(temporaryFolder.getRoot().toPath())) {
-            Assertions.assertEquals(0L, files.count());
+       assertThat(files.count()).isEqualTo(0L);
         }
     }
 
     private void verifyTheFileIsStillThere() throws IOException {
         try (Stream<Path> files = Files.list(temporaryFolder.getRoot().toPath())) {
-            Assertions.assertEquals(1L, files.count());
+       assertThat(files.count()).isEqualTo(1L);
         }
     }
 

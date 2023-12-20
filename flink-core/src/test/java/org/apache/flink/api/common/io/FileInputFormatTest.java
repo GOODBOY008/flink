@@ -31,7 +31,6 @@ import org.apache.flink.testutils.TestFileUtils;
 import org.apache.flink.types.IntValue;
 
 import org.junit.Rule;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.TemporaryFolder;
 
@@ -48,15 +47,22 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /** Tests for the FileInputFormat */
-public class FileInputFormatTest {
+class FileInputFormatTest {
 
     @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test
     void testGetPathWithoutSettingFirst() {
         final DummyFileInputFormat format = new DummyFileInputFormat();
-        Assertions.assertNull(format.getFilePath(), "Path should be null.");
+        assertThat(format.getFilePath()).as("Path should be null.").isNull();
     }
 
     @Test
@@ -64,54 +70,57 @@ public class FileInputFormatTest {
         final DummyFileInputFormat format = new DummyFileInputFormat();
 
         Path[] paths = format.getFilePaths();
-        Assertions.assertNotNull(paths, "Paths should not be null.");
-        Assertions.assertEquals(0, paths.length, "Paths size should be 0.");
+        assertThat(paths).as("Paths should not be null.").isNotNull();
+        assertThat(paths.length).isCloseTo(0, within("Paths size should be 0."));
     }
 
     @Test
     void testToStringWithoutPathSet() {
         final DummyFileInputFormat format = new DummyFileInputFormat();
-        Assertions.assertEquals(
+        assertEquals(
                 "File Input (unknown file)",
                 format.toString(),
                 "The toString() should be correct.");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     void testSetPathsNull() {
-        final MultiDummyFileInputFormat format = new MultiDummyFileInputFormat();
-        format.setFilePaths((String) null);
+        assertThatThrownBy(() -> new MultiDummyFileInputFormat().setFilePaths((String) null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     void testSetPathNullString() {
-        final DummyFileInputFormat format = new DummyFileInputFormat();
-        format.setFilePath((String) null);
+        assertThatThrownBy(() -> new DummyFileInputFormat().setFilePath((String) null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     void testSetPathNullPath() {
-        final DummyFileInputFormat format = new DummyFileInputFormat();
-        format.setFilePath((Path) null);
+        assertThatThrownBy(() -> new DummyFileInputFormat().setFilePath((Path) null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     void testSetPathsOnePathNull() {
-        final MultiDummyFileInputFormat format = new MultiDummyFileInputFormat();
-        format.setFilePaths("/an/imaginary/path", null);
+        assertThatThrownBy(
+                        () ->
+                                new MultiDummyFileInputFormat()
+                                        .setFilePaths("/an/imaginary/path", null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     void testSetPathsEmptyArray() {
-        final MultiDummyFileInputFormat format = new MultiDummyFileInputFormat();
-        format.setFilePaths(new String[0]);
+        assertThatThrownBy(() -> new MultiDummyFileInputFormat().setFilePaths(new String[0]))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testSetPath() {
         final DummyFileInputFormat format = new DummyFileInputFormat();
         format.setFilePath("/some/imaginary/path");
-        Assertions.assertEquals(format.getFilePath().toString(), "/some/imaginary/path");
+        assertThat("/some/imaginary/path").isEqualTo(format.getFilePath().toString());
     }
 
     @Test
@@ -121,11 +130,11 @@ public class FileInputFormatTest {
         format.setFilePath(myPath);
         final Path[] filePaths = format.getFilePaths();
 
-        Assertions.assertEquals(1, filePaths.length);
-        Assertions.assertEquals(myPath, filePaths[0].toUri().toString());
+        assertThat(filePaths.length).isEqualTo(1);
+        assertThat(filePaths[0].toUri().toString()).isEqualTo(myPath);
 
         // ensure backwards compatibility
-        Assertions.assertEquals(myPath, format.filePath.toUri().toString());
+        assertThat(format.filePath.toUri().toString()).isEqualTo(myPath);
     }
 
     @Test
@@ -135,11 +144,11 @@ public class FileInputFormatTest {
         format.setFilePaths(myPath);
         final Path[] filePaths = format.getFilePaths();
 
-        Assertions.assertEquals(1, filePaths.length);
-        Assertions.assertEquals(myPath, filePaths[0].toUri().toString());
+        assertThat(filePaths.length).isEqualTo(1);
+        assertThat(filePaths[0].toUri().toString()).isEqualTo(myPath);
 
         // ensure backwards compatibility
-        Assertions.assertEquals(myPath, format.filePath.toUri().toString());
+        assertThat(format.filePath.toUri().toString()).isEqualTo(myPath);
     }
 
     @Test
@@ -151,37 +160,40 @@ public class FileInputFormatTest {
         format.setFilePaths(myPath, myPath2);
         final Path[] filePaths = format.getFilePaths();
 
-        Assertions.assertEquals(2, filePaths.length);
-        Assertions.assertEquals(myPath, filePaths[0].toUri().toString());
-        Assertions.assertEquals(myPath2, filePaths[1].toUri().toString());
+        assertThat(filePaths.length).isEqualTo(2);
+        assertThat(filePaths[0].toUri().toString()).isEqualTo(myPath);
+        assertThat(filePaths[1].toUri().toString()).isEqualTo(myPath2);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     void testMultiPathSetOnSinglePathIF() {
         final DummyFileInputFormat format = new DummyFileInputFormat();
         final String myPath = "/an/imaginary/path";
         final String myPath2 = "/an/imaginary/path2";
 
-        format.setFilePaths(myPath, myPath2);
+        assertThatThrownBy(() -> format.setFilePaths(myPath, myPath2))
+                .isInstanceOf(UnsupportedOperationException.class);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     void testMultiPathSetOnSinglePathIF2() {
         final DummyFileInputFormat format = new DummyFileInputFormat();
         final String myPath = "/an/imaginary/path";
         final String myPath2 = "/an/imaginary/path2";
 
-        format.setFilePaths(new Path(myPath), new Path(myPath2));
+        // format.setFilePaths(new Path(myPath), new Path(myPath2));
+        assertThatThrownBy(() -> format.setFilePaths(new Path(myPath), new Path(myPath2)))
+                .isInstanceOf(UnsupportedOperationException.class);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     void testSinglePathGetOnMultiPathIF() {
         final MultiDummyFileInputFormat format = new MultiDummyFileInputFormat();
         final String myPath = "/an/imaginary/path";
         final String myPath2 = "/an/imaginary/path2";
 
         format.setFilePaths(myPath, myPath2);
-        format.getFilePath();
+        assertThatThrownBy(format::getFilePath).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
@@ -192,16 +204,17 @@ public class FileInputFormatTest {
         conf.setString("input.file.path", filePath);
         format.configure(conf);
 
-        Assertions.assertEquals(new Path(filePath), format.getFilePath(), "Paths should be equal.");
+        assertThat(format.getFilePath())
+                .isCloseTo(new Path(filePath), within("Paths should be equal."));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     void testSetFileViaConfigurationEmptyPath() {
         final DummyFileInputFormat format = new DummyFileInputFormat();
         final String filePath = null;
         Configuration conf = new Configuration();
         conf.setString("input.file.path", filePath);
-        format.configure(conf);
+        assertThatThrownBy(() -> format.configure(conf)).isInstanceOf(RuntimeException.class);
     }
 
     // ------------------------------------------------------------------------
@@ -217,9 +230,9 @@ public class FileInputFormatTest {
         fif.configure(new Configuration());
         FileInputSplit[] splits = fif.createInputSplits(2);
 
-        Assertions.assertEquals(2, splits.length);
-        Assertions.assertEquals(tempFile, splits[0].getPath().toString());
-        Assertions.assertEquals(tempFile, splits[1].getPath().toString());
+        assertThat(splits).hasSize(2);
+        assertThat(splits[0].getPath().toString()).isEqualTo(tempFile);
+        assertThat(splits[1].getPath().toString()).isEqualTo(tempFile);
     }
 
     @Test
@@ -237,26 +250,26 @@ public class FileInputFormatTest {
         int numSplitsFile2 = 0;
         int numSplitsFile3 = 0;
 
-        Assertions.assertEquals(3, splits.length);
+        assertThat(splits.length).isEqualTo(3);
         for (FileInputSplit fis : splits) {
-            Assertions.assertEquals(0, fis.getStart());
+            assertThat(fis.getStart()).isEqualTo(0);
             if (fis.getPath().toString().equals(tempFile1)) {
                 numSplitsFile1++;
-                Assertions.assertEquals(21, fis.getLength());
+                assertThat(fis.getLength()).isEqualTo(21);
             } else if (fis.getPath().toString().equals(tempFile2)) {
                 numSplitsFile2++;
-                Assertions.assertEquals(22, fis.getLength());
+                assertThat(fis.getLength()).isEqualTo(22);
             } else if (fis.getPath().toString().equals(tempFile3)) {
                 numSplitsFile3++;
-                Assertions.assertEquals(23, fis.getLength());
+                assertThat(fis.getLength()).isEqualTo(23);
             } else {
-                Assertions.fail("Got split for unknown file.");
+                fail("Got split for unknown file.");
             }
         }
 
-        Assertions.assertEquals(1, numSplitsFile1);
-        Assertions.assertEquals(1, numSplitsFile2);
-        Assertions.assertEquals(1, numSplitsFile3);
+        assertThat(numSplitsFile1).isEqualTo(1);
+        assertThat(numSplitsFile2).isEqualTo(1);
+        assertThat(numSplitsFile3).isEqualTo(1);
     }
 
     // ------------------------------------------------------------------------
@@ -271,10 +284,10 @@ public class FileInputFormatTest {
             format.configure(new Configuration());
 
             BaseStatistics stats = format.getStatistics(null);
-            Assertions.assertNull(stats, "The file statistics should be null.");
+            assertThat(stats).as("The file statistics should be null.").isNull();
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assertions.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
 
@@ -289,11 +302,11 @@ public class FileInputFormatTest {
             format.configure(new Configuration());
 
             BaseStatistics stats = format.getStatistics(null);
-            Assertions.assertEquals(
+            assertEquals(
                     SIZE, stats.getTotalInputSize(), "The file size from the statistics is wrong.");
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assertions.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
 
@@ -314,13 +327,13 @@ public class FileInputFormatTest {
             format.configure(new Configuration());
 
             BaseStatistics stats = format.getStatistics(null);
-            Assertions.assertEquals(
+            assertEquals(
                     TOTAL,
                     stats.getTotalInputSize(),
                     "The file size from the statistics is wrong.");
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assertions.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
 
@@ -337,7 +350,7 @@ public class FileInputFormatTest {
             format.configure(new Configuration());
 
             FileBaseStatistics stats = format.getStatistics(null);
-            Assertions.assertEquals(
+            assertEquals(
                     SIZE, stats.getTotalInputSize(), "The file size from the statistics is wrong.");
 
             format = new DummyFileInputFormat();
@@ -345,7 +358,7 @@ public class FileInputFormatTest {
             format.configure(new Configuration());
 
             FileBaseStatistics newStats = format.getStatistics(stats);
-            Assertions.assertSame(newStats, stats, "Statistics object was changed");
+            assertThat(stats).as("Statistics object was changed").isSameAs(newStats);
 
             // insert fake stats with the correct modification time. the call should return the fake
             // stats
@@ -359,7 +372,7 @@ public class FileInputFormatTest {
                             FAKE_SIZE,
                             BaseStatistics.AVG_RECORD_BYTES_UNKNOWN);
             BaseStatistics latest = format.getStatistics(fakeStats);
-            Assertions.assertEquals(
+            assertEquals(
                     FAKE_SIZE,
                     latest.getTotalInputSize(),
                     "The file size from the statistics is wrong.");
@@ -376,14 +389,14 @@ public class FileInputFormatTest {
                             FAKE_SIZE,
                             BaseStatistics.AVG_RECORD_BYTES_UNKNOWN);
             BaseStatistics reGathered = format.getStatistics(outDatedFakeStats);
-            Assertions.assertEquals(
+            assertEquals(
                     SIZE,
                     reGathered.getTotalInputSize(),
                     "The file size from the statistics is wrong.");
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assertions.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
 
@@ -412,7 +425,7 @@ public class FileInputFormatTest {
             format.configure(new Configuration());
 
             FileBaseStatistics stats = format.getStatistics(null);
-            Assertions.assertEquals(
+            assertEquals(
                     TOTAL,
                     stats.getTotalInputSize(),
                     "The file size from the statistics is wrong.");
@@ -422,7 +435,7 @@ public class FileInputFormatTest {
             format.configure(new Configuration());
 
             FileBaseStatistics newStats = format.getStatistics(stats);
-            Assertions.assertSame(newStats, stats, "Statistics object was changed");
+            assertThat(stats).as("Statistics object was changed").isSameAs(newStats);
 
             // insert fake stats with the correct modification time. the call should return the fake
             // stats
@@ -436,7 +449,7 @@ public class FileInputFormatTest {
                             FAKE_SIZE,
                             BaseStatistics.AVG_RECORD_BYTES_UNKNOWN);
             BaseStatistics latest = format.getStatistics(fakeStats);
-            Assertions.assertEquals(
+            assertEquals(
                     FAKE_SIZE,
                     latest.getTotalInputSize(),
                     "The file size from the statistics is wrong.");
@@ -453,14 +466,14 @@ public class FileInputFormatTest {
                             FAKE_SIZE,
                             BaseStatistics.AVG_RECORD_BYTES_UNKNOWN);
             BaseStatistics reGathered = format.getStatistics(outDatedFakeStats);
-            Assertions.assertEquals(
+            assertEquals(
                     TOTAL,
                     reGathered.getTotalInputSize(),
                     "The file size from the statistics is wrong.");
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assertions.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
 
@@ -474,7 +487,7 @@ public class FileInputFormatTest {
         format.configure(new Configuration());
 
         BaseStatistics stats = format.getStatistics(null);
-        Assertions.assertNull(stats, "The file statistics should be null.");
+        assertThat(stats).as("The file statistics should be null.").isNull();
     }
 
     @Test
@@ -492,7 +505,7 @@ public class FileInputFormatTest {
         format.configure(new Configuration());
 
         BaseStatistics stats = format.getStatistics(null);
-        Assertions.assertEquals(
+        assertEquals(
                 totalSize,
                 stats.getTotalInputSize(),
                 "The file size from the statistics is wrong.");
@@ -520,7 +533,7 @@ public class FileInputFormatTest {
         format.configure(new Configuration());
 
         BaseStatistics stats = format.getStatistics(null);
-        Assertions.assertEquals(
+        assertEquals(
                 totalSize123 + totalSize456,
                 stats.getTotalInputSize(),
                 "The file size from the statistics is wrong.");
@@ -546,7 +559,7 @@ public class FileInputFormatTest {
         format.configure(new Configuration());
 
         FileBaseStatistics stats = format.getStatistics(null);
-        Assertions.assertEquals(
+        assertEquals(
                 sizeTotal,
                 stats.getTotalInputSize(),
                 "The file size from the statistics is wrong.");
@@ -556,7 +569,7 @@ public class FileInputFormatTest {
         format.configure(new Configuration());
 
         FileBaseStatistics newStats = format.getStatistics(stats);
-        Assertions.assertSame(newStats, stats, "Statistics object was changed");
+        assertThat(stats).as("Statistics object was changed").isSameAs(newStats);
 
         // insert fake stats with the correct modification time. the call should return the fake
         // stats
@@ -570,7 +583,7 @@ public class FileInputFormatTest {
                         fakeSize,
                         BaseStatistics.AVG_RECORD_BYTES_UNKNOWN);
         BaseStatistics latest = format.getStatistics(fakeStats);
-        Assertions.assertEquals(
+        assertEquals(
                 fakeSize,
                 latest.getTotalInputSize(),
                 "The file size from the statistics is wrong.");
@@ -587,7 +600,7 @@ public class FileInputFormatTest {
                         fakeSize,
                         BaseStatistics.AVG_RECORD_BYTES_UNKNOWN);
         BaseStatistics reGathered = format.getStatistics(outDatedFakeStats);
-        Assertions.assertEquals(
+        assertEquals(
                 sizeTotal,
                 reGathered.getTotalInputSize(),
                 "The file size from the statistics is wrong.");
@@ -616,13 +629,13 @@ public class FileInputFormatTest {
             FileInputSplit[] splits = format.createInputSplits(2);
             final Set<String> supportedCompressionFormats =
                     FileInputFormat.getSupportedCompressionFormats();
-            Assertions.assertEquals(supportedCompressionFormats.size(), splits.length);
+            assertThat(splits.length).isEqualTo(supportedCompressionFormats.size());
             for (FileInputSplit split : splits) {
-                Assertions.assertEquals(
+                assertEquals(
                         FileInputFormat.READ_WHOLE_SPLIT_FLAG,
                         split.getLength()); // unsplittable compressed files have this size as a
                 // flag for "read whole file"
-                Assertions.assertEquals(0L, split.getStart()); // always read from the beginning.
+                assertThat(split.getStart()).isEqualTo(0L); // always read from the beginning.
             }
 
             // test if this also works for "mixed" directories
@@ -634,26 +647,25 @@ public class FileInputFormatTest {
             formatMixed.setFilePath(tempFile);
             formatMixed.configure(new Configuration());
             FileInputSplit[] splitsMixed = formatMixed.createInputSplits(2);
-            Assertions.assertEquals(supportedCompressionFormats.size() + 1, splitsMixed.length);
+            assertThat(splitsMixed.length).isEqualTo(supportedCompressionFormats.size() + 1);
             for (FileInputSplit split : splitsMixed) {
                 final String extension =
                         FileInputFormat.extractFileExtension(split.getPath().getName());
                 if (supportedCompressionFormats.contains(extension)) {
-                    Assertions.assertEquals(
+                    assertEquals(
                             FileInputFormat.READ_WHOLE_SPLIT_FLAG,
                             split.getLength()); // unsplittable compressed files have this size as a
                     // flag for "read whole file"
-                    Assertions.assertEquals(
-                            0L, split.getStart()); // always read from the beginning.
+                    assertEquals(0L, split.getStart()); // always read from the beginning.
                 } else {
-                    Assertions.assertEquals(0L, split.getStart());
-                    Assertions.assertTrue(split.getLength() > 0, "split size not correct");
+                    assertThat(split.getStart()).isEqualTo(0L);
+                    assertThat(split.getLength() > 0).as("split size not correct").isTrue();
                 }
             }
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assertions.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
 
@@ -680,19 +692,19 @@ public class FileInputFormatTest {
             final Set<String> supportedCompressionFormats =
                     FileInputFormat.getSupportedCompressionFormats();
             // one file per compression format, one split per file
-            Assertions.assertEquals(supportedCompressionFormats.size(), splits.size());
+            assertThat(splits.size()).isEqualTo(supportedCompressionFormats.size());
             for (FileInputSplit split : splits) {
-                Assertions.assertEquals(0L, split.getStart()); // always read from the beginning.
+                assertThat(split.getStart()).isEqualTo(0L); // always read from the beginning.
                 format.open(split);
-                Assertions.assertTrue(format.compressedRead);
-                Assertions.assertEquals(
+                assertThat(format.compressedRead).isTrue();
+                assertEquals(
                         FileInputFormat.READ_WHOLE_SPLIT_FLAG,
                         format.getSplitLength()); // unsplittable compressed files have this size
                 // as flag for "read whole file"
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assertions.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
 
@@ -742,7 +754,7 @@ public class FileInputFormatTest {
             format.configure(new Configuration());
             FileInputSplit[] splits = format.createInputSplits(1);
 
-            Assertions.assertEquals(2, splits.length);
+            assertThat(splits.length).isEqualTo(2);
 
             final URI uri1 = splits[0].getPath().toUri();
             final URI uri2 = splits[1].getPath().toUri();
@@ -750,13 +762,13 @@ public class FileInputFormatTest {
             final URI childUri1 = child1.toURI();
             final URI childUri2 = child2.toURI();
 
-            Assertions.assertTrue(
+            assertTrue(
                     (uri1.equals(childUri1) && uri2.equals(childUri2))
                             || (uri1.equals(childUri2) && uri2.equals(childUri1)));
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -787,17 +799,17 @@ public class FileInputFormatTest {
                             Collections.singletonList("**/another_file.bin")));
             FileInputSplit[] splits = format.createInputSplits(1);
 
-            Assertions.assertEquals(1, splits.length);
+            assertThat(splits.length).isEqualTo(1);
 
             final URI uri1 = splits[0].getPath().toUri();
 
             final URI childUri1 = child1.toURI();
 
-            Assertions.assertEquals(uri1, childUri1);
+            assertThat(childUri1).isEqualTo(uri1);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -824,7 +836,7 @@ public class FileInputFormatTest {
                         Arrays.asList("**/another_file.bin", "**/dataFile1.txt")));
         FileInputSplit[] splits = format.createInputSplits(1);
 
-        Assertions.assertEquals(0, splits.length);
+        assertThat(splits.length).isEqualTo(0);
     }
 
     @Test
@@ -847,11 +859,11 @@ public class FileInputFormatTest {
 
             // check that only valid files are used for statistics computation
             BaseStatistics stats = format.getStatistics(null);
-            Assertions.assertEquals(TOTAL, stats.getTotalInputSize());
+            assertThat(stats.getTotalInputSize()).isEqualTo(TOTAL);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -888,7 +900,7 @@ public class FileInputFormatTest {
             inputFormat.open(inputSplit);
             while (!inputFormat.reachedEnd()) {
                 if ((bytes = inputFormat.nextRecord(bytes)) != null) {
-                    Assertions.assertArrayEquals(new byte[] {--prev}, bytes);
+                    assertThat(bytes).isEqualTo(new byte[] {--prev});
                 }
             }
         }
@@ -902,7 +914,8 @@ public class FileInputFormatTest {
         for (File child : files) {
             child.deleteOnExit();
 
-            try (BufferedOutputStream out = new BufferedOutputStream(Files.newOutputStream(child.toPath()))) {
+            try (BufferedOutputStream out =
+                    new BufferedOutputStream(Files.newOutputStream(child.toPath()))) {
                 out.write(contents);
             }
         }

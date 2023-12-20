@@ -25,10 +25,12 @@ import org.apache.flink.api.common.typeutils.base.StringSerializer;
 import org.apache.flink.api.java.typeutils.runtime.kryo.KryoSerializer;
 import org.apache.flink.core.testutils.CommonTestUtils;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 /** Tests for the {@link ListStateDescriptor}. */
 class ListStateDescriptorTest {
@@ -41,20 +43,20 @@ class ListStateDescriptorTest {
 
         ListStateDescriptor<String> descr = new ListStateDescriptor<>("testName", serializer);
 
-        Assertions.assertEquals("testName", descr.getName());
-        Assertions.assertNotNull(descr.getSerializer());
-        Assertions.assertInstanceOf(ListSerializer.class, descr.getSerializer());
-        Assertions.assertNotNull(descr.getElementSerializer());
-        Assertions.assertEquals(serializer, descr.getElementSerializer());
+        assertThat(descr.getName()).isEqualTo("testName");
+        assertThat(descr.getSerializer()).isNotNull();
+        assertInstanceOf(ListSerializer.class, descr.getSerializer());
+        assertThat(descr.getElementSerializer()).isNotNull();
+        assertThat(descr.getElementSerializer()).isEqualTo(serializer);
 
         ListStateDescriptor<String> copy = CommonTestUtils.createCopySerializable(descr);
 
-        Assertions.assertEquals("testName", copy.getName());
-        Assertions.assertNotNull(copy.getSerializer());
-        Assertions.assertInstanceOf(ListSerializer.class, copy.getSerializer());
+        assertThat(copy.getName()).isEqualTo("testName");
+        assertThat(copy.getSerializer()).isNotNull();
+        assertInstanceOf(ListSerializer.class, copy.getSerializer());
 
-        Assertions.assertNotNull(copy.getElementSerializer());
-        Assertions.assertEquals(serializer, copy.getElementSerializer());
+        assertThat(copy.getElementSerializer()).isNotNull();
+        assertThat(copy.getElementSerializer()).isEqualTo(serializer);
     }
 
     @Test
@@ -68,22 +70,22 @@ class ListStateDescriptorTest {
 
         // test that hashCode() works on state descriptors with initialized and uninitialized
         // serializers
-        Assertions.assertEquals(original.hashCode(), same.hashCode());
-        Assertions.assertEquals(original.hashCode(), sameBySerializer.hashCode());
+        assertThat(same.hashCode()).isEqualTo(original.hashCode());
+        assertThat(sameBySerializer.hashCode()).isEqualTo(original.hashCode());
 
-        Assertions.assertEquals(original, same);
-        Assertions.assertEquals(original, sameBySerializer);
+        assertThat(same).isEqualTo(original);
+        assertThat(sameBySerializer).isEqualTo(original);
 
         // equality with a clone
         ListStateDescriptor<String> clone = CommonTestUtils.createCopySerializable(original);
-        Assertions.assertEquals(original, clone);
+        assertThat(clone).isEqualTo(original);
 
         // equality with an initialized
         clone.initializeSerializerUnlessSet(new ExecutionConfig());
-        Assertions.assertEquals(original, clone);
+        assertThat(clone).isEqualTo(original);
 
         original.initializeSerializerUnlessSet(new ExecutionConfig());
-        Assertions.assertEquals(original, same);
+        assertThat(same).isEqualTo(original);
     }
 
     /**
@@ -105,11 +107,11 @@ class ListStateDescriptorTest {
         TypeSerializer<String> serializerB = descr.getElementSerializer();
 
         // check that the retrieved serializers are not the same
-        Assertions.assertNotSame(serializerA, serializerB);
+        assertThat(serializerB).isNotSameAs(serializerA);
 
         TypeSerializer<List<String>> listSerializerA = descr.getSerializer();
         TypeSerializer<List<String>> listSerializerB = descr.getSerializer();
 
-        Assertions.assertNotSame(listSerializerA, listSerializerB);
+        assertThat(listSerializerB).isNotSameAs(listSerializerA);
     }
 }

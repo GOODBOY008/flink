@@ -24,9 +24,13 @@ import org.apache.flink.core.memory.DataOutputView;
 import org.apache.flink.core.memory.DataOutputViewStreamWrapper;
 import org.apache.flink.util.TestLogger;
 
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.BeforeEach;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -68,7 +72,7 @@ public class RecordITCase extends TestLogger {
                 RecordTest.blackboxTestRecordWithValues(fields, this.rand, this.in, this.out);
             }
         } catch (Throwable t) {
-            Assertions.fail("Test failed due to an exception: " + t.getMessage());
+       fail("Test failed due to an exception: " + t.getMessage());
         }
     }
 }

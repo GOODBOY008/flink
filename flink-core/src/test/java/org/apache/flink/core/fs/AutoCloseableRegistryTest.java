@@ -20,8 +20,12 @@ package org.apache.flink.core.fs;
 
 import org.apache.flink.util.TestLogger;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 
@@ -39,7 +43,7 @@ public class AutoCloseableRegistryTest extends TestLogger {
 
         int expected = 1;
         for (int actual : closeOrder) {
-            Assertions.assertEquals(expected++, actual);
+       assertThat(actual).isEqualTo(expected++);
         }
     }
 
@@ -62,11 +66,11 @@ public class AutoCloseableRegistryTest extends TestLogger {
         try {
             autoCloseableRegistry.close();
 
-            Assertions.fail("Close should throw exception");
+       fail("Close should throw exception");
         } catch (Exception ex) {
-            Assertions.assertEquals("1", ex.getMessage());
-            Assertions.assertEquals("2", ex.getSuppressed()[0].getMessage());
-            Assertions.assertEquals(
+       assertThat(ex.getMessage()).isEqualTo("1");
+       assertThat(ex.getSuppressed()[0].getMessage()).isEqualTo("2");
+       assertEquals(
                     "java.lang.AssertionError: 3", ex.getSuppressed()[1].getMessage());
         }
     }

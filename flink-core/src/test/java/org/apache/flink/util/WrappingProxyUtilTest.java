@@ -20,8 +20,12 @@
 package org.apache.flink.util;
 
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -36,7 +40,7 @@ public class WrappingProxyUtilTest {
         try {
             WrappingProxyUtil.stripProxy(
                     new SelfWrappingProxy(WrappingProxyUtil.SAFETY_NET_MAX_ITERATIONS));
-            Assertions.fail("Expected exception not thrown");
+       fail("Expected exception not thrown");
         } catch (final IllegalArgumentException e) {
             MatcherAssert.assertThat(
                     e.getMessage(), containsString("Are there loops in the object graph?"));

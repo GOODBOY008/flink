@@ -18,8 +18,12 @@
 
 package org.apache.flink.core.memory;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
@@ -33,36 +37,36 @@ public class DataInputDeserializerTest {
 
         bytes = new byte[] {};
         dis = new DataInputDeserializer(bytes, 0, bytes.length);
-        Assertions.assertEquals(bytes.length, dis.available());
+   assertThat(dis.available()).isEqualTo(bytes.length);
 
         bytes = new byte[] {1, 2, 3};
         dis = new DataInputDeserializer(bytes, 0, bytes.length);
-        Assertions.assertEquals(bytes.length, dis.available());
+   assertThat(dis.available()).isEqualTo(bytes.length);
 
         dis.readByte();
-        Assertions.assertEquals(2, dis.available());
+   assertThat(dis.available()).isEqualTo(2);
         dis.readByte();
-        Assertions.assertEquals(1, dis.available());
+   assertThat(dis.available()).isEqualTo(1);
         dis.readByte();
-        Assertions.assertEquals(0, dis.available());
+   assertThat(dis.available()).isEqualTo(0);
 
         try {
             dis.readByte();
-            Assertions.fail("Did not throw expected IOException");
+       fail("Did not throw expected IOException");
         } catch (IOException e) {
             // ignore
         }
-        Assertions.assertEquals(0, dis.available());
+   assertThat(dis.available()).isEqualTo(0);
     }
 
     @Test
     void testReadWithLenZero() throws IOException {
         byte[] bytes = new byte[0];
         DataInputDeserializer dis = new DataInputDeserializer(bytes, 0, bytes.length);
-        Assertions.assertEquals(0, dis.available());
+   assertThat(dis.available()).isEqualTo(0);
 
         byte[] bytesForRead = new byte[0];
-        Assertions.assertEquals(
+   assertEquals(
                 0, dis.read(bytesForRead, 0, 0)); // do not throw when read with len 0
     }
 }

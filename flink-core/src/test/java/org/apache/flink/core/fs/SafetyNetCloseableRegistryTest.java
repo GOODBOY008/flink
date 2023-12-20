@@ -24,8 +24,12 @@ import org.apache.flink.util.ExceptionUtils;
 
 import org.junit.Rule;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.Closeable;
@@ -116,7 +120,7 @@ public class SafetyNetCloseableRegistryTest
 
     @AfterEach
     public void tearDown() {
-        Assertions.assertFalse(SafetyNetCloseableRegistry.isReaperThreadRunning());
+   assertThat(SafetyNetCloseableRegistry.isReaperThreadRunning()).isFalse();
     }
 
     @Test
@@ -129,11 +133,11 @@ public class SafetyNetCloseableRegistryTest
                         try {
                             FileSystem fs1 = FileSystem.getLocalFileSystem();
                             // ensure no safety net in place
-                            Assertions.assertFalse(fs1 instanceof SafetyNetWrapperFileSystem);
+                       assertThat(fs1 instanceof SafetyNetWrapperFileSystem).isFalse();
                             FileSystemSafetyNet.initializeSafetyNetForThread();
                             fs1 = FileSystem.getLocalFileSystem();
                             // ensure safety net is in place now
-                          Assertions.assertInstanceOf(SafetyNetWrapperFileSystem.class, fs1);
+                     assertInstanceOf(SafetyNetWrapperFileSystem.class, fs1);
 
                             Path tmp =
                                     new Path(tmpFolder.newFolder().toURI().toString(), "test_file");
@@ -146,17 +150,17 @@ public class SafetyNetCloseableRegistryTest
                                             public void go() {
                                                 FileSystem fs2 = FileSystem.getLocalFileSystem();
                                                 // ensure the safety net does not leak here
-                                                Assertions.assertFalse(
+                                           assertFalse(
                                                         fs2 instanceof SafetyNetWrapperFileSystem);
                                                 FileSystemSafetyNet.initializeSafetyNetForThread();
                                                 fs2 = FileSystem.getLocalFileSystem();
                                                 // ensure we can bring another safety net in place
-                                              Assertions.assertInstanceOf(SafetyNetWrapperFileSystem.class, fs2);
+                                         assertInstanceOf(SafetyNetWrapperFileSystem.class, fs2);
                                                 FileSystemSafetyNet
                                                         .closeSafetyNetAndGuardedResourcesForThread();
                                                 fs2 = FileSystem.getLocalFileSystem();
                                                 // and that we can remove it again
-                                                Assertions.assertFalse(
+                                           assertFalse(
                                                         fs2 instanceof SafetyNetWrapperFileSystem);
                                             }
                                         };
@@ -172,18 +176,18 @@ public class SafetyNetCloseableRegistryTest
                                 // ensure leaking stream was closed
                                 try {
                                     stream.write(43);
-                                    Assertions.fail();
+                               fail();
                                 } catch (IOException ignore) {
 
                                 }
                                 fs1 = FileSystem.getLocalFileSystem();
                                 // ensure safety net was removed
-                                Assertions.assertFalse(fs1 instanceof SafetyNetWrapperFileSystem);
+                           assertThat(fs1 instanceof SafetyNetWrapperFileSystem).isFalse();
                             } finally {
                                 fs1.delete(tmp, false);
                             }
                         } catch (Exception e) {
-                            Assertions.fail(ExceptionUtils.stringifyException(e));
+                       fail(ExceptionUtils.stringifyException(e));
                         }
                     }
                 };
@@ -204,23 +208,23 @@ public class SafetyNetCloseableRegistryTest
             Thread.sleep(50);
         }
 
-        Assertions.assertEquals(0, unclosedCounter.get());
+   assertThat(unclosedCounter.get()).isEqualTo(0);
         closeableRegistry.close();
     }
 
     @Test
     void testReaperThreadSpawnAndStop() throws Exception {
-        Assertions.assertFalse(SafetyNetCloseableRegistry.isReaperThreadRunning());
+   assertThat(SafetyNetCloseableRegistry.isReaperThreadRunning()).isFalse();
 
         try (SafetyNetCloseableRegistry ignored = new SafetyNetCloseableRegistry()) {
-            Assertions.assertTrue(SafetyNetCloseableRegistry.isReaperThreadRunning());
+       assertThat(SafetyNetCloseableRegistry.isReaperThreadRunning()).isTrue();
 
             try (SafetyNetCloseableRegistry ignored2 = new SafetyNetCloseableRegistry()) {
-                Assertions.assertTrue(SafetyNetCloseableRegistry.isReaperThreadRunning());
+           assertThat(SafetyNetCloseableRegistry.isReaperThreadRunning()).isTrue();
             }
-            Assertions.assertTrue(SafetyNetCloseableRegistry.isReaperThreadRunning());
+       assertThat(SafetyNetCloseableRegistry.isReaperThreadRunning()).isTrue();
         }
-        Assertions.assertFalse(SafetyNetCloseableRegistry.isReaperThreadRunning());
+   assertThat(SafetyNetCloseableRegistry.isReaperThreadRunning()).isFalse();
     }
 
     /**
@@ -234,11 +238,11 @@ public class SafetyNetCloseableRegistryTest
             new SafetyNetCloseableRegistry(OutOfMemoryReaperThread::new);
         } catch (java.lang.OutOfMemoryError error) {
         }
-        Assertions.assertFalse(SafetyNetCloseableRegistry.isReaperThreadRunning());
+   assertThat(SafetyNetCloseableRegistry.isReaperThreadRunning()).isFalse();
 
         // the OOM error will not lead to failure of subsequent constructor call.
         SafetyNetCloseableRegistry closeableRegistry = new SafetyNetCloseableRegistry();
-        Assertions.assertTrue(SafetyNetCloseableRegistry.isReaperThreadRunning());
+   assertThat(SafetyNetCloseableRegistry.isReaperThreadRunning()).isTrue();
 
         closeableRegistry.close();
     }

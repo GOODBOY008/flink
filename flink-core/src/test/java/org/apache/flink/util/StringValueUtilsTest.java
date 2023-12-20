@@ -21,8 +21,12 @@ package org.apache.flink.util;
 import org.apache.flink.types.StringValue;
 import org.apache.flink.util.StringValueUtils.WhitespaceTokenizer;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Tests for the {@link StringValueUtils}. */
 public class StringValueUtilsTest extends TestLogger {
@@ -31,14 +35,14 @@ public class StringValueUtilsTest extends TestLogger {
     void testToLowerCaseConverting() {
         StringValue testString = new StringValue("TEST");
         StringValueUtils.toLowerCase(testString);
-        Assertions.assertEquals(new StringValue("test"), testString);
+   assertThat(testString).isEqualTo(new StringValue("test"));
     }
 
     @Test
     void testReplaceNonWordChars() {
         StringValue testString = new StringValue("TEST123_@");
         StringValueUtils.replaceNonWordChars(testString, '!');
-        Assertions.assertEquals(new StringValue("TEST123_!"), testString);
+   assertThat(testString).isEqualTo(new StringValue("TEST123_!"));
     }
 
     @Test
@@ -49,7 +53,7 @@ public class StringValueUtilsTest extends TestLogger {
         // first token
         tokenizer.next(testString);
         // next token is not exist
-        Assertions.assertFalse(tokenizer.next(testString));
+   assertThat(tokenizer.next(testString)).isFalse();
     }
 
     @Test
@@ -57,7 +61,7 @@ public class StringValueUtilsTest extends TestLogger {
         StringValue testString = new StringValue("test test");
         StringValueUtils.WhitespaceTokenizer tokenizer = new WhitespaceTokenizer();
         tokenizer.setStringToTokenize(testString);
-        Assertions.assertTrue(tokenizer.next(testString));
+   assertThat(tokenizer.next(testString)).isTrue();
     }
 
     @Test
@@ -65,6 +69,6 @@ public class StringValueUtilsTest extends TestLogger {
         StringValue testString = new StringValue("    ");
         StringValueUtils.WhitespaceTokenizer tokenizer = new WhitespaceTokenizer();
         tokenizer.setStringToTokenize(testString);
-        Assertions.assertFalse(tokenizer.next(testString));
+   assertThat(tokenizer.next(testString)).isFalse();
     }
 }

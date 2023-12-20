@@ -20,7 +20,11 @@ package org.apache.flink.util;
 
 import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Tests for the {@link OutputTag}. */
 public class OutputTagTest {

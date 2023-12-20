@@ -18,7 +18,12 @@
 
 package org.apache.flink.configuration;
 
+import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -141,7 +146,7 @@ class DelegatingConfigurationTest {
         final Configuration conf = new Configuration();
         final DelegatingConfiguration delegatingConf = new DelegatingConfiguration(conf, "prefix.");
 
-        assertThat(delegatingConf.set(CoreOptions.DEFAULT_PARALLELISM, 1)).isSameAs(delegatingConf);
+   assertThat(delegatingConf.set(CoreOptions.DEFAULT_PARALLELISM, 1)).isSameAs(delegatingConf);
     }
 
     @Test

@@ -24,8 +24,12 @@ import org.apache.flink.core.testutils.CheckedThread;
 import org.apache.flink.core.testutils.OneShotLatch;
 
 import org.junit.Rule;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
@@ -49,12 +53,12 @@ class LimitedConnectionsFileSystemTest {
                         Long.MAX_VALUE - 1, // long timeout, close to overflow
                         Long.MAX_VALUE - 1); // long timeout, close to overflow
 
-        Assertions.assertEquals(Integer.MAX_VALUE, limitedFs.getMaxNumOpenStreamsTotal());
-        Assertions.assertEquals(Integer.MAX_VALUE, limitedFs.getMaxNumOpenOutputStreams());
-        Assertions.assertEquals(Integer.MAX_VALUE, limitedFs.getMaxNumOpenInputStreams());
+   assertThat(limitedFs.getMaxNumOpenStreamsTotal()).isEqualTo(Integer.MAX_VALUE);
+   assertThat(limitedFs.getMaxNumOpenOutputStreams()).isEqualTo(Integer.MAX_VALUE);
+   assertThat(limitedFs.getMaxNumOpenInputStreams()).isEqualTo(Integer.MAX_VALUE);
 
-        Assertions.assertTrue(limitedFs.getStreamOpenTimeout() > 0);
-        Assertions.assertTrue(limitedFs.getStreamInactivityTimeout() > 0);
+   assertThat(limitedFs.getStreamOpenTimeout() > 0).isTrue();
+   assertThat(limitedFs.getStreamInactivityTimeout() > 0).isTrue();
     }
 
     @Test
@@ -184,7 +188,7 @@ class LimitedConnectionsFileSystemTest {
         // try to open another thread
         try {
             limitedFs.create(new Path(tempFolder.newFile().toURI()), WriteMode.OVERWRITE);
-            Assertions.fail("this should have timed out");
+       fail("this should have timed out");
         } catch (IOException e) {
             // expected
         }
@@ -230,7 +234,7 @@ class LimitedConnectionsFileSystemTest {
         createRandomContents(file, rnd);
         try {
             limitedFs.open(new Path(file.toURI()));
-            Assertions.fail("this should have timed out");
+       fail("this should have timed out");
         } catch (IOException e) {
             // expected
         }
@@ -440,27 +444,27 @@ class LimitedConnectionsFileSystemTest {
     void testFailingStreamsUnregister() {
         final LimitedConnectionsFileSystem fs = new LimitedConnectionsFileSystem(new FailFs(), 1);
 
-        Assertions.assertEquals(0, fs.getNumberOfOpenInputStreams());
-        Assertions.assertEquals(0, fs.getNumberOfOpenOutputStreams());
-        Assertions.assertEquals(0, fs.getTotalNumberOfOpenStreams());
+   assertThat(fs.getNumberOfOpenInputStreams()).isEqualTo(0);
+   assertThat(fs.getNumberOfOpenOutputStreams()).isEqualTo(0);
+   assertThat(fs.getTotalNumberOfOpenStreams()).isEqualTo(0);
 
         try {
             fs.open(new Path(tempFolder.newFile().toURI()));
-            Assertions.fail("this is expected to fail with an exception");
+       fail("this is expected to fail with an exception");
         } catch (IOException e) {
             // expected
         }
 
         try {
             fs.create(new Path(tempFolder.newFile().toURI()), WriteMode.NO_OVERWRITE);
-            Assertions.fail("this is expected to fail with an exception");
+       fail("this is expected to fail with an exception");
         } catch (IOException e) {
             // expected
         }
 
-        Assertions.assertEquals(0, fs.getNumberOfOpenInputStreams());
-        Assertions.assertEquals(0, fs.getNumberOfOpenOutputStreams());
-        Assertions.assertEquals(0, fs.getTotalNumberOfOpenStreams());
+   assertThat(fs.getNumberOfOpenInputStreams()).isEqualTo(0);
+   assertThat(fs.getNumberOfOpenOutputStreams()).isEqualTo(0);
+   assertThat(fs.getTotalNumberOfOpenStreams()).isEqualTo(0);
     }
 
     /**
@@ -594,9 +598,9 @@ class LimitedConnectionsFileSystemTest {
         public void go() throws Exception {
 
             try (FSDataOutputStream stream = fs.create(path, WriteMode.OVERWRITE)) {
-                Assertions.assertTrue(
+           assertTrue(
                         fs.getNumberOfOpenOutputStreams() <= maxConcurrentOutputStreams);
-                Assertions.assertTrue(
+           assertTrue(
                         fs.getTotalNumberOfOpenStreams() <= maxConcurrentStreamsTotal);
 
                 final Random rnd = new Random();
@@ -633,9 +637,9 @@ class LimitedConnectionsFileSystemTest {
         public void go() throws Exception {
 
             try (FSDataInputStream stream = fs.open(path)) {
-                Assertions.assertTrue(
+           assertTrue(
                         fs.getNumberOfOpenInputStreams() <= maxConcurrentInputStreams);
-                Assertions.assertTrue(
+           assertTrue(
                         fs.getTotalNumberOfOpenStreams() <= maxConcurrentStreamsTotal);
 
                 final byte[] readBuffer = new byte[4096];
@@ -685,9 +689,9 @@ class LimitedConnectionsFileSystemTest {
         public void go() throws Exception {
 
             try (FSDataOutputStream stream = fs.create(path, WriteMode.OVERWRITE)) {
-                Assertions.assertTrue(
+           assertTrue(
                         fs.getNumberOfOpenOutputStreams() <= maxConcurrentOutputStreams);
-                Assertions.assertTrue(
+           assertTrue(
                         fs.getTotalNumberOfOpenStreams() <= maxConcurrentStreamsTotal);
 
                 final Random rnd = new Random();
@@ -729,13 +733,13 @@ class LimitedConnectionsFileSystemTest {
         public void go() throws Exception {
 
             try (FSDataInputStream stream = fs.open(path)) {
-                Assertions.assertTrue(
+           assertTrue(
                         fs.getNumberOfOpenInputStreams() <= maxConcurrentInputStreams);
-                Assertions.assertTrue(
+           assertTrue(
                         fs.getTotalNumberOfOpenStreams() <= maxConcurrentStreamsTotal);
 
                 final byte[] readBuffer = new byte[(int) fs.getFileStatus(path).getLen() - 1];
-                Assertions.assertTrue(stream.read(readBuffer) != -1);
+           assertThat(stream.read(readBuffer) != -1).isTrue();
 
                 waitTillWokenUp();
 

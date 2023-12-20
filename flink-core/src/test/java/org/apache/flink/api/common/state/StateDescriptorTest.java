@@ -30,12 +30,17 @@ import org.apache.flink.core.fs.Path;
 import org.apache.flink.core.testutils.CheckedThread;
 import org.apache.flink.core.testutils.CommonTestUtils;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Tests for the common/shared functionality of {@link StateDescriptor}. */
 class StateDescriptorTest {
@@ -49,77 +54,77 @@ class StateDescriptorTest {
         final TypeSerializer<String> serializer = StringSerializer.INSTANCE;
         final TestStateDescriptor<String> descr = new TestStateDescriptor<>("test", serializer);
 
-        Assertions.assertTrue(descr.isSerializerInitialized());
-        Assertions.assertNotNull(descr.getSerializer());
-        Assertions.assertInstanceOf(StringSerializer.class, descr.getSerializer());
+        assertThat(descr.isSerializerInitialized()).isTrue();
+        assertThat(descr.getSerializer()).isNotNull();
+        assertInstanceOf(StringSerializer.class, descr.getSerializer());
 
         // this should not have any effect
         descr.initializeSerializerUnlessSet(new ExecutionConfig());
-        Assertions.assertTrue(descr.isSerializerInitialized());
-        Assertions.assertNotNull(descr.getSerializer());
-        Assertions.assertInstanceOf(StringSerializer.class, descr.getSerializer());
+        assertThat(descr.isSerializerInitialized()).isTrue();
+        assertThat(descr.getSerializer()).isNotNull();
+        assertInstanceOf(StringSerializer.class, descr.getSerializer());
 
         TestStateDescriptor<String> clone = CommonTestUtils.createCopySerializable(descr);
-        Assertions.assertTrue(clone.isSerializerInitialized());
-        Assertions.assertNotNull(clone.getSerializer());
-        Assertions.assertInstanceOf(StringSerializer.class, clone.getSerializer());
+        assertThat(clone.isSerializerInitialized()).isTrue();
+        assertThat(clone.getSerializer()).isNotNull();
+        assertInstanceOf(StringSerializer.class, clone.getSerializer());
     }
 
     @Test
     void testInitializeSerializerBeforeSerialization() throws Exception {
         final TestStateDescriptor<String> descr = new TestStateDescriptor<>("test", String.class);
 
-        Assertions.assertFalse(descr.isSerializerInitialized());
+        assertThat(descr.isSerializerInitialized()).isFalse();
         try {
             descr.getSerializer();
-            Assertions.fail("should fail with an exception");
+            fail("should fail with an exception");
         } catch (IllegalStateException ignored) {
         }
 
         descr.initializeSerializerUnlessSet(new ExecutionConfig());
 
-        Assertions.assertTrue(descr.isSerializerInitialized());
-        Assertions.assertNotNull(descr.getSerializer());
-        Assertions.assertInstanceOf(StringSerializer.class, descr.getSerializer());
+        assertThat(descr.isSerializerInitialized()).isTrue();
+        assertThat(descr.getSerializer()).isNotNull();
+        assertInstanceOf(StringSerializer.class, descr.getSerializer());
 
         TestStateDescriptor<String> clone = CommonTestUtils.createCopySerializable(descr);
 
-        Assertions.assertTrue(clone.isSerializerInitialized());
-        Assertions.assertNotNull(clone.getSerializer());
-        Assertions.assertInstanceOf(StringSerializer.class, clone.getSerializer());
+        assertThat(clone.isSerializerInitialized()).isTrue();
+        assertThat(clone.getSerializer()).isNotNull();
+        assertInstanceOf(StringSerializer.class, clone.getSerializer());
     }
 
     @Test
     void testInitializeSerializerAfterSerialization() throws Exception {
         final TestStateDescriptor<String> descr = new TestStateDescriptor<>("test", String.class);
 
-        Assertions.assertFalse(descr.isSerializerInitialized());
+        assertThat(descr.isSerializerInitialized()).isFalse();
         try {
             descr.getSerializer();
-            Assertions.fail("should fail with an exception");
+            fail("should fail with an exception");
         } catch (IllegalStateException ignored) {
         }
 
         TestStateDescriptor<String> clone = CommonTestUtils.createCopySerializable(descr);
 
-        Assertions.assertFalse(clone.isSerializerInitialized());
+        assertThat(clone.isSerializerInitialized()).isFalse();
         try {
             clone.getSerializer();
-            Assertions.fail("should fail with an exception");
+            fail("should fail with an exception");
         } catch (IllegalStateException ignored) {
         }
 
         clone.initializeSerializerUnlessSet(new ExecutionConfig());
 
-        Assertions.assertTrue(clone.isSerializerInitialized());
-        Assertions.assertNotNull(clone.getSerializer());
-        Assertions.assertInstanceOf(StringSerializer.class, clone.getSerializer());
+        assertThat(clone.isSerializerInitialized()).isTrue();
+        assertThat(clone.getSerializer()).isNotNull();
+        assertInstanceOf(StringSerializer.class, clone.getSerializer());
     }
 
     @Test
     void testInitializeSerializerAfterSerializationWithCustomConfig() throws Exception {
         // guard our test assumptions.
-        Assertions.assertEquals(
+        assertEquals(
                 -1,
                 new KryoSerializer<>(String.class, new ExecutionConfig())
                         .getKryo()
@@ -136,7 +141,7 @@ class StateDescriptorTest {
         clone.initializeSerializerUnlessSet(config);
 
         // serialized one (later initialized) carries the registration
-        Assertions.assertTrue(
+        assertTrue(
                 ((KryoSerializer<?>) clone.getSerializer())
                                 .getKryo()
                                 .getRegistration(File.class)
@@ -165,7 +170,7 @@ class StateDescriptorTest {
         TypeSerializer<String> serializerB = descr.getSerializer();
 
         // check that the retrieved serializers are not the same
-        Assertions.assertNotSame(serializerA, serializerB);
+        assertThat(serializerB).isNotSameAs(serializerA);
     }
 
     // ------------------------------------------------------------------------
@@ -183,22 +188,22 @@ class StateDescriptorTest {
 
         // test that hashCode() works on state descriptors with initialized and uninitialized
         // serializers
-        Assertions.assertEquals(original.hashCode(), same.hashCode());
-        Assertions.assertEquals(original.hashCode(), sameBySerializer.hashCode());
+        assertThat(same.hashCode()).isEqualTo(original.hashCode());
+        assertThat(sameBySerializer.hashCode()).isEqualTo(original.hashCode());
 
-        Assertions.assertEquals(original, same);
-        Assertions.assertEquals(original, sameBySerializer);
+        assertThat(same).isEqualTo(original);
+        assertThat(sameBySerializer).isEqualTo(original);
 
         // equality with a clone
         TestStateDescriptor<String> clone = CommonTestUtils.createCopySerializable(original);
-        Assertions.assertEquals(original, clone);
+        assertThat(clone).isEqualTo(original);
 
         // equality with an initialized
         clone.initializeSerializerUnlessSet(new ExecutionConfig());
-        Assertions.assertEquals(original, clone);
+        assertThat(clone).isEqualTo(original);
 
         original.initializeSerializerUnlessSet(new ExecutionConfig());
-        Assertions.assertEquals(original, same);
+        assertThat(same).isEqualTo(original);
     }
 
     @Test
@@ -209,7 +214,7 @@ class StateDescriptorTest {
         final OtherTestStateDescriptor<String> descr2 =
                 new OtherTestStateDescriptor<>(name, String.class);
 
-        Assertions.assertNotEquals(descr1, descr2);
+        assertThat(descr2).isNotEqualTo(descr1);
     }
 
     @Test
@@ -239,7 +244,7 @@ class StateDescriptorTest {
         for (CheckedThread t : threads) {
             t.sync();
         }
-        Assertions.assertEquals(
+        assertEquals(
                 1,
                 serializers.size(),
                 "Should use only one serializer but actually: " + serializers);
@@ -251,10 +256,10 @@ class StateDescriptorTest {
         ValueStateDescriptor<Integer> stateDescriptor =
                 new ValueStateDescriptor<>("test-state", IntSerializer.INSTANCE);
         stateDescriptor.enableTimeToLive(StateTtlConfig.newBuilder(Time.minutes(60)).build());
-        Assertions.assertTrue(stateDescriptor.getTtlConfig().isEnabled());
+        assertThat(stateDescriptor.getTtlConfig().isEnabled()).isTrue();
 
         stateDescriptor.enableTimeToLive(StateTtlConfig.DISABLED);
-        Assertions.assertFalse(stateDescriptor.getTtlConfig().isEnabled());
+        assertThat(stateDescriptor.getTtlConfig().isEnabled()).isFalse();
     }
 
     // ------------------------------------------------------------------------

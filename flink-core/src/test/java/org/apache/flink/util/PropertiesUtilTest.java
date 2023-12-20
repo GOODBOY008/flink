@@ -18,8 +18,12 @@
 
 package org.apache.flink.util;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Properties;
 
@@ -43,8 +47,8 @@ public class PropertiesUtilTest {
         prop3.put("key3", "value3");
 
         Properties flattened = flatten(prop3);
-        Assertions.assertEquals(flattened.get("key1"), "value1");
-        Assertions.assertEquals(flattened.get("key2"), "value2");
-        Assertions.assertEquals(flattened.get("key3"), "value3");
+   assertThat("value1").isEqualTo(flattened.get("key1"));
+   assertThat("value2").isEqualTo(flattened.get("key2"));
+   assertThat("value3").isEqualTo(flattened.get("key3"));
     }
 }

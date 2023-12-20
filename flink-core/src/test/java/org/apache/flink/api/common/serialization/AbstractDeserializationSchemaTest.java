@@ -26,8 +26,10 @@ import org.apache.flink.util.FlinkRuntimeException;
 
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.util.JSONPObject;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Fail.fail;
 
 /** Tests for {@link AbstractDeserializationSchema}. */
 class AbstractDeserializationSchemaTest {
@@ -37,7 +39,7 @@ class AbstractDeserializationSchemaTest {
         TypeInformation<Tuple2<byte[], byte[]>> type = new TupleSchema().getProducedType();
         TypeInformation<Tuple2<byte[], byte[]>> expected =
                 TypeInformation.of(new TypeHint<Tuple2<byte[], byte[]>>() {});
-        Assertions.assertEquals(expected, type);
+        assertThat(type).isEqualTo(expected);
     }
 
     @Test
@@ -52,14 +54,14 @@ class AbstractDeserializationSchemaTest {
 
         TypeInformation<Tuple2<byte[], byte[]>> expected =
                 TypeInformation.of(new TypeHint<Tuple2<byte[], byte[]>>() {});
-        Assertions.assertEquals(expected, type);
+        assertThat(type).isEqualTo(expected);
     }
 
     @Test
     void testTypeExtractionGeneric() {
         TypeInformation<JSONPObject> type = new JsonSchema().getProducedType();
         TypeInformation<JSONPObject> expected = TypeInformation.of(new TypeHint<JSONPObject>() {});
-        Assertions.assertEquals(expected, type);
+        assertThat(type).isEqualTo(expected);
     }
 
     @Test
@@ -73,14 +75,14 @@ class AbstractDeserializationSchemaTest {
                 }.getProducedType();
 
         TypeInformation<JSONPObject> expected = TypeInformation.of(new TypeHint<JSONPObject>() {});
-        Assertions.assertEquals(expected, type);
+        assertThat(type).isEqualTo(expected);
     }
 
     @Test
     void testTypeExtractionRawException() {
         try {
             new RawSchema();
-            Assertions.fail();
+            fail();
         } catch (FlinkRuntimeException e) {
             // expected
         }
@@ -90,7 +92,7 @@ class AbstractDeserializationSchemaTest {
     void testTypeExtractionGenericException() {
         try {
             new GenericSchema<>();
-            Assertions.fail();
+            fail();
         } catch (FlinkRuntimeException e) {
             // expected
         }
@@ -99,7 +101,7 @@ class AbstractDeserializationSchemaTest {
     @Test
     void testIndirectGenericExtension() {
         TypeInformation<String> type = new IndirectExtension().getProducedType();
-        Assertions.assertEquals(BasicTypeInfo.STRING_TYPE_INFO, type);
+        assertThat(type).isEqualTo(BasicTypeInfo.STRING_TYPE_INFO);
     }
 
     // ------------------------------------------------------------------------

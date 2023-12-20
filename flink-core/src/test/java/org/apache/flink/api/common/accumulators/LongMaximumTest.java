@@ -18,15 +18,16 @@
 
 package org.apache.flink.api.common.accumulators;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class LongMaximumTest {
 
     @Test
     void testGet() {
         LongMaximum max = new LongMaximum();
-        Assertions.assertEquals(Long.MIN_VALUE, max.getLocalValue().longValue());
+        assertThat(max.getLocalValue().longValue()).isEqualTo(Long.MIN_VALUE);
     }
 
     @Test
@@ -35,10 +36,10 @@ class LongMaximumTest {
         long value = 9876543210L;
 
         max.add(value);
-        Assertions.assertEquals(value, max.getLocalValue().longValue());
+        assertThat(max.getLocalValue().longValue()).isEqualTo(value);
 
         max.resetLocal();
-        Assertions.assertEquals(Long.MIN_VALUE, max.getLocalValue().longValue());
+        assertThat(max.getLocalValue().longValue()).isEqualTo(Long.MIN_VALUE);
     }
 
     @Test
@@ -50,7 +51,7 @@ class LongMaximumTest {
         max.add(-9876543210L);
         max.add(-1234567890);
 
-        Assertions.assertEquals(9876543210L, max.getLocalValue().longValue());
+        assertThat(max.getLocalValue().longValue()).isEqualTo(9876543210L);
     }
 
     @Test
@@ -62,10 +63,10 @@ class LongMaximumTest {
         max2.add(5678909876543210123L);
 
         max2.merge(max1);
-        Assertions.assertEquals(5678909876543210123L, max2.getLocalValue().longValue());
+        assertThat(max2.getLocalValue().longValue()).isEqualTo(5678909876543210123L);
 
         max1.merge(max2);
-        Assertions.assertEquals(5678909876543210123L, max1.getLocalValue().longValue());
+        assertThat(max1.getLocalValue().longValue()).isEqualTo(5678909876543210123L);
     }
 
     @Test
@@ -76,6 +77,6 @@ class LongMaximumTest {
         max.add(value);
 
         LongMaximum clone = max.clone();
-        Assertions.assertEquals(value, clone.getLocalValue().longValue());
+        assertThat(clone.getLocalValue().longValue()).isEqualTo(value);
     }
 }

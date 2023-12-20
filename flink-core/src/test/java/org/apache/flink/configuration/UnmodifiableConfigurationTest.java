@@ -20,8 +20,12 @@ package org.apache.flink.configuration;
 
 import org.apache.flink.util.TestLogger;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -40,12 +44,12 @@ public class UnmodifiableConfigurationTest extends TestLogger {
             Class<UnmodifiableConfiguration> clazz = UnmodifiableConfiguration.class;
             for (Method m : clazz.getMethods()) {
                 if (m.getName().startsWith("add")) {
-                    assertSame(clazz, m.getDeclaringClass());
+                    assertThat(m.getDeclaringClass()).isSameAs(clazz);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+       fail(e.getMessage());
         }
     }
 
@@ -77,19 +81,19 @@ public class UnmodifiableConfigurationTest extends TestLogger {
                     Object key = keyClass == String.class ? "key" : rawOption;
 
                     Object parameter = parameters.get(parameterClass);
-                    Assertions.assertNotNull(parameter, "method " + m + " not covered by test");
+               assertThat(parameter).as("method " + m + " not covered by test").isNotNull();
 
                     try {
                         m.invoke(config, key, parameter);
-                        Assertions.fail("should fail with an exception");
+                   fail("should fail with an exception");
                     } catch (InvocationTargetException e) {
-                      Assertions.assertInstanceOf(UnsupportedOperationException.class, e.getTargetException());
+                 assertInstanceOf(UnsupportedOperationException.class, e.getTargetException());
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+       fail(e.getMessage());
         }
     }
 }

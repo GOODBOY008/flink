@@ -19,8 +19,12 @@
 package org.apache.flink.core.fs;
 
 import org.junit.Rule;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
@@ -45,7 +49,7 @@ public class RefCountedFileWithStreamTest {
         final RefCountedFileWithStream fileUnderTest = getClosedRefCountedFileWithContent(content);
         long fileLength = fileUnderTest.getLength();
 
-        Assertions.assertEquals(content.length, fileLength);
+   assertThat(fileLength).isEqualTo(content.length);
     }
 
     @Test
@@ -73,7 +77,7 @@ public class RefCountedFileWithStreamTest {
 
     private void verifyTheFileIsStillThere() throws IOException {
         try (Stream<Path> files = Files.list(temporaryFolder.getRoot().toPath())) {
-            Assertions.assertEquals(1L, files.count());
+       assertThat(files.count()).isEqualTo(1L);
         }
     }
 

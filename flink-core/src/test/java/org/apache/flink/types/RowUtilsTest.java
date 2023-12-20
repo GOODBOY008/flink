@@ -18,8 +18,12 @@
 
 package org.apache.flink.types;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +47,7 @@ public class RowUtilsTest {
                             Row.of("b", 12, false),
                             Row.of("b", 12, false),
                             Row.of("b", 12, true));
-            Assertions.assertTrue(RowUtils.compareRows(originalList, list, false));
+       assertThat(RowUtils.compareRows(originalList, list, false)).isTrue();
         }
 
         {
@@ -53,7 +57,7 @@ public class RowUtilsTest {
                             Row.of("b", 12, false),
                             Row.of("b", 12, true), // diff order here
                             Row.of("b", 12, false));
-            Assertions.assertFalse(RowUtils.compareRows(originalList, list, false));
+       assertThat(RowUtils.compareRows(originalList, list, false)).isFalse();
         }
 
         {
@@ -63,7 +67,7 @@ public class RowUtilsTest {
                             Row.of("b", 12, false),
                             Row.of("b", 12, true), // diff order here
                             Row.of("b", 12, false));
-            Assertions.assertTrue(RowUtils.compareRows(originalList, list, true));
+       assertThat(RowUtils.compareRows(originalList, list, true)).isTrue();
         }
 
         {
@@ -74,7 +78,7 @@ public class RowUtilsTest {
                             Row.of("b", 12, false),
                             Row.of("b", 12, true),
                             Row.of("b", 12, true)); // diff here
-            Assertions.assertFalse(RowUtils.compareRows(originalList, list, true));
+       assertThat(RowUtils.compareRows(originalList, list, true)).isFalse();
         }
     }
 }

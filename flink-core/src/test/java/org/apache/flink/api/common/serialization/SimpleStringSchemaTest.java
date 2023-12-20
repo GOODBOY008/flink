@@ -20,14 +20,15 @@ package org.apache.flink.api.common.serialization;
 
 import org.apache.flink.core.testutils.CommonTestUtils;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 /** Tests for the {@link SimpleStringSchema}. */
-public class SimpleStringSchemaTest {
+class SimpleStringSchemaTest {
 
     @Test
     void testSerializationWithAnotherCharset() {
@@ -35,8 +36,8 @@ public class SimpleStringSchemaTest {
         final String string = "之掃描古籍版實乃姚鼐的";
         final byte[] bytes = string.getBytes(charset);
 
-        Assertions.assertArrayEquals(bytes, new SimpleStringSchema(charset).serialize(string));
-        Assertions.assertEquals(string, new SimpleStringSchema(charset).deserialize(bytes));
+        assertThat(new SimpleStringSchema(charset).serialize(string)).isEqualTo(bytes);
+        assertThat(new SimpleStringSchema(charset).deserialize(bytes)).isEqualTo(string);
     }
 
     @Test
@@ -44,6 +45,6 @@ public class SimpleStringSchemaTest {
         final SimpleStringSchema schema = new SimpleStringSchema(StandardCharsets.UTF_16LE);
         final SimpleStringSchema copy = CommonTestUtils.createCopySerializable(schema);
 
-        Assertions.assertEquals(schema.getCharset(), copy.getCharset());
+        assertThat(copy.getCharset()).isEqualTo(schema.getCharset());
     }
 }

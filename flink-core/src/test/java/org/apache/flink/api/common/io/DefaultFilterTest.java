@@ -27,7 +27,7 @@ import org.junit.runners.Parameterized.Parameters;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @RunWith(Parameterized.class)
@@ -63,9 +63,6 @@ public class DefaultFilterTest {
     void test() {
         FilePathFilter defaultFilter = FilePathFilter.createDefaultFilter();
         Path path = new Path(filePath);
-        assertThat(
-                String.format("File: %s", filePath),
-                defaultFilter.filterPath(path),
-                is(shouldFilter));
+        assertThat(defaultFilter.filterPath(path), is(shouldFilter));
     }
 }

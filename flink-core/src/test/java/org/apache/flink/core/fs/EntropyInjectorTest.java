@@ -22,8 +22,12 @@ import org.apache.flink.core.fs.FileSystem.WriteMode;
 import org.apache.flink.core.fs.local.LocalFileSystem;
 
 import org.junit.ClassRule;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
@@ -40,8 +44,8 @@ public class EntropyInjectorTest {
         EntropyInjectingFileSystem efs = new TestEntropyInjectingFs("test", "ignored");
         Path path = new Path("hdfs://localhost:12345");
 
-        Assertions.assertEquals(path, EntropyInjector.resolveEntropy(path, efs, true));
-        Assertions.assertEquals(path, EntropyInjector.resolveEntropy(path, efs, false));
+   assertThat(EntropyInjector.resolveEntropy(path, efs, true)).isEqualTo(path);
+   assertThat(EntropyInjector.resolveEntropy(path, efs, false)).isEqualTo(path);
     }
 
     @Test
@@ -49,8 +53,8 @@ public class EntropyInjectorTest {
         EntropyInjectingFileSystem efs = new TestEntropyInjectingFs("_entropy_key_", "ignored");
         Path path = new Path("s3://hugo@myawesomehost:55522/path/to/the/file");
 
-        Assertions.assertEquals(path, EntropyInjector.resolveEntropy(path, efs, true));
-        Assertions.assertEquals(path, EntropyInjector.resolveEntropy(path, efs, false));
+   assertThat(EntropyInjector.resolveEntropy(path, efs, true)).isEqualTo(path);
+   assertThat(EntropyInjector.resolveEntropy(path, efs, false)).isEqualTo(path);
     }
 
     @Test
@@ -58,10 +62,10 @@ public class EntropyInjectorTest {
         EntropyInjectingFileSystem efs = new TestEntropyInjectingFs("s0mek3y", "12345678");
         Path path = new Path("s3://hugo@myawesomehost:55522/path/s0mek3y/the/file");
 
-        Assertions.assertEquals(
+   assertEquals(
                 new Path("s3://hugo@myawesomehost:55522/path/12345678/the/file"),
                 EntropyInjector.resolveEntropy(path, efs, true));
-        Assertions.assertEquals(
+   assertEquals(
                 new Path("s3://hugo@myawesomehost:55522/path/the/file"),
                 EntropyInjector.resolveEntropy(path, efs, false));
     }
@@ -71,8 +75,8 @@ public class EntropyInjectorTest {
         EntropyInjectingFileSystem efs = new TestEntropyInjectingFs("_entropy_key_", "ignored");
         Path path = new Path("/path/file");
 
-        Assertions.assertEquals(path, EntropyInjector.resolveEntropy(path, efs, true));
-        Assertions.assertEquals(path, EntropyInjector.resolveEntropy(path, efs, false));
+   assertThat(EntropyInjector.resolveEntropy(path, efs, true)).isEqualTo(path);
+   assertThat(EntropyInjector.resolveEntropy(path, efs, false)).isEqualTo(path);
     }
 
     @Test
@@ -80,9 +84,9 @@ public class EntropyInjectorTest {
         EntropyInjectingFileSystem efs = new TestEntropyInjectingFs("_entropy_key_", "xyzz");
         Path path = new Path("/path/_entropy_key_/file");
 
-        Assertions.assertEquals(
+   assertEquals(
                 new Path("/path/xyzz/file"), EntropyInjector.resolveEntropy(path, efs, true));
-        Assertions.assertEquals(
+   assertEquals(
                 new Path("/path/file"), EntropyInjector.resolveEntropy(path, efs, false));
     }
 
@@ -91,10 +95,10 @@ public class EntropyInjectorTest {
         EntropyInjectingFileSystem efs = new TestEntropyInjectingFs("_entropy_key_", "pqr");
         Path path = new Path("s3://myhost:122/entropy-_entropy_key_-suffix/file");
 
-        Assertions.assertEquals(
+   assertEquals(
                 new Path("s3://myhost:122/entropy-pqr-suffix/file"),
                 EntropyInjector.resolveEntropy(path, efs, true));
-        Assertions.assertEquals(
+   assertEquals(
                 new Path("s3://myhost:122/entropy--suffix/file"),
                 EntropyInjector.resolveEntropy(path, efs, false));
     }
@@ -110,8 +114,8 @@ public class EntropyInjectorTest {
 
         out.stream().close();
 
-        Assertions.assertEquals(path, out.path());
-        Assertions.assertTrue(new File(new File(folder, "_entropy_"), "file").exists());
+   assertThat(out.path()).isEqualTo(path);
+   assertThat(new File(new File(folder).as("_entropy_"), "file").isTrue().exists());
     }
 
     @Test
@@ -127,9 +131,9 @@ public class EntropyInjectorTest {
 
         out.stream().close();
 
-        Assertions.assertEquals(
+   assertEquals(
                 new Path(Path.fromLocalFile(folder), "test-entropy/file"), out.path());
-        Assertions.assertTrue(new File(new File(folder, "test-entropy"), "file").exists());
+   assertThat(new File(new File(folder).as("test-entropy"), "file").isTrue().exists());
     }
 
     @Test
@@ -154,7 +158,7 @@ public class EntropyInjectorTest {
 
             out = streamAndPath.stream();
 
-            Assertions.assertEquals(pathWithEntropy, streamAndPath.path());
+       assertThat(streamAndPath.path()).isEqualTo(pathWithEntropy);
         } finally {
             FileSystemSafetyNet.closeSafetyNetAndGuardedResourcesForThread();
         }
@@ -163,7 +167,7 @@ public class EntropyInjectorTest {
         try {
             out.write(42);
             out.flush();
-            Assertions.fail("stream should be already close and hence fail with an exception");
+       fail("stream should be already close and hence fail with an exception");
         } catch (IOException ignored) {
         }
     }
@@ -188,7 +192,7 @@ public class EntropyInjectorTest {
             OutputStreamAndPath streamAndPath =
                     EntropyInjector.createEntropyAware(fs, path, WriteMode.NO_OVERWRITE);
 
-            Assertions.assertEquals(pathWithEntropy, streamAndPath.path());
+       assertThat(streamAndPath.path()).isEqualTo(pathWithEntropy);
         } finally {
             FileSystemSafetyNet.closeSafetyNetAndGuardedResourcesForThread();
         }
@@ -211,7 +215,7 @@ public class EntropyInjectorTest {
         OutputStreamAndPath streamAndPath =
                 EntropyInjector.createEntropyAware(testFs, path, WriteMode.NO_OVERWRITE);
 
-        Assertions.assertEquals(pathWithEntropy, streamAndPath.path());
+   assertThat(streamAndPath.path()).isEqualTo(pathWithEntropy);
     }
 
     @Test
@@ -220,7 +224,7 @@ public class EntropyInjectorTest {
         final FileSystem efs = new TestEntropyInjectingFs(entropyKey, "ignored");
         final File folder = TMP_FOLDER.newFolder();
         final Path path = new Path(Path.fromLocalFile(folder), entropyKey + "/path/");
-        Assertions.assertTrue(EntropyInjector.isEntropyInjecting(efs, path));
+   assertThat(EntropyInjector.isEntropyInjecting(efs, path)).isTrue();
     }
 
     @Test
@@ -228,7 +232,7 @@ public class EntropyInjectorTest {
         final FileSystem efs = new TestEntropyInjectingFs(null, "ignored");
 
         final File folder = TMP_FOLDER.newFolder();
-        Assertions.assertFalse(EntropyInjector.isEntropyInjecting(efs, Path.fromLocalFile(folder)));
+   assertThat(EntropyInjector.isEntropyInjecting(efs, Path.fromLocalFile(folder))).isFalse();
     }
 
     @Test
@@ -237,7 +241,7 @@ public class EntropyInjectorTest {
         final FileSystem efs = new TestEntropyInjectingFs(entropyKey, "ignored");
         final File folder = TMP_FOLDER.newFolder();
         final Path path = new Path(Path.fromLocalFile(folder), "path"); // no entropy key
-        Assertions.assertFalse(EntropyInjector.isEntropyInjecting(efs, path));
+   assertThat(EntropyInjector.isEntropyInjecting(efs, path)).isFalse();
     }
 
     // ------------------------------------------------------------------------

@@ -23,8 +23,11 @@ import org.apache.flink.util.TestLogger;
 import org.apache.flink.shaded.guava31.com.google.common.collect.Sets;
 
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Assertions;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,10 +35,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Tests for the {@link ConfigOption}. */
-public class ConfigOptionTest extends TestLogger {
+class ConfigOptionTest extends TestLogger {
 
     @Test
     void testDeprecationFlagForDeprecatedKeys() {
@@ -45,9 +50,9 @@ public class ConfigOptionTest extends TestLogger {
                         .defaultValue(0)
                         .withDeprecatedKeys("deprecated1", "deprecated2");
 
-        Assertions.assertTrue(optionWithDeprecatedKeys.hasFallbackKeys());
+   assertThat(optionWithDeprecatedKeys.hasFallbackKeys()).isTrue();
         for (final FallbackKey fallbackKey : optionWithDeprecatedKeys.fallbackKeys()) {
-            Assertions.assertTrue(
+       assertTrue(
                     fallbackKey.isDeprecated(), "deprecated key not flagged as deprecated");
         }
     }
@@ -60,9 +65,9 @@ public class ConfigOptionTest extends TestLogger {
                         .defaultValue(0)
                         .withFallbackKeys("fallback1", "fallback2");
 
-        Assertions.assertTrue(optionWithFallbackKeys.hasFallbackKeys());
+   assertThat(optionWithFallbackKeys.hasFallbackKeys()).isTrue();
         for (final FallbackKey fallbackKey : optionWithFallbackKeys.fallbackKeys()) {
-            Assertions.assertFalse(fallbackKey.isDeprecated(), "falback key flagged as deprecated");
+       assertThat(fallbackKey.isDeprecated()).as("falback key flagged as deprecated").isFalse();
         }
     }
 
@@ -85,8 +90,8 @@ public class ConfigOptionTest extends TestLogger {
             }
         }
 
-        Assertions.assertEquals(2, fallbackKeys.size());
-        Assertions.assertEquals(2, deprecatedKeys.size());
+   assertThat(fallbackKeys).hasSize(2);
+   assertThat(deprecatedKeys).hasSize(2);
 
         MatcherAssert.assertThat(fallbackKeys, containsInAnyOrder("fallback1", "fallback2"));
         MatcherAssert.assertThat(deprecatedKeys, containsInAnyOrder("deprecated1", "deprecated2"));
@@ -104,8 +109,8 @@ public class ConfigOptionTest extends TestLogger {
                         .withDeprecatedKeys(deprecatedKeys)
                         .withFallbackKeys("fallback1");
 
-        Assertions.assertTrue(optionWithDeprecatedKeys.hasDeprecatedKeys());
-        Assertions.assertEquals(
+   assertThat(optionWithDeprecatedKeys.hasDeprecatedKeys()).isTrue();
+   assertEquals(
                 expectedDeprecatedKeys, Sets.newHashSet(optionWithDeprecatedKeys.deprecatedKeys()));
     }
 
@@ -114,6 +119,6 @@ public class ConfigOptionTest extends TestLogger {
         final ConfigOption<Integer> optionWithFallbackKeys =
                 ConfigOptions.key("key").intType().defaultValue(0).withFallbackKeys("fallback1");
 
-        Assertions.assertFalse(optionWithFallbackKeys.hasDeprecatedKeys());
+   assertThat(optionWithFallbackKeys.hasDeprecatedKeys()).isFalse();
     }
 }

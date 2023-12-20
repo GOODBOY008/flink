@@ -18,13 +18,14 @@
 
 package org.apache.flink.api.common.operators.util;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class FieldSetTest {
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+
+class FieldSetTest {
 
     @Test
     void testFieldSetConstructors() {
@@ -62,10 +63,10 @@ public class FieldSetTest {
         s1.addField(Integer.valueOf(14));
         s2.addFields(78, 13, 66, 3);
 
-        Assertions.assertEquals(0, s1.size());
-        Assertions.assertEquals(1, s2.size());
-        Assertions.assertEquals(1, s3.size());
-        Assertions.assertEquals(4, s4.size());
+        assertThat(s1).isEmpty();
+        assertThat(s2).hasSize(1);
+        assertThat(s3).hasSize(1);
+        assertThat(s4).hasSize(4);
     }
 
     @Test
@@ -75,11 +76,11 @@ public class FieldSetTest {
 
     private static void check(FieldSet set, int... elements) {
         if (elements == null) {
-            Assertions.assertEquals(0, set.size());
+            assertThat(set).isEmpty();
             return;
         }
 
-        Assertions.assertEquals(elements.length, set.size());
+        assertThat(set.size()).isEqualTo(elements.length);
 
         // test contains
         for (int i : elements) {
@@ -92,7 +93,7 @@ public class FieldSetTest {
         {
             int[] arr = set.toArray();
             Arrays.sort(arr);
-            Assertions.assertArrayEquals(arr, elements);
+            assertThat(elements).isEqualTo(arr);
         }
 
         {
@@ -102,9 +103,9 @@ public class FieldSetTest {
             for (int i = 0; i < fromIter.length; i++) {
                 fromIter[i] = iter.next();
             }
-            Assertions.assertFalse(iter.hasNext());
+            assertThat(iter.hasNext()).isFalse();
             Arrays.sort(fromIter);
-            Assertions.assertArrayEquals(fromIter, elements);
+            assertThat(elements).isEqualTo(fromIter);
         }
     }
 }

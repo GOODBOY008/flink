@@ -24,13 +24,15 @@ import org.apache.flink.core.fs.FileSystem.WriteMode;
 import org.apache.flink.core.fs.Path;
 import org.apache.flink.types.IntValue;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 
-public class FileOutputFormatTest {
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
+
+class FileOutputFormatTest {
 
     @Test
     void testCreateNonParallelLocalFS() throws IOException {
@@ -51,14 +53,14 @@ public class FileOutputFormatTest {
         try {
             dfof.open(0, 1);
             dfof.close();
-            Assertions.fail();
+            fail();
         } catch (Exception e) {
             // exception expected
         }
         tmpOutPath.delete();
 
         // check fail if directory exists
-        Assertions.assertTrue(tmpOutPath.mkdir(), "Directory could not be created.");
+        assertThat(tmpOutPath.mkdir()).as("Directory could not be created.").isTrue();
 
         dfof = new DummyFileOutputFormat();
         dfof.setOutputFilePath(new Path(tmpFilePath));
@@ -70,7 +72,7 @@ public class FileOutputFormatTest {
         try {
             dfof.open(0, 1);
             dfof.close();
-            Assertions.fail();
+            fail();
         } catch (Exception e) {
             // exception expected
         }
@@ -88,9 +90,9 @@ public class FileOutputFormatTest {
             dfof.open(0, 1);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isFile()).isTrue();
         tmpOutPath.delete();
 
         // check fail for path with tailing '/'
@@ -105,9 +107,9 @@ public class FileOutputFormatTest {
             dfof.open(0, 1);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isFile()).isTrue();
         tmpOutPath.delete();
 
         // ----------- test again with always directory mode
@@ -125,14 +127,14 @@ public class FileOutputFormatTest {
         try {
             dfof.open(0, 1);
             dfof.close();
-            Assertions.fail();
+            fail();
         } catch (Exception e) {
             // exception expected
         }
         tmpOutPath.delete();
 
         // check success if directory exists
-        Assertions.assertTrue(tmpOutPath.mkdir(), "Directory could not be created.");
+        assertThat(tmpOutPath.mkdir()).as("Directory could not be created.").isTrue();
 
         dfof = new DummyFileOutputFormat();
         dfof.setOutputFilePath(new Path(tmpFilePath));
@@ -145,10 +147,10 @@ public class FileOutputFormatTest {
             dfof.open(0, 1);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
         (new File(tmpOutPath.getAbsoluteFile() + "/1")).delete();
 
         // check custom file name inside directory if directory exists
@@ -164,11 +166,11 @@ public class FileOutputFormatTest {
             dfof.open(0, 1);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
         File customOutFile = new File(tmpOutPath.getAbsolutePath() + "/fancy-1-0.avro");
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(customOutFile.exists() && customOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(customOutFile.exists() && customOutFile.isFile()).isTrue();
         customOutFile.delete();
 
         // check fail if file in directory exists
@@ -186,7 +188,7 @@ public class FileOutputFormatTest {
         try {
             dfof.open(0, 1);
             dfof.close();
-            Assertions.fail();
+            fail();
         } catch (Exception e) {
             // exception expected
         }
@@ -205,10 +207,10 @@ public class FileOutputFormatTest {
             dfof.open(0, 1);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
         (new File(tmpOutPath.getAbsoluteFile() + "/1")).delete();
         tmpOutPath.delete();
 
@@ -224,10 +226,10 @@ public class FileOutputFormatTest {
             dfof.open(0, 1);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
         (new File(tmpOutPath.getAbsoluteFile() + "/1")).delete();
         tmpOutPath.delete();
     }
@@ -254,14 +256,14 @@ public class FileOutputFormatTest {
         try {
             dfof.open(0, 2);
             dfof.close();
-            Assertions.fail();
+            fail();
         } catch (Exception e) {
             // exception expected
         }
         tmpOutPath.delete();
 
         // check success if directory exists
-        Assertions.assertTrue(tmpOutPath.mkdir(), "Directory could not be created.");
+        assertThat(tmpOutPath.mkdir()).as("Directory could not be created.").isTrue();
 
         dfof = new DummyFileOutputFormat();
         dfof.setOutputFilePath(new Path(tmpFilePath));
@@ -274,10 +276,10 @@ public class FileOutputFormatTest {
             dfof.open(0, 2);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
         tmpOutFile.delete();
         tmpOutPath.delete();
 
@@ -295,7 +297,7 @@ public class FileOutputFormatTest {
         try {
             dfof.open(0, 2);
             dfof.close();
-            Assertions.fail();
+            fail();
         } catch (Exception e) {
             // exception expected
         }
@@ -314,10 +316,10 @@ public class FileOutputFormatTest {
             dfof.open(0, 2);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
         tmpOutFile.delete();
         tmpOutPath.delete();
 
@@ -333,10 +335,10 @@ public class FileOutputFormatTest {
             dfof.open(0, 2);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
         tmpOutFile.delete();
         tmpOutPath.delete();
     }
@@ -364,13 +366,13 @@ public class FileOutputFormatTest {
             dfof.open(0, 1);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isFile()).isTrue();
 
         // check success if directory exists
         tmpOutPath.delete();
-        Assertions.assertTrue(tmpOutPath.mkdir(), "Directory could not be created.");
+        assertThat(tmpOutPath.mkdir()).as("Directory could not be created.").isTrue();
 
         dfof = new DummyFileOutputFormat();
         dfof.setOutputFilePath(new Path(tmpFilePath));
@@ -383,9 +385,9 @@ public class FileOutputFormatTest {
             dfof.open(0, 1);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isFile()).isTrue();
         tmpOutPath.delete();
 
         // check success
@@ -400,9 +402,9 @@ public class FileOutputFormatTest {
             dfof.open(0, 1);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isFile()).isTrue();
         tmpOutPath.delete();
 
         // check fail for path with tailing '/'
@@ -417,9 +419,9 @@ public class FileOutputFormatTest {
             dfof.open(0, 1);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isFile()).isTrue();
         tmpOutPath.delete();
 
         // ----------- test again with always directory mode
@@ -438,16 +440,16 @@ public class FileOutputFormatTest {
             dfof.open(0, 1);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
 
         tmpOutFile.delete();
         tmpOutPath.delete();
 
         // check success if directory exists
-        Assertions.assertTrue(tmpOutPath.mkdir(), "Directory could not be created.");
+        assertThat(tmpOutPath.mkdir()).as("Directory could not be created.").isTrue();
 
         dfof = new DummyFileOutputFormat();
         dfof.setOutputFilePath(new Path(tmpFilePath));
@@ -460,10 +462,10 @@ public class FileOutputFormatTest {
             dfof.open(0, 1);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
         tmpOutPath.delete();
         tmpOutFile.delete();
 
@@ -482,10 +484,10 @@ public class FileOutputFormatTest {
             dfof.open(0, 1);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
         tmpOutPath.delete();
         tmpOutFile.delete();
 
@@ -501,10 +503,10 @@ public class FileOutputFormatTest {
             dfof.open(0, 1);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
         tmpOutFile.delete();
         tmpOutPath.delete();
 
@@ -520,10 +522,10 @@ public class FileOutputFormatTest {
             dfof.open(0, 1);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
         tmpOutFile.delete();
         tmpOutPath.delete();
     }
@@ -551,15 +553,15 @@ public class FileOutputFormatTest {
             dfof.open(0, 2);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
         tmpOutFile.delete();
         tmpOutPath.delete();
 
         // check success if directory exists
-        Assertions.assertTrue(tmpOutPath.mkdir(), "Directory could not be created.");
+        assertThat(tmpOutPath.mkdir()).as("Directory could not be created.").isTrue();
 
         dfof = new DummyFileOutputFormat();
         dfof.setOutputFilePath(new Path(tmpFilePath));
@@ -572,10 +574,10 @@ public class FileOutputFormatTest {
             dfof.open(0, 2);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
         tmpOutFile.delete();
         tmpOutPath.delete();
 
@@ -594,10 +596,10 @@ public class FileOutputFormatTest {
             dfof.open(0, 2);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
         (new File(tmpOutPath.getAbsoluteFile() + "/1")).delete();
         tmpOutPath.delete();
 
@@ -613,10 +615,10 @@ public class FileOutputFormatTest {
             dfof.open(0, 2);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
         tmpOutFile.delete();
         tmpOutPath.delete();
 
@@ -632,10 +634,10 @@ public class FileOutputFormatTest {
             dfof.open(0, 2);
             dfof.close();
         } catch (Exception e) {
-            Assertions.fail();
+            fail();
         }
-        Assertions.assertTrue(tmpOutPath.exists() && tmpOutPath.isDirectory());
-        Assertions.assertTrue(tmpOutFile.exists() && tmpOutFile.isFile());
+        assertThat(tmpOutPath.exists() && tmpOutPath.isDirectory()).isTrue();
+        assertThat(tmpOutFile.exists() && tmpOutFile.isFile()).isTrue();
         tmpOutFile.delete();
         tmpOutPath.delete();
     }

@@ -20,7 +20,11 @@ package org.apache.flink.util.concurrent;
 
 import org.apache.flink.util.TestLogger;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
 

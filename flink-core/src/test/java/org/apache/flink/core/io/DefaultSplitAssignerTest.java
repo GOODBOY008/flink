@@ -20,8 +20,12 @@ package org.apache.flink.core.io;
 
 import org.apache.flink.api.common.io.DefaultInputSplitAssigner;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -42,14 +46,14 @@ public class DefaultSplitAssignerTest {
             DefaultInputSplitAssigner ia = new DefaultInputSplitAssigner(splits);
             InputSplit is;
             while ((is = ia.getNextInputSplit("", 0)) != null) {
-                Assertions.assertTrue(splits.remove(is));
+           assertThat(splits.remove(is)).isTrue();
             }
 
-            Assertions.assertTrue(splits.isEmpty());
-            Assertions.assertNull(ia.getNextInputSplit("", 0));
+       assertThat(splits.isEmpty()).isTrue();
+       assertThat(ia.getNextInputSplit("", 0)).isNull();
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+       fail(e.getMessage());
         }
     }
 
@@ -101,19 +105,19 @@ public class DefaultSplitAssignerTest {
             // verify
             for (int i = 0; i < NUM_THREADS; i++) {
                 if (threads[i].isAlive()) {
-                    Assertions.fail(
+               fail(
                             "The concurrency test case is erroneous, the thread did not respond in time.");
                 }
             }
 
-            Assertions.assertEquals(NUM_SPLITS, splitsRetrieved.get());
-            Assertions.assertEquals(SUM_OF_IDS, sumOfIds.get());
+       assertThat(splitsRetrieved.get()).isEqualTo(NUM_SPLITS);
+       assertThat(sumOfIds.get()).isEqualTo(SUM_OF_IDS);
 
             // nothing left
-            Assertions.assertNull(ia.getNextInputSplit("", 0));
+       assertThat(ia.getNextInputSplit("", 0)).isNull();
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail(e.getMessage());
+       fail(e.getMessage());
         }
     }
 }

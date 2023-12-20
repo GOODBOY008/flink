@@ -21,8 +21,12 @@ package org.apache.flink.types.parser;
 import org.apache.flink.configuration.ConfigConstants;
 import org.apache.flink.util.TestLogger;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -44,12 +48,12 @@ public abstract class ParserTestBase<T> extends TestLogger {
 
     @Test
     void testTest() {
-        Assertions.assertNotNull(getParser());
-        Assertions.assertNotNull(getTypeClass());
-        Assertions.assertNotNull(getValidTestValues());
-        Assertions.assertNotNull(getValidTestResults());
-        Assertions.assertNotNull(getInvalidTestValues());
-        Assertions.assertEquals(getValidTestValues().length, getValidTestResults().length);
+   assertNotNull(getParser());
+   assertNotNull(getTypeClass());
+   assertNotNull(getValidTestValues());
+   assertNotNull(getValidTestResults());
+   assertNotNull(getInvalidTestValues());
+   assertEquals(getValidTestValues().length, getValidTestResults().length);
     }
 
     @Test
@@ -58,13 +62,13 @@ public abstract class ParserTestBase<T> extends TestLogger {
             FieldParser<?> parser = getParser();
             Object created = parser.createValue();
 
-            Assertions.assertNotNull(created, "Null type created");
-            Assertions.assertTrue(
+       assertNotNull(created, "Null type created");
+       assertTrue(
                     getTypeClass().isAssignableFrom(created.getClass()), "Wrong type created");
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Test erroneous: " + e.getMessage());
+       fail("Test erroneous: " + e.getMessage());
         }
     }
 
@@ -102,39 +106,39 @@ public abstract class ParserTestBase<T> extends TestLogger {
                                 new byte[] {'9', '9', '9'},
                                 parser3.createValue());
 
-                Assertions.assertTrue(
+           assertTrue(
                         numRead1 != -1,
                         "Parser declared the valid value " + testValues[i] + " as invalid.");
-                Assertions.assertTrue(
+           assertTrue(
                         numRead2 != -1,
                         "Parser declared the valid value " + testValues[i] + " as invalid.");
-                Assertions.assertTrue(
+           assertTrue(
                         numRead3 != -1,
                         "Parser declared the valid value " + testValues[i] + " as invalid.");
 
-                Assertions.assertEquals(
+           assertEquals(
                         bytes1.length, numRead1, "Invalid number of bytes read returned.");
-                Assertions.assertEquals(
+           assertEquals(
                         bytes2.length, numRead2, "Invalid number of bytes read returned.");
-                Assertions.assertEquals(
+           assertEquals(
                         bytes3.length, numRead3, "Invalid number of bytes read returned.");
 
                 T result1 = parser1.getLastResult();
                 T result2 = parser2.getLastResult();
                 T result3 = parser3.getLastResult();
 
-                Assertions.assertEquals(
+           assertEquals(
                         results[i], result1, "Parser parsed wrong. " + testValues[i]);
-                Assertions.assertEquals(
+           assertEquals(
                         results[i], result2, "Parser parsed wrong. " + testValues[i]);
-                Assertions.assertEquals(
+           assertEquals(
                         results[i], result3, "Parser parsed wrong. " + testValues[i]);
             }
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Test erroneous: " + e.getMessage());
+       fail("Test erroneous: " + e.getMessage());
         }
     }
 
@@ -166,29 +170,29 @@ public abstract class ParserTestBase<T> extends TestLogger {
                                 new byte[] {'&', '&', '&', '&'},
                                 parser2.createValue());
 
-                Assertions.assertTrue(
+           assertTrue(
                         numRead1 != -1,
                         "Parser declared the valid value " + testValues[i] + " as invalid.");
-                Assertions.assertTrue(
+           assertTrue(
                         numRead2 != -1,
                         "Parser declared the valid value " + testValues[i] + " as invalid.");
 
-                Assertions.assertEquals(
+           assertEquals(
                         bytes1.length, numRead1, "Invalid number of bytes read returned.");
-                Assertions.assertEquals(
+           assertEquals(
                         bytes2.length, numRead2, "Invalid number of bytes read returned.");
 
                 T result1 = parser1.getLastResult();
                 T result2 = parser2.getLastResult();
 
-                Assertions.assertEquals(results[i], result1, "Parser parsed wrong.");
-                Assertions.assertEquals(results[i], result2, "Parser parsed wrong.");
+           assertEquals(results[i], result1, "Parser parsed wrong.");
+           assertEquals(results[i], result2, "Parser parsed wrong.");
             }
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Test erroneous: " + e.getMessage());
+       fail("Test erroneous: " + e.getMessage());
         }
     }
 
@@ -225,23 +229,23 @@ public abstract class ParserTestBase<T> extends TestLogger {
                                 new byte[] {','},
                                 val2);
 
-                Assertions.assertTrue(
+           assertTrue(
                         pos1 != -1,
                         "Parser declared the valid value " + testValues[i] + " as invalid.");
-                Assertions.assertTrue(
+           assertTrue(
                         pos2 != -1,
                         "Parser declared the valid value " + testValues[i] + " as invalid.");
 
                 T result1 = parser1.getLastResult();
                 T result2 = parser2.getLastResult();
 
-                Assertions.assertEquals(results[i], result1, "Parser parsed wrong.");
-                Assertions.assertEquals(results[i], result2, "Parser parsed wrong.");
+           assertEquals(results[i], result1, "Parser parsed wrong.");
+           assertEquals(results[i], result2, "Parser parsed wrong.");
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Test erroneous: " + e.getMessage());
+       fail("Test erroneous: " + e.getMessage());
         }
     }
 
@@ -272,11 +276,11 @@ public abstract class ParserTestBase<T> extends TestLogger {
                                 allBytesWithDelimiter.length,
                                 new byte[] {'&', '&', '&', '&'},
                                 val1);
-                Assertions.assertTrue(
+           assertTrue(
                         pos1 != -1,
                         "Parser declared the valid value " + testValues[i] + " as invalid.");
                 T result1 = parser1.getLastResult();
-                Assertions.assertEquals(results[i], result1, "Parser parsed wrong.");
+           assertEquals(results[i], result1, "Parser parsed wrong.");
 
                 pos2 =
                         parser2.parseField(
@@ -285,16 +289,16 @@ public abstract class ParserTestBase<T> extends TestLogger {
                                 allBytesNoDelimiterEnd.length,
                                 new byte[] {'9', '9', '9'},
                                 val2);
-                Assertions.assertTrue(
+           assertTrue(
                         pos2 != -1,
                         "Parser declared the valid value " + testValues[i] + " as invalid.");
                 T result2 = parser2.getLastResult();
-                Assertions.assertEquals(results[i], result2, "Parser parsed wrong.");
+           assertEquals(results[i], result2, "Parser parsed wrong.");
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Test erroneous: " + e.getMessage());
+       fail("Test erroneous: " + e.getMessage());
         }
     }
 
@@ -312,13 +316,13 @@ public abstract class ParserTestBase<T> extends TestLogger {
                 parser.parseField(
                     bytes, 0, bytes.length, new byte[] {'|'}, parser.createValue());
 
-            Assertions.assertEquals(
+       assertEquals(
                 -1, numRead, "Parser accepted the invalid value " + testValue + ".");
           }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Test erroneous: " + e.getMessage());
+       fail("Test erroneous: " + e.getMessage());
         }
     }
 
@@ -354,22 +358,22 @@ public abstract class ParserTestBase<T> extends TestLogger {
                 for (int i = 0; i < splitPoint; i++) {
                     pos = parser.parseField(bytes, pos, bytes.length, new byte[] {'%'}, value);
 
-                    Assertions.assertTrue(
+               assertTrue(
                             pos != -1,
                             "Parser declared the valid value " + validValues[i] + " as invalid.");
                     T result = parser.getLastResult();
-                    Assertions.assertEquals(validResults[i], result, "Parser parsed wrong.");
+               assertEquals(validResults[i], result, "Parser parsed wrong.");
                 }
 
                 // fail on the invalid part
                 pos = parser.parseField(bytes, pos, bytes.length, new byte[] {'%'}, value);
-                Assertions.assertEquals(
+           assertEquals(
                         -1, pos, "Parser accepted the invalid value " + invalid + ".");
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Test erroneous: " + e.getMessage());
+       fail("Test erroneous: " + e.getMessage());
         }
     }
 
@@ -404,15 +408,15 @@ public abstract class ParserTestBase<T> extends TestLogger {
                     result = (T) parseMethod.invoke(null, bytes, 0, bytes.length, '|');
                 } catch (InvocationTargetException e) {
                     e.getTargetException().printStackTrace();
-                    Assertions.fail("Error while parsing: " + e.getTargetException().getMessage());
+               fail("Error while parsing: " + e.getTargetException().getMessage());
                     return;
                 }
-                Assertions.assertEquals(results[i], result, "Parser parsed wrong.");
+           assertEquals(results[i], result, "Parser parsed wrong.");
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Test erroneous: " + e.getMessage());
+       fail("Test erroneous: " + e.getMessage());
         }
     }
 
@@ -442,7 +446,7 @@ public abstract class ParserTestBase<T> extends TestLogger {
 
             try {
               parseMethod.invoke(null, bytes, 0, bytes.length, '|');
-              Assertions.fail("Static parse method accepted invalid value");
+         fail("Static parse method accepted invalid value");
             } catch (InvocationTargetException e) {
               // that's it!
             }
@@ -450,7 +454,7 @@ public abstract class ParserTestBase<T> extends TestLogger {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Test erroneous: " + e.getMessage());
+       fail("Test erroneous: " + e.getMessage());
         }
     }
 
@@ -499,16 +503,16 @@ public abstract class ParserTestBase<T> extends TestLogger {
                         parser.parseField(
                                 bytes, i, bytes.length, new byte[] {'|'}, parser.createValue());
 
-                Assertions.assertEquals(
+           assertEquals(
                         FieldParser.ParseErrorState.EMPTY_COLUMN, parser.getErrorState());
 
                 if (this.allowsEmptyField()) {
-                    Assertions.assertTrue(
+               assertTrue(
                             numRead != -1, "Parser declared the empty string as invalid.");
-                    Assertions.assertEquals(
+               assertEquals(
                             i + 1, numRead, "Invalid number of bytes read returned.");
                 } else {
-                    Assertions.assertEquals(-1, numRead, "Parser accepted the empty string.");
+               assertEquals(-1, numRead, "Parser accepted the empty string.");
                 }
 
                 parser.resetParserState();
@@ -517,7 +521,7 @@ public abstract class ParserTestBase<T> extends TestLogger {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Test erroneous: " + e.getMessage());
+       fail("Test erroneous: " + e.getMessage());
         }
     }
 }

@@ -25,8 +25,12 @@ import org.apache.flink.core.testutils.CheckedThread;
 import org.apache.flink.core.testutils.OneShotLatch;
 
 import org.junit.Rule;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.stubbing.Answer;
@@ -64,7 +68,7 @@ public class InitOutputPathTest {
             // in the original un-synchronized state, we can force the race to occur by using
             // the proper latch order to control the process of the concurrent threads
             runTest(true);
-            Assertions.fail("should fail with an exception");
+       fail("should fail with an exception");
         } catch (FileNotFoundException e) {
             // expected
         } finally {

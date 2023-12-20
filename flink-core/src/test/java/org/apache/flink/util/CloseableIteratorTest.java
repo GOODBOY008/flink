@@ -17,8 +17,12 @@
 
 package org.apache.flink.util;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +43,7 @@ public class CloseableIteratorTest {
                         CloseableIterator.flatten(CloseableIterator.empty()),
                         CloseableIterator.flatten(CloseableIterator.flatten()));
         for (CloseableIterator<?> i : iterators) {
-            Assertions.assertFalse(i.hasNext());
+       assertThat(i.hasNext()).isFalse();
             i.close();
         }
     }
@@ -53,7 +57,7 @@ public class CloseableIteratorTest {
 
         List<String> iterated = new ArrayList<>();
         iterator.forEachRemaining(iterated::add);
-        Assertions.assertArrayEquals(ELEMENTS, iterated.toArray());
+   assertThat(iterated.toArray()).isEqualTo(ELEMENTS);
     }
 
     @Test(expected = TestException.class)
@@ -71,7 +75,7 @@ public class CloseableIteratorTest {
         try {
             iterator.close();
         } finally {
-            Assertions.assertArrayEquals(ELEMENTS, closed.toArray());
+       assertThat(closed.toArray()).isEqualTo(ELEMENTS);
         }
     }
 

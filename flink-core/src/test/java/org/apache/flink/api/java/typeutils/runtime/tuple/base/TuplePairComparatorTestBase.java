@@ -23,8 +23,12 @@ import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.util.TestLogger;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Abstract test base for TuplePairComparators.
@@ -47,12 +51,12 @@ public abstract class TuplePairComparatorTestBase<T extends Tuple, R extends Tup
             for (int x = 0; x < data.f0.length; x++) {
                 comparator.setReference(data.f0[x]);
 
-                Assertions.assertTrue(comparator.equalToReference(data.f1[x]));
+           assertTrue(comparator.equalToReference(data.f1[x]));
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -73,16 +77,16 @@ public abstract class TuplePairComparatorTestBase<T extends Tuple, R extends Tup
                 for (int y = x + 1; y < data.f1.length; y++) {
                     comparator.setReference(data.f0[x]);
                     if (ascending) {
-                        Assertions.assertTrue(comparator.compareToReference(data.f1[y]) > 0);
+                   assertTrue(comparator.compareToReference(data.f1[y]) > 0);
                     } else {
-                        Assertions.assertTrue(comparator.compareToReference(data.f1[y]) < 0);
+                   assertTrue(comparator.compareToReference(data.f1[y]) < 0);
                     }
                 }
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 

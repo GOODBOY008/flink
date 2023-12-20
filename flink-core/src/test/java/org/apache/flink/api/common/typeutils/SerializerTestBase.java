@@ -34,7 +34,6 @@ import org.apache.flink.util.TestLoggerExtension;
 import org.apache.commons.lang3.SerializationException;
 import org.apache.commons.lang3.SerializationUtils;
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -46,6 +45,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CyclicBarrier;
+
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Abstract test base for serializers.
@@ -101,13 +103,13 @@ public abstract class SerializerTestBase<T> {
             if (instance == null && allowNullInstances(serializer)) {
                 return;
             }
-            Assertions.assertNotNull(instance, "The created instance must not be null.");
+            assertNotNull(instance, "The created instance must not be null.");
 
             Class<T> type = getTypeClass();
-            Assertions.assertNotNull(type, "The test is corrupt: type class is null.");
+            assertNotNull(type, "The test is corrupt: type class is null.");
 
             if (!type.isAssignableFrom(instance.getClass())) {
-                Assertions.fail(
+                fail(
                         "Type of the instantiated object is wrong. "
                                 + "Expected Type: "
                                 + type
@@ -117,7 +119,7 @@ public abstract class SerializerTestBase<T> {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+            fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -158,7 +160,7 @@ public abstract class SerializerTestBase<T> {
         } else {
             throw new AssertionError("Unable to restore serializer with " + strategy);
         }
-        Assertions.assertSame(serializer.getClass(), restoreSerializer.getClass());
+        assertSame(serializer.getClass(), restoreSerializer.getClass());
     }
 
     @Test
@@ -166,17 +168,16 @@ public abstract class SerializerTestBase<T> {
         final int len = getLength();
 
         if (len == 0) {
-            Assertions.fail(
-                    "Broken serializer test base - zero length cannot be the expected length");
+            fail("Broken serializer test base - zero length cannot be the expected length");
         }
 
         try {
             TypeSerializer<T> serializer = getSerializer();
-            Assertions.assertEquals(len, serializer.getLength());
+            assertEquals(len, serializer.getLength());
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+            fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -197,7 +198,7 @@ public abstract class SerializerTestBase<T> {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+            fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -215,7 +216,7 @@ public abstract class SerializerTestBase<T> {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+            fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -236,7 +237,7 @@ public abstract class SerializerTestBase<T> {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+            fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -251,21 +252,19 @@ public abstract class SerializerTestBase<T> {
                 serializer.serialize(value, out);
                 TestInputView in = out.getInputView();
 
-                Assertions.assertTrue(
-                        in.available() > 0, "No data available during deserialization.");
+                assertTrue(in.available() > 0, "No data available during deserialization.");
 
                 T deserialized = serializer.deserialize(serializer.createInstance(), in);
                 checkToString(deserialized);
 
                 deepEquals("Deserialized value if wrong.", value, deserialized);
 
-                Assertions.assertEquals(
-                        0, in.available(), "Trailing data available after deserialization.");
+                assertEquals(0, in.available(), "Trailing data available after deserialization.");
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+            fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -282,23 +281,21 @@ public abstract class SerializerTestBase<T> {
                 serializer.serialize(value, out);
                 TestInputView in = out.getInputView();
 
-                Assertions.assertTrue(
-                        in.available() > 0, "No data available during deserialization.");
+                assertTrue(in.available() > 0, "No data available during deserialization.");
 
                 T deserialized = serializer.deserialize(reuseValue, in);
                 checkToString(deserialized);
 
                 deepEquals("Deserialized value if wrong.", value, deserialized);
 
-                Assertions.assertEquals(
-                        0, in.available(), "Trailing data available after deserialization.");
+                assertEquals(0, in.available(), "Trailing data available after deserialization.");
 
                 reuseValue = deserialized;
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+            fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -324,11 +321,11 @@ public abstract class SerializerTestBase<T> {
                 num++;
             }
 
-            Assertions.assertEquals(testData.length, num, "Wrong number of elements deserialized.");
+            assertEquals(testData.length, num, "Wrong number of elements deserialized.");
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+            fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -356,11 +353,11 @@ public abstract class SerializerTestBase<T> {
                 num++;
             }
 
-            Assertions.assertEquals(testData.length, num, "Wrong number of elements deserialized.");
+            assertEquals(testData.length, num, "Wrong number of elements deserialized.");
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+            fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -380,20 +377,20 @@ public abstract class SerializerTestBase<T> {
 
                 TestInputView toVerify = target.getInputView();
 
-                Assertions.assertTrue(toVerify.available() > 0, "No data available copying.");
+                assertTrue(toVerify.available() > 0, "No data available copying.");
 
                 T deserialized = serializer.deserialize(serializer.createInstance(), toVerify);
                 checkToString(deserialized);
 
                 deepEquals("Deserialized value if wrong.", value, deserialized);
 
-                Assertions.assertEquals(
+                assertEquals(
                         0, toVerify.available(), "Trailing data available after deserialization.");
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+            fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -425,11 +422,11 @@ public abstract class SerializerTestBase<T> {
                 num++;
             }
 
-            Assertions.assertEquals(testData.length, num, "Wrong number of elements copied.");
+            assertEquals(testData.length, num, "Wrong number of elements copied.");
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+            fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -441,11 +438,11 @@ public abstract class SerializerTestBase<T> {
             try {
                 ser2 = SerializationUtils.clone(ser1);
             } catch (SerializationException e) {
-                Assertions.fail("The serializer is not serializable: " + e);
+                fail("The serializer is not serializable: " + e);
                 return;
             }
 
-            Assertions.assertEquals(
+            assertEquals(
                     ser1, ser2, "The copy of the serializer is not equal to the original one.");
 
             // Make sure the serializer can be used after cloning
@@ -453,7 +450,7 @@ public abstract class SerializerTestBase<T> {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            Assertions.fail("Exception in test: " + e.getMessage());
+            fail("Exception in test: " + e.getMessage());
         }
     }
 
@@ -465,7 +462,7 @@ public abstract class SerializerTestBase<T> {
         } catch (Throwable t) {
             System.err.println(t.getMessage());
             t.printStackTrace();
-            Assertions.fail("Unexpected failure of null value handling: " + t.getMessage());
+            fail("Unexpected failure of null value handling: " + t.getMessage());
         }
     }
 
@@ -475,7 +472,7 @@ public abstract class SerializerTestBase<T> {
         final TypeSerializer<T> serializer = getSerializer();
         final CyclicBarrier startLatch = new CyclicBarrier(numThreads);
         final List<SerializerRunner<T>> concurrentRunners = new ArrayList<>(numThreads);
-        Assertions.assertEquals(serializer, serializer.duplicate());
+        assertEquals(serializer, serializer.duplicate());
 
         T[] testData = getData();
 

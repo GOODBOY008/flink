@@ -18,8 +18,12 @@
 
 package org.apache.flink.core.memory;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Random;
 
@@ -60,11 +64,11 @@ class EndiannessAccessChecks {
 
                 segment.putLongLittleEndian(pos, val);
                 long r = segment.getLongBigEndian(pos);
-                Assertions.assertEquals(val, Long.reverseBytes(r));
+           assertEquals(val, Long.reverseBytes(r));
 
                 segment.putLongBigEndian(pos, val);
                 r = segment.getLongLittleEndian(pos);
-                Assertions.assertEquals(val, Long.reverseBytes(r));
+           assertEquals(val, Long.reverseBytes(r));
             }
         }
 
@@ -79,11 +83,11 @@ class EndiannessAccessChecks {
 
                 segment.putIntLittleEndian(pos, val);
                 int r = segment.getIntBigEndian(pos);
-                Assertions.assertEquals(val, Integer.reverseBytes(r));
+           assertEquals(val, Integer.reverseBytes(r));
 
                 segment.putIntBigEndian(pos, val);
                 r = segment.getIntLittleEndian(pos);
-                Assertions.assertEquals(val, Integer.reverseBytes(r));
+           assertEquals(val, Integer.reverseBytes(r));
             }
         }
 
@@ -98,11 +102,11 @@ class EndiannessAccessChecks {
 
                 segment.putShortLittleEndian(pos, val);
                 short r = segment.getShortBigEndian(pos);
-                Assertions.assertEquals(val, Short.reverseBytes(r));
+           assertEquals(val, Short.reverseBytes(r));
 
                 segment.putShortBigEndian(pos, val);
                 r = segment.getShortLittleEndian(pos);
-                Assertions.assertEquals(val, Short.reverseBytes(r));
+           assertEquals(val, Short.reverseBytes(r));
             }
         }
 
@@ -117,11 +121,11 @@ class EndiannessAccessChecks {
 
                 segment.putCharLittleEndian(pos, val);
                 char r = segment.getCharBigEndian(pos);
-                Assertions.assertEquals(val, Character.reverseBytes(r));
+           assertEquals(val, Character.reverseBytes(r));
 
                 segment.putCharBigEndian(pos, val);
                 r = segment.getCharLittleEndian(pos);
-                Assertions.assertEquals(val, Character.reverseBytes(r));
+           assertEquals(val, Character.reverseBytes(r));
             }
         }
 
@@ -138,12 +142,12 @@ class EndiannessAccessChecks {
                 float r = segment.getFloatBigEndian(pos);
                 float reversed =
                         Float.intBitsToFloat(Integer.reverseBytes(Float.floatToRawIntBits(r)));
-                Assertions.assertEquals(val, reversed, 0.0f);
+           assertEquals(val, reversed, 0.0f);
 
                 segment.putFloatBigEndian(pos, val);
                 r = segment.getFloatLittleEndian(pos);
                 reversed = Float.intBitsToFloat(Integer.reverseBytes(Float.floatToRawIntBits(r)));
-                Assertions.assertEquals(val, reversed, 0.0f);
+           assertEquals(val, reversed, 0.0f);
             }
         }
 
@@ -160,13 +164,13 @@ class EndiannessAccessChecks {
                 double r = segment.getDoubleBigEndian(pos);
                 double reversed =
                         Double.longBitsToDouble(Long.reverseBytes(Double.doubleToRawLongBits(r)));
-                Assertions.assertEquals(val, reversed, 0.0f);
+           assertEquals(val, reversed, 0.0f);
 
                 segment.putDoubleBigEndian(pos, val);
                 r = segment.getDoubleLittleEndian(pos);
                 reversed =
                         Double.longBitsToDouble(Long.reverseBytes(Double.doubleToRawLongBits(r)));
-                Assertions.assertEquals(val, reversed, 0.0f);
+           assertEquals(val, reversed, 0.0f);
             }
         }
     }

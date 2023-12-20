@@ -17,8 +17,12 @@
 
 package org.apache.flink.core.memory;
 
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static java.lang.System.arraycopy;
 
@@ -32,7 +36,7 @@ public class MemorySegmentFactoryTest {
         arraycopy(data, 0, changingData, 0, data.length);
         MemorySegment segment = MemorySegmentFactory.wrapCopy(changingData, 0, changingData.length);
         changingData[0]++;
-        Assertions.assertArrayEquals(data, segment.getHeapMemory());
+   assertThat(segment.getHeapMemory()).isEqualTo(data);
     }
 
     @Test
@@ -41,7 +45,7 @@ public class MemorySegmentFactoryTest {
         MemorySegment segment = MemorySegmentFactory.wrapCopy(data, 0, data.length / 2);
         byte[] exp = new byte[segment.size()];
         arraycopy(data, 0, exp, 0, exp.length);
-        Assertions.assertArrayEquals(exp, segment.getHeapMemory());
+   assertThat(segment.getHeapMemory()).isEqualTo(exp);
     }
 
     @Test

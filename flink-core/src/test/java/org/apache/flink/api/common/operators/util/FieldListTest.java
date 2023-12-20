@@ -18,12 +18,13 @@
 
 package org.apache.flink.api.common.operators.util;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-public class FieldListTest {
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+
+class FieldListTest {
 
     @Test
     void testFieldListConstructors() {
@@ -58,10 +59,10 @@ public class FieldListTest {
         s1.addField(Integer.valueOf(14));
         s2.addFields(78, 13, 66, 3);
 
-        Assertions.assertEquals(0, s1.size());
-        Assertions.assertEquals(1, s2.size());
-        Assertions.assertEquals(1, s3.size());
-        Assertions.assertEquals(4, s4.size());
+        assertThat(s1).isEmpty();
+        assertThat(s2).hasSize(1);
+        assertThat(s3).hasSize(1);
+        assertThat(s4).hasSize(4);
     }
 
     @Test
@@ -73,11 +74,11 @@ public class FieldListTest {
 
     private static void check(FieldList set, int... elements) {
         if (elements == null) {
-            Assertions.assertEquals(0, set.size());
+            assertThat(set).isEmpty();
             return;
         }
 
-        Assertions.assertEquals(elements.length, set.size());
+        assertThat(set.size()).isEqualTo(elements.length);
 
         // test contains
         for (int i : elements) {
@@ -87,7 +88,7 @@ public class FieldListTest {
         // test to array
         {
             int[] arr = set.toArray();
-            Assertions.assertArrayEquals(arr, elements);
+            assertThat(elements).isEqualTo(arr);
         }
 
         {
@@ -97,8 +98,8 @@ public class FieldListTest {
             for (int i = 0; i < fromIter.length; i++) {
                 fromIter[i] = iter.next();
             }
-            Assertions.assertFalse(iter.hasNext());
-            Assertions.assertArrayEquals(fromIter, elements);
+            assertThat(iter.hasNext()).isFalse();
+            assertThat(elements).isEqualTo(fromIter);
         }
     }
 }

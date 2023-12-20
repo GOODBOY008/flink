@@ -31,8 +31,12 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import org.hamcrest.MatcherAssert;
 import org.junit.Rule;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.rules.ExpectedException;
 
 import java.io.ByteArrayInputStream;
@@ -77,7 +81,7 @@ class KryoSerializerCompatibilityTest {
         @SuppressWarnings("unchecked")
         TypeSerializerSchemaCompatibility<TestClassB> compatResult =
                 kryoSerializerConfigSnapshot.resolveSchemaCompatibility(kryoSerializerForB);
-        Assertions.assertTrue(compatResult.isIncompatible());
+   assertThat(compatResult.isIncompatible()).isTrue();
     }
 
     @Test
@@ -246,14 +250,14 @@ class KryoSerializerCompatibilityTest {
         @SuppressWarnings("unchecked")
         TypeSerializerSchemaCompatibility<TestClass> compatResult =
                 kryoSerializerConfigSnapshot.resolveSchemaCompatibility(kryoSerializer);
-        Assertions.assertTrue(compatResult.isCompatibleWithReconfiguredSerializer());
+   assertThat(compatResult.isCompatibleWithReconfiguredSerializer()).isTrue();
 
         kryoSerializer = (KryoSerializer<TestClass>) compatResult.getReconfiguredSerializer();
-        Assertions.assertEquals(
+   assertEquals(
                 testClassId, kryoSerializer.getKryo().getRegistration(TestClass.class).getId());
-        Assertions.assertEquals(
+   assertEquals(
                 testClassAId, kryoSerializer.getKryo().getRegistration(TestClassA.class).getId());
-        Assertions.assertEquals(
+   assertEquals(
                 testClassBId, kryoSerializer.getKryo().getRegistration(TestClassB.class).getId());
     }
 
