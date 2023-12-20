@@ -26,22 +26,22 @@ import org.junit.jupiter.api.Test;
 public class OutputTagTest {
 
     @Test(expected = NullPointerException.class)
-    public void testNullRejected() {
+     void testNullRejected() {
         new OutputTag<Integer>(null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void testNullRejectedWithTypeInfo() {
+     void testNullRejectedWithTypeInfo() {
         new OutputTag<>(null, BasicTypeInfo.INT_TYPE_INFO);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testEmptyStringRejected() {
+     void testEmptyStringRejected() {
         new OutputTag<Integer>("");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testEmptyStringRejectedWithTypeInfo() {
+     void testEmptyStringRejectedWithTypeInfo() {
         new OutputTag<>("", BasicTypeInfo.INT_TYPE_INFO);
     }
 }

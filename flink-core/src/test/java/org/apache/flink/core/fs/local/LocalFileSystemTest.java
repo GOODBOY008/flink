@@ -352,27 +352,27 @@ public class LocalFileSystemTest extends TestLogger {
     }
 
     @Test(expected = ClosedChannelException.class)
-    public void testFlushMethodFailsOnClosedOutputStream() throws IOException {
+     void testFlushMethodFailsOnClosedOutputStream() throws IOException {
         testMethodCallFailureOnClosedStream(FSDataOutputStream::flush);
     }
 
     @Test(expected = ClosedChannelException.class)
-    public void testWriteIntegerMethodFailsOnClosedOutputStream() throws IOException {
+     void testWriteIntegerMethodFailsOnClosedOutputStream() throws IOException {
         testMethodCallFailureOnClosedStream(os -> os.write(0));
     }
 
     @Test(expected = ClosedChannelException.class)
-    public void testWriteBytesMethodFailsOnClosedOutputStream() throws IOException {
+     void testWriteBytesMethodFailsOnClosedOutputStream() throws IOException {
         testMethodCallFailureOnClosedStream(os -> os.write(new byte[0]));
     }
 
     @Test(expected = ClosedChannelException.class)
-    public void testWriteBytesSubArrayMethodFailsOnClosedOutputStream() throws IOException {
+     void testWriteBytesSubArrayMethodFailsOnClosedOutputStream() throws IOException {
         testMethodCallFailureOnClosedStream(os -> os.write(new byte[0], 0, 0));
     }
 
     @Test(expected = ClosedChannelException.class)
-    public void testGetPosMethodFailsOnClosedOutputStream() throws IOException {
+     void testGetPosMethodFailsOnClosedOutputStream() throws IOException {
         testMethodCallFailureOnClosedStream(FSDataOutputStream::getPos);
     }
 

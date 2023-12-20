@@ -71,7 +71,7 @@ public class MemorySizeTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testInvalid() {
+     void testInvalid() {
         new MemorySize(-1);
     }
 
@@ -202,12 +202,12 @@ public class MemorySizeTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testParseNumberOverflow() {
+     void testParseNumberOverflow() {
         MemorySize.parseBytes("100000000000000000000000000000000 bytes");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testParseNumberTimeUnitOverflow() {
+     void testParseNumberTimeUnitOverflow() {
         MemorySize.parseBytes("100000000000000 tb");
     }
 
@@ -232,7 +232,7 @@ public class MemorySizeTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testDivideByNegativeLong() {
+     void testDivideByNegativeLong() {
         final MemorySize memory = new MemorySize(100L);
         memory.divide(-23L);
     }

@@ -2276,7 +2276,7 @@ public class TypeExtractorTest {
     }
 
     @Test(expected = InvalidTypesException.class)
-    public void testEitherFromObjectException() {
+     void testEitherFromObjectException() {
         Either<String, Tuple1<Integer>> either = Either.Left("test");
         TypeExtractor.getForObject(either);
     }
@@ -2300,7 +2300,7 @@ public class TypeExtractorTest {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Test(expected = InvalidTypesException.class)
-    public void testGenericTypeWithSuperclassInput() {
+     void testGenericTypeWithSuperclassInput() {
         TypeInformation<?> inputType = TypeExtractor.createTypeInfo(Map.class);
 
         MapFunction<?, ?> function =

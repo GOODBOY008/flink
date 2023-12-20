@@ -60,17 +60,17 @@ class SerializedValueTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testNullValue() {
+     void testNullValue() {
         new SerializedValue<>(null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void testFromNullBytes() {
+     void testFromNullBytes() {
         SerializedValue.fromBytes(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testFromEmptyBytes() {
+     void testFromEmptyBytes() {
         SerializedValue.fromBytes(new byte[0]);
     }
 }

@@ -54,7 +54,7 @@ public class RefCountedBufferingFileStreamTest {
     }
 
     @Test(expected = IOException.class)
-    public void testExceptionWhenWritingToClosedFile() throws IOException {
+     void testExceptionWhenWritingToClosedFile() throws IOException {
         RefCountedBufferingFileStream stream = getStreamToTest();
 
         final byte[] contentToWrite = bytesOf("hello");

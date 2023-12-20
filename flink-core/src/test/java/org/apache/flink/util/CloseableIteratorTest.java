@@ -57,7 +57,7 @@ public class CloseableIteratorTest {
     }
 
     @Test(expected = TestException.class)
-    public void testFlattenErrorHandling() throws Exception {
+     void testFlattenErrorHandling() throws Exception {
         List<String> closed = new ArrayList<>();
         CloseableIterator<String> iterator =
                 CloseableIterator.flatten(

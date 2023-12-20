@@ -164,13 +164,13 @@ public class TypeInfoFactoryTest {
     }
 
     @Test(expected = InvalidTypesException.class)
-    public void testMissingTypeInfo() {
+     void testMissingTypeInfo() {
         MapFunction f = new MyFaultyMapper();
         TypeExtractor.getMapReturnTypes(f, INT_TYPE_INFO);
     }
 
     @Test(expected = InvalidTypesException.class)
-    public void testMissingTypeInference() {
+     void testMissingTypeInference() {
         MapFunction f = new MyFaultyMapper2();
         TypeExtractor.getMapReturnTypes(f, new MyFaultyTypeInfo());
     }

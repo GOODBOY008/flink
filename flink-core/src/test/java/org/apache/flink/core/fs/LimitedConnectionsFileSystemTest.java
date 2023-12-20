@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.util.Random;
 
 /** Tests for the {@link LimitedConnectionsFileSystem}. */
-public class LimitedConnectionsFileSystemTest {
+class LimitedConnectionsFileSystemTest {
 
     @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
 

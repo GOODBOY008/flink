@@ -121,7 +121,7 @@ public class InstantiationUtilTest extends TestLogger {
     }
 
     @Test(expected = RuntimeException.class)
-    public void testCheckForInstantiationOfPrivateClass() {
+     void testCheckForInstantiationOfPrivateClass() {
         InstantiationUtil.checkForInstantiation(TestClass.class);
     }
 

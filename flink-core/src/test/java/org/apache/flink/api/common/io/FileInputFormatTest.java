@@ -41,6 +41,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -77,31 +78,31 @@ public class FileInputFormatTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSetPathsNull() {
+    void testSetPathsNull() {
         final MultiDummyFileInputFormat format = new MultiDummyFileInputFormat();
         format.setFilePaths((String) null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSetPathNullString() {
+    void testSetPathNullString() {
         final DummyFileInputFormat format = new DummyFileInputFormat();
         format.setFilePath((String) null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSetPathNullPath() {
+    void testSetPathNullPath() {
         final DummyFileInputFormat format = new DummyFileInputFormat();
         format.setFilePath((Path) null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSetPathsOnePathNull() {
+    void testSetPathsOnePathNull() {
         final MultiDummyFileInputFormat format = new MultiDummyFileInputFormat();
         format.setFilePaths("/an/imaginary/path", null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSetPathsEmptyArray() {
+    void testSetPathsEmptyArray() {
         final MultiDummyFileInputFormat format = new MultiDummyFileInputFormat();
         format.setFilePaths(new String[0]);
     }
@@ -156,7 +157,7 @@ public class FileInputFormatTest {
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void testMultiPathSetOnSinglePathIF() {
+    void testMultiPathSetOnSinglePathIF() {
         final DummyFileInputFormat format = new DummyFileInputFormat();
         final String myPath = "/an/imaginary/path";
         final String myPath2 = "/an/imaginary/path2";
@@ -165,7 +166,7 @@ public class FileInputFormatTest {
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void testMultiPathSetOnSinglePathIF2() {
+    void testMultiPathSetOnSinglePathIF2() {
         final DummyFileInputFormat format = new DummyFileInputFormat();
         final String myPath = "/an/imaginary/path";
         final String myPath2 = "/an/imaginary/path2";
@@ -174,7 +175,7 @@ public class FileInputFormatTest {
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void testSinglePathGetOnMultiPathIF() {
+    void testSinglePathGetOnMultiPathIF() {
         final MultiDummyFileInputFormat format = new MultiDummyFileInputFormat();
         final String myPath = "/an/imaginary/path";
         final String myPath2 = "/an/imaginary/path2";
@@ -195,7 +196,7 @@ public class FileInputFormatTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void testSetFileViaConfigurationEmptyPath() {
+    void testSetFileViaConfigurationEmptyPath() {
         final DummyFileInputFormat format = new DummyFileInputFormat();
         final String filePath = null;
         Configuration conf = new Configuration();
@@ -901,7 +902,7 @@ public class FileInputFormatTest {
         for (File child : files) {
             child.deleteOnExit();
 
-            try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(child))) {
+            try (BufferedOutputStream out = new BufferedOutputStream(Files.newOutputStream(child.toPath()))) {
                 out.write(contents);
             }
         }

@@ -37,7 +37,7 @@ public class TestFileUtils {
         File f = File.createTempFile(FILE_PREFIX, FILE_SUFFIX);
         f.deleteOnExit();
 
-        try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(f))) {
+        try (BufferedOutputStream out = new BufferedOutputStream(Files.newOutputStream(f.toPath()))) {
             for (; bytes > 0; bytes--) {
                 out.write(0);
             }
@@ -69,7 +69,7 @@ public class TestFileUtils {
         f.createNewFile();
         f.deleteOnExit();
 
-        try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(f))) {
+        try (BufferedOutputStream out = new BufferedOutputStream(Files.newOutputStream(f.toPath()))) {
             for (; bytes > 0; bytes--) {
                 out.write(0);
             }
@@ -90,7 +90,7 @@ public class TestFileUtils {
     // ------------------------------------------------------------------------
 
     public static String createTempFileDir(File tempDir, long... bytes) throws IOException {
-        File f = null;
+        File f;
         do {
             f = new File(tempDir, randomFileName());
         } while (f.exists());
@@ -101,7 +101,7 @@ public class TestFileUtils {
             File child = new File(f, randomFileName());
             child.deleteOnExit();
 
-            try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(child))) {
+            try (BufferedOutputStream out = new BufferedOutputStream(Files.newOutputStream(child.toPath()))) {
                 for (; l > 0; l--) {
                     out.write(0);
                 }
@@ -116,7 +116,7 @@ public class TestFileUtils {
 
     public static String createTempFileDirExtension(
             File tempDir, String fileExtension, String... contents) throws IOException {
-        File f = null;
+        File f;
         do {
             f = new File(tempDir, randomFileName(FILE_SUFFIX));
         } while (f.exists());
@@ -136,7 +136,7 @@ public class TestFileUtils {
 
     public static String createTempFileDirForProvidedFormats(File tempDir, Set<String> formats)
             throws IOException {
-        File f = null;
+        File f;
         do {
             f = new File(tempDir, randomFileName(FILE_SUFFIX));
         } while (f.exists());

@@ -122,7 +122,7 @@ public class NetUtilsTest extends TestLogger {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testAcceptWithoutTimeoutRejectsSocketWithSoTimeout() throws IOException {
+     void testAcceptWithoutTimeoutRejectsSocketWithSoTimeout() throws IOException {
         try (final ServerSocket serverSocket = new ServerSocket(0)) {
             serverSocket.setSoTimeout(5);
             NetUtils.acceptWithoutTimeout(serverSocket);

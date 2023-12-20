@@ -40,6 +40,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -657,7 +658,7 @@ public class GenericCsvInputFormatTest {
             tempFile.deleteOnExit();
 
             // write string with proper encoding
-            try (Writer out = new OutputStreamWriter(new FileOutputStream(tempFile), charset)) {
+            try (Writer out = new OutputStreamWriter(Files.newOutputStream(tempFile.toPath()), charset)) {
                 out.write(fileContent);
             }
 
@@ -861,7 +862,7 @@ public class GenericCsvInputFormatTest {
         tempFile.deleteOnExit();
 
         DataOutputStream dos =
-                new DataOutputStream(new DeflaterOutputStream(new FileOutputStream(tempFile)));
+                new DataOutputStream(new DeflaterOutputStream(Files.newOutputStream(tempFile.toPath())));
         dos.writeBytes(content);
         dos.close();
 
@@ -878,7 +879,7 @@ public class GenericCsvInputFormatTest {
         tempFile.deleteOnExit();
 
         DataOutputStream dos =
-                new DataOutputStream(new GZIPOutputStream(new FileOutputStream(tempFile)));
+                new DataOutputStream(new GZIPOutputStream(Files.newOutputStream(tempFile.toPath())));
         dos.writeBytes(content);
         dos.close();
 
@@ -896,7 +897,7 @@ public class GenericCsvInputFormatTest {
 
         DataOutputStream dos =
                 new DataOutputStream(
-                        new ZstdCompressorOutputStream(new FileOutputStream(tempFile)));
+                        new ZstdCompressorOutputStream(Files.newOutputStream(tempFile.toPath())));
         dos.writeBytes(content);
         dos.close();
 

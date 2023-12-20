@@ -37,7 +37,7 @@ class Tuple2Test {
     }
 
     @Test(expected = NullFieldException.class)
-    public void testGetFieldNotNull() {
+    void testGetFieldNotNull() {
         Tuple2<String, Integer> tuple = new Tuple2<>("Test case", null);
 
         Assertions.assertEquals("Test case", tuple.getFieldNotNull(0));

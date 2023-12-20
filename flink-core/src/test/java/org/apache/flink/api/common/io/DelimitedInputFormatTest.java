@@ -41,6 +41,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -575,7 +576,7 @@ public class DelimitedInputFormatTest {
         File tempFile = File.createTempFile("test_contents", "tmp");
         tempFile.deleteOnExit();
 
-        try (Writer out = new OutputStreamWriter(new FileOutputStream(tempFile))) {
+        try (Writer out = new OutputStreamWriter(Files.newOutputStream(tempFile.toPath()))) {
             out.write(contents);
         }
 
@@ -591,7 +592,7 @@ public class DelimitedInputFormatTest {
         File tempFile = File.createTempFile("test_contents", "tmp");
         tempFile.deleteOnExit();
 
-        try (Writer out = new OutputStreamWriter(new FileOutputStream(tempFile), charset)) {
+        try (Writer out = new OutputStreamWriter(Files.newOutputStream(tempFile.toPath()), charset)) {
             out.write(contents);
         }
 
@@ -621,7 +622,7 @@ public class DelimitedInputFormatTest {
         File tempFile = File.createTempFile("test_contents", "tmp");
         tempFile.deleteOnExit();
 
-        try (OutputStreamWriter wrt = new OutputStreamWriter(new FileOutputStream(tempFile))) {
+        try (OutputStreamWriter wrt = new OutputStreamWriter(Files.newOutputStream(tempFile.toPath()))) {
             wrt.write(contents);
         }
         return new Path(tempFile.toURI().toString());

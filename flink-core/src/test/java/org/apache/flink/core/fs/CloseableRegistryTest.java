@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 /** Tests for the {@link CloseableRegistry}. */
-public class CloseableRegistryTest
+class CloseableRegistryTest
         extends AbstractAutoCloseableRegistryTest<Closeable, Closeable, Object> {
 
     @Override
