@@ -40,7 +40,7 @@ public class DefaultSplitAssignerTest {
             }
 
             DefaultInputSplitAssigner ia = new DefaultInputSplitAssigner(splits);
-            InputSplit is = null;
+            InputSplit is;
             while ((is = ia.getNextInputSplit("", 0)) != null) {
                 Assertions.assertTrue(splits.remove(is));
             }

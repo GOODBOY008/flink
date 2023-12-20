@@ -24,7 +24,7 @@ import org.apache.flink.types.parser.FieldParser.ParseErrorState;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class FieldParserTest {
+class FieldParserTest {
 
     @Test
     void testDelimiterNext() {

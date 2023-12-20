@@ -61,7 +61,7 @@ public class EnumSerializerCompatibilityTest extends TestLogger {
 
     /** Check that removing enum fields makes the snapshot incompatible */
     @Test(expected = IllegalStateException.class)
-    public void removingFieldShouldBeIncompatible() throws Exception {
+    void removingFieldShouldBeIncompatible() throws Exception {
         Assertions.assertTrue(checkCompatibility(ENUM_A, ENUM_C).isIncompatible());
     }
 

@@ -128,7 +128,7 @@ class LinkedOptionalMapTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void unwrapOptionalsWithMissingValueThrows() {
+     void unwrapOptionalsWithMissingValueThrows() {
         LinkedOptionalMap<Class<?>, String> map = new LinkedOptionalMap<>();
 
         map.put("a", String.class, null);
@@ -137,7 +137,7 @@ class LinkedOptionalMapTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void unwrapOptionalsWithMissingKeyThrows() {
+     void unwrapOptionalsWithMissingKeyThrows() {
         LinkedOptionalMap<Class<?>, String> map = new LinkedOptionalMap<>();
 
         map.put("a", null, "blabla");

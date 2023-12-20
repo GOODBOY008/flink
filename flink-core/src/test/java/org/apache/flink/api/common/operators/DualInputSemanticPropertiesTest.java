@@ -233,7 +233,7 @@ public class DualInputSemanticPropertiesTest {
     }
 
     @Test(expected = SemanticProperties.InvalidSemanticAnnotationException.class)
-    public void testAddForwardedFieldsTargetTwice1() {
+    void testAddForwardedFieldsTargetTwice1() {
 
         DualInputSemanticProperties sp = new DualInputSemanticProperties();
         sp.addForwardedField(0, 0, 2);
@@ -241,7 +241,7 @@ public class DualInputSemanticPropertiesTest {
     }
 
     @Test(expected = SemanticProperties.InvalidSemanticAnnotationException.class)
-    public void testAddForwardedFieldsTargetTwice2() {
+    void testAddForwardedFieldsTargetTwice2() {
 
         DualInputSemanticProperties sp = new DualInputSemanticProperties();
         sp.addForwardedField(1, 0, 2);

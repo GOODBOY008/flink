@@ -103,23 +103,23 @@ public class TransformationTest extends TestLogger {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testDeclareManagedMemoryOperatorScopeUseCaseFailWrongScope() {
+    void testDeclareManagedMemoryOperatorScopeUseCaseFailWrongScope() {
         transformation.declareManagedMemoryUseCaseAtOperatorScope(ManagedMemoryUseCase.PYTHON, 123);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testDeclareManagedMemoryOperatorScopeUseCaseFailZeroWeight() {
+    void testDeclareManagedMemoryOperatorScopeUseCaseFailZeroWeight() {
         transformation.declareManagedMemoryUseCaseAtOperatorScope(ManagedMemoryUseCase.OPERATOR, 0);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testDeclareManagedMemoryOperatorScopeUseCaseFailNegativeWeight() {
+    void testDeclareManagedMemoryOperatorScopeUseCaseFailNegativeWeight() {
         transformation.declareManagedMemoryUseCaseAtOperatorScope(
                 ManagedMemoryUseCase.OPERATOR, -1);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testDeclareManagedMemorySlotScopeUseCaseFailWrongScope() {
+    void testDeclareManagedMemorySlotScopeUseCaseFailWrongScope() {
         transformation.declareManagedMemoryUseCaseAtSlotScope(ManagedMemoryUseCase.OPERATOR);
     }
 

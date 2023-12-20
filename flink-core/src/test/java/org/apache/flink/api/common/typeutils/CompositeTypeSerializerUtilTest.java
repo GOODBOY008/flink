@@ -147,7 +147,7 @@ public class CompositeTypeSerializerUtilTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testGetFinalResultOnUndefinedReconfigureIntermediateCompatibilityResultFails() {
+    void testGetFinalResultOnUndefinedReconfigureIntermediateCompatibilityResultFails() {
         IntermediateCompatibilityResult<Integer> intermediateCompatibilityResult =
                 IntermediateCompatibilityResult.undefinedReconfigureResult(
                         new TypeSerializer[] {IntSerializer.INSTANCE});
@@ -165,7 +165,7 @@ public class CompositeTypeSerializerUtilTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testGetNestedSerializersOnIncompatibleIntermediateCompatibilityResultFails() {
+    void testGetNestedSerializersOnIncompatibleIntermediateCompatibilityResultFails() {
         IntermediateCompatibilityResult<Integer> intermediateCompatibilityResult =
                 IntermediateCompatibilityResult.definedIncompatibleResult();
 

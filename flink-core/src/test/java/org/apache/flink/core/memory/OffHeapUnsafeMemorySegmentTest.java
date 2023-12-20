@@ -49,7 +49,7 @@ class OffHeapUnsafeMemorySegmentTest extends MemorySegmentTestBase {
 
     @Override
     @Test(expected = UnsupportedOperationException.class)
-    public void testByteBufferWrapping() {
+     void testByteBufferWrapping() {
         createSegment(10).wrap(1, 2);
     }
 

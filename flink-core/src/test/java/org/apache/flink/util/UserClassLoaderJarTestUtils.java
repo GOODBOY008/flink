@@ -27,6 +27,7 @@ import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,7 +83,7 @@ public class UserClassLoaderJarTestUtils {
 
         // pack class file to jar
         File jarFile = Paths.get(tmpDir.toString(), jarName).toFile();
-        JarOutputStream jos = new JarOutputStream(new FileOutputStream(jarFile));
+        JarOutputStream jos = new JarOutputStream(Files.newOutputStream(jarFile.toPath()));
         for (String className : classNameCodes.keySet()) {
             File classFile = Paths.get(tmpDir.toString(), className + ".class").toFile();
             JarEntry jarEntry = new JarEntry(className + ".class");

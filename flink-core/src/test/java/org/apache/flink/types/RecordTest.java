@@ -169,8 +169,8 @@ public class RecordTest {
 
     @Test
     void testRemoveField() {
-        Record record = null;
-        int oldLen = 0;
+        Record record;
+        int oldLen;
 
         // Create filled record and remove field from the middle
         record = new Record(this.origVal1, this.origVal2);
@@ -499,7 +499,7 @@ public class RecordTest {
 
     private long generateRandomBitmask(int numFields) {
         long bitmask = 0L;
-        long tmp = 0L;
+        long tmp;
 
         for (int i = 0; i < numFields; i++) {
             tmp = this.rand.nextBoolean() ? 1L : 0L;

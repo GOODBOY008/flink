@@ -43,7 +43,7 @@ public class ResourceTest extends TestLogger {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorInvalidValue() {
+    void testConstructorInvalidValue() {
         new TestResource(-0.1);
     }
 
@@ -78,7 +78,7 @@ public class ResourceTest extends TestLogger {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testMergeErrorOnDifferentTypes() {
+    void testMergeErrorOnDifferentTypes() {
         final Resource<TestResource> v1 = new TestResource(0.1);
         final TestResource v2 = new CPUResource(0.1);
         v1.merge(v2);
@@ -92,14 +92,14 @@ public class ResourceTest extends TestLogger {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSubtractLargerValue() {
+    void testSubtractLargerValue() {
         final Resource<TestResource> v1 = new TestResource(0.1);
         final TestResource v2 = new TestResource(0.2);
         v1.subtract(v2);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSubtractErrorOnDifferentTypes() {
+    void testSubtractErrorOnDifferentTypes() {
         final Resource<TestResource> v1 = new TestResource(0.1);
         final TestResource v2 = new CPUResource(0.1);
         v1.subtract(v2);
@@ -113,7 +113,7 @@ public class ResourceTest extends TestLogger {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testDivideNegative() {
+    void testDivideNegative() {
         final Resource<TestResource> resource = new TestResource(1.2);
         final BigDecimal by = BigDecimal.valueOf(-0.5);
         resource.divide(by);
@@ -127,7 +127,7 @@ public class ResourceTest extends TestLogger {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testDivideNegativeInteger() {
+    void testDivideNegativeInteger() {
         final Resource<TestResource> resource = new TestResource(1.2);
         final int by = -5;
         resource.divide(by);
@@ -141,7 +141,7 @@ public class ResourceTest extends TestLogger {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testMutiplyNegative() {
+    void testMutiplyNegative() {
         final Resource<TestResource> resource = new TestResource(0.3);
         final BigDecimal by = BigDecimal.valueOf(-0.2);
         resource.multiply(by);
@@ -155,7 +155,7 @@ public class ResourceTest extends TestLogger {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testMutiplyNegativeInteger() {
+    void testMutiplyNegativeInteger() {
         final Resource<TestResource> resource = new TestResource(0.3);
         final int by = -2;
         resource.multiply(by);
@@ -183,12 +183,12 @@ public class ResourceTest extends TestLogger {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testCompareToFailNull() {
+    void testCompareToFailNull() {
         new TestResource(0.0).compareTo(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testCompareToFailDifferentType() {
+    void testCompareToFailDifferentType() {
         // initialized as different anonymous classes
         final Resource<TestResource> resource1 = new TestResource(0.0) {};
         final Resource<TestResource> resource2 = new TestResource(0.0) {};
@@ -196,7 +196,7 @@ public class ResourceTest extends TestLogger {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testCompareToFailDifferentName() {
+    void testCompareToFailDifferentName() {
         // initialized as different anonymous classes
         final Resource<TestResource> resource1 = new TestResource("name1", 0.0);
         final Resource<TestResource> resource2 = new TestResource("name2", 0.0);

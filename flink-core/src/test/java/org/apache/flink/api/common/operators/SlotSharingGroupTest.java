@@ -68,7 +68,7 @@ public class SlotSharingGroupTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testBuildSlotSharingGroupWithIllegalConfig() {
+    void testBuildSlotSharingGroupWithIllegalConfig() {
         SlotSharingGroup.newBuilder("ssg")
                 .setCpuCores(1)
                 .setTaskHeapMemory(MemorySize.ZERO)
@@ -77,7 +77,7 @@ public class SlotSharingGroupTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testBuildSlotSharingGroupWithoutAllRequiredConfig() {
+    void testBuildSlotSharingGroupWithoutAllRequiredConfig() {
         SlotSharingGroup.newBuilder("ssg").setCpuCores(1).setTaskOffHeapMemoryMB(10).build();
     }
 }

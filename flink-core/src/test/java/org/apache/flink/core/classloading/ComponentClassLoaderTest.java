@@ -62,7 +62,7 @@ public class ComponentClassLoaderTest extends TestLogger {
     // ----------------------------------------------------------------------------------------------
 
     @Test(expected = ClassNotFoundException.class)
-    public void testComponentOnlyIsDefaultForClasses() throws Exception {
+     void testComponentOnlyIsDefaultForClasses() throws Exception {
         TestUrlClassLoader owner =
                 new TestUrlClassLoader(NON_EXISTENT_CLASS_NAME, CLASS_RETURNED_BY_OWNER);
 

@@ -114,7 +114,7 @@ public class SingleInputSemanticPropertiesTest {
     }
 
     @Test(expected = InvalidSemanticAnnotationException.class)
-    public void testAddForwardedFieldsTargetTwice() {
+    void testAddForwardedFieldsTargetTwice() {
 
         SingleInputSemanticProperties sp = new SingleInputSemanticProperties();
         sp.addForwardedField(0, 2);
@@ -122,7 +122,7 @@ public class SingleInputSemanticPropertiesTest {
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
-    public void testGetTargetFieldInvalidIndex() {
+    void testGetTargetFieldInvalidIndex() {
 
         SingleInputSemanticProperties sp = new SingleInputSemanticProperties();
         sp.addForwardedField(0, 0);
@@ -131,7 +131,7 @@ public class SingleInputSemanticPropertiesTest {
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
-    public void testGetSourceFieldInvalidIndex() {
+    void testGetSourceFieldInvalidIndex() {
 
         SingleInputSemanticProperties sp = new SingleInputSemanticProperties();
         sp.addForwardedField(0, 0);
@@ -140,7 +140,7 @@ public class SingleInputSemanticPropertiesTest {
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
-    public void testGetReadFieldsInvalidIndex() {
+    void testGetReadFieldsInvalidIndex() {
 
         SingleInputSemanticProperties sp = new SingleInputSemanticProperties();
         sp.addReadFields(new FieldSet(0, 1));
@@ -167,7 +167,7 @@ public class SingleInputSemanticPropertiesTest {
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
-    public void testAllForwardedSingleInputSemPropsInvalidIndex1() {
+    void testAllForwardedSingleInputSemPropsInvalidIndex1() {
 
         SingleInputSemanticProperties sp =
                 new SingleInputSemanticProperties.AllFieldsForwardedProperties();
@@ -175,7 +175,7 @@ public class SingleInputSemanticPropertiesTest {
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
-    public void testAllForwardedSingleInputSemPropsInvalidIndex2() {
+    void testAllForwardedSingleInputSemPropsInvalidIndex2() {
 
         SingleInputSemanticProperties sp =
                 new SingleInputSemanticProperties.AllFieldsForwardedProperties();

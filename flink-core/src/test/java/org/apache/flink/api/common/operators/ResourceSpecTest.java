@@ -61,13 +61,13 @@ public class ResourceSpecTest extends TestLogger {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testLessThanOrEqualWhenUnknownWithSpecified() {
+    void testLessThanOrEqualWhenUnknownWithSpecified() {
         final ResourceSpec rs1 = ResourceSpec.newBuilder(1.0, 100).build();
         Assertions.assertTrue(ResourceSpec.UNKNOWN.lessThanOrEqual(rs1));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testLessThanOrEqualWhenSpecifiedWithUnknown() {
+    void testLessThanOrEqualWhenSpecifiedWithUnknown() {
         final ResourceSpec rs1 = ResourceSpec.newBuilder(1.0, 100).build();
         Assertions.assertTrue(rs1.lessThanOrEqual(ResourceSpec.UNKNOWN));
     }
@@ -225,7 +225,7 @@ public class ResourceSpecTest extends TestLogger {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSubtractOtherHasLargerResources() {
+    void testSubtractOtherHasLargerResources() {
         final ResourceSpec rs1 = ResourceSpec.newBuilder(1.0, 100).build();
         final ResourceSpec rs2 = ResourceSpec.newBuilder(0.2, 200).build();
 

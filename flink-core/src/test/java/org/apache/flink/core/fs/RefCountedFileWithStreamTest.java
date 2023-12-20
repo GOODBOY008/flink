@@ -55,7 +55,7 @@ public class RefCountedFileWithStreamTest {
     }
 
     @Test(expected = IOException.class)
-    public void writeAfterCloseShouldThrowException() throws IOException {
+     void writeAfterCloseShouldThrowException() throws IOException {
         final RefCountedFileWithStream fileUnderTest =
                 getClosedRefCountedFileWithContent("hello world");
         byte[] content = bytesOf("Hello Again");
@@ -63,7 +63,7 @@ public class RefCountedFileWithStreamTest {
     }
 
     @Test(expected = IOException.class)
-    public void flushAfterCloseShouldThrowException() throws IOException {
+     void flushAfterCloseShouldThrowException() throws IOException {
         final RefCountedFileWithStream fileUnderTest =
                 getClosedRefCountedFileWithContent("hello world");
         fileUnderTest.flush();

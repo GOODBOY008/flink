@@ -61,7 +61,7 @@ public class FlinkSecurityManagerTest extends TestLogger {
     }
 
     @Test(expected = UserSystemExitException.class)
-    public void testThrowUserExit() {
+     void testThrowUserExit() {
         FlinkSecurityManager flinkSecurityManager =
                 new FlinkSecurityManager(ClusterOptions.UserSystemExitMode.THROW, false);
         flinkSecurityManager.monitorUserSystemExit();
@@ -224,7 +224,7 @@ public class FlinkSecurityManagerTest extends TestLogger {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testInvalidConfiguration() {
+     void testInvalidConfiguration() {
         Configuration configuration = new Configuration();
         configuration.set(ClusterOptions.INTERCEPT_USER_SYSTEM_EXIT, null);
         FlinkSecurityManager flinkSecurityManager =

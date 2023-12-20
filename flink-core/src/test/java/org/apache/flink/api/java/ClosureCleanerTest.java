@@ -36,7 +36,7 @@ import java.io.Serializable;
 public class ClosureCleanerTest {
 
     @Test(expected = InvalidProgramException.class)
-    public void testNonSerializable() throws Exception {
+    void testNonSerializable() throws Exception {
         MapCreator creator = new NonSerializableMapCreator();
         MapFunction<Integer, Integer> map = creator.getMap();
 
@@ -82,7 +82,7 @@ public class ClosureCleanerTest {
     }
 
     @Test(expected = InvalidProgramException.class)
-    public void testNestedNonSerializable() throws Exception {
+    void testNestedNonSerializable() throws Exception {
         MapCreator creator = new NestedNonSerializableMapCreator(1);
         MapFunction<Integer, Integer> map = creator.getMap();
 
@@ -235,7 +235,7 @@ public class ClosureCleanerTest {
      * interfaces that it implements.
      */
     @Test(expected = InvalidProgramException.class)
-    public void testCleanObject() {
+    void testCleanObject() {
         ClosureCleaner.clean(new Object(), ExecutionConfig.ClosureCleanerLevel.RECURSIVE, true);
     }
 }
@@ -327,7 +327,7 @@ class NonSerializableMapCreator implements MapCreator {
 @SuppressWarnings("serial")
 class SerializableMapCreator implements MapCreator, Serializable {
 
-    private int add = 0;
+    private int add;
 
     SerializableMapCreator(int add) {
         this.add = add;
@@ -342,7 +342,7 @@ class SerializableMapCreator implements MapCreator, Serializable {
 @SuppressWarnings("serial")
 class NestedSerializableMapCreator implements MapCreator, Serializable {
 
-    private int add = 0;
+    private int add;
     private final InnerSerializableMapCreator inner;
 
     NestedSerializableMapCreator(int add) {
@@ -366,7 +366,7 @@ class NestedSerializableMapCreator implements MapCreator, Serializable {
 
 class NestedNonSerializableMapCreator implements MapCreator {
 
-    private int add = 0;
+    private int add;
     private final InnerSerializableMapCreator inner;
 
     NestedNonSerializableMapCreator(int add) {

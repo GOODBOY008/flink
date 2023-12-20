@@ -55,17 +55,17 @@ public class CompressedSerializedValueTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testNullValue() throws Exception {
+     void testNullValue() throws Exception {
         CompressedSerializedValue.fromObject(null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void testFromNullBytes() {
+     void testFromNullBytes() {
         CompressedSerializedValue.fromBytes(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testFromEmptyBytes() {
+     void testFromEmptyBytes() {
         CompressedSerializedValue.fromBytes(new byte[0]);
     }
 }

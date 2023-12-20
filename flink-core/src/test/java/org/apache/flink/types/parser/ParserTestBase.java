@@ -377,7 +377,7 @@ public abstract class ParserTestBase<T> extends TestLogger {
     @SuppressWarnings("unchecked")
     public void testStaticParseMethod() {
         try {
-            Method parseMethod = null;
+            Method parseMethod;
             try {
                 parseMethod =
                         getParser()
@@ -419,7 +419,7 @@ public abstract class ParserTestBase<T> extends TestLogger {
     @Test
     void testStaticParseMethodWithInvalidValues() {
         try {
-            Method parseMethod = null;
+            Method parseMethod;
             try {
                 parseMethod =
                         getParser()

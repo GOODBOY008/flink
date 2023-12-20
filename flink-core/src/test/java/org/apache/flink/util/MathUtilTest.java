@@ -152,17 +152,17 @@ public class MathUtilTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testDivideRoundUpNegativeDividend() {
+     void testDivideRoundUpNegativeDividend() {
         MathUtils.divideRoundUp(-1, 1);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testDivideRoundUpNegativeDivisor() {
+     void testDivideRoundUpNegativeDivisor() {
         MathUtils.divideRoundUp(1, -1);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testDivideRoundUpZeroDivisor() {
+     void testDivideRoundUpZeroDivisor() {
         MathUtils.divideRoundUp(1, 0);
     }
 }

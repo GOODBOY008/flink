@@ -1840,12 +1840,12 @@ public abstract class MemorySegmentTestBase {
     }
 
     @Test(expected = ReadOnlyBufferException.class)
-    public void testHeapByteBufferGetReadOnly() {
+     void testHeapByteBufferGetReadOnly() {
         testByteBufferGetReadOnly(false);
     }
 
     @Test(expected = ReadOnlyBufferException.class)
-    public void testOffHeapByteBufferGetReadOnly() {
+     void testOffHeapByteBufferGetReadOnly() {
         testByteBufferGetReadOnly(true);
     }
 

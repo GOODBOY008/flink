@@ -52,7 +52,7 @@ public class EnumSerializerTest extends TestLogger {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testEmptyEnum() {
+    void testEmptyEnum() {
         new EnumSerializer<>(EmptyEnum.class);
     }
 

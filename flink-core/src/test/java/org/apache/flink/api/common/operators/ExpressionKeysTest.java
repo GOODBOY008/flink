@@ -51,7 +51,7 @@ public class ExpressionKeysTest {
     }
 
     @Test(expected = InvalidProgramException.class)
-    public void testGenericNonKeyType() {
+    void testGenericNonKeyType() {
         // Fail: GenericType cannot be used as key
         TypeInformation<GenericNonKeyType> genericType =
                 new GenericTypeInfo<>(GenericNonKeyType.class);
@@ -153,7 +153,7 @@ public class ExpressionKeysTest {
     }
 
     @Test(expected = InvalidProgramException.class)
-    public void testTupleNonKeyField() {
+    void testTupleNonKeyField() {
         // selected field is not a key type
         TypeInformation<Tuple3<String, Long, GenericNonKeyType>> ti =
                 new TupleTypeInfo<>(
@@ -384,7 +384,7 @@ public class ExpressionKeysTest {
     }
 
     @Test(expected = InvalidProgramException.class)
-    public void testNonKeyPojoField() {
+    void testNonKeyPojoField() {
         // selected field is not a key type
         TypeInformation<PojoWithNonKeyField> ti =
                 TypeExtractor.getForClass(PojoWithNonKeyField.class);
@@ -483,7 +483,7 @@ public class ExpressionKeysTest {
     }
 
     @Test(expected = Keys.IncompatibleKeysException.class)
-    public void testAreCompatible6() throws Keys.IncompatibleKeysException {
+    void testAreCompatible6() throws Keys.IncompatibleKeysException {
         TypeInformation<Pojo1> t1 = TypeExtractor.getForClass(Pojo1.class);
         TypeInformation<Tuple2<String, Long>> t2 =
                 new TupleTypeInfo<>(BasicTypeInfo.STRING_TYPE_INFO, BasicTypeInfo.LONG_TYPE_INFO);
@@ -495,7 +495,7 @@ public class ExpressionKeysTest {
     }
 
     @Test(expected = Keys.IncompatibleKeysException.class)
-    public void testAreCompatible7() throws Keys.IncompatibleKeysException {
+    void testAreCompatible7() throws Keys.IncompatibleKeysException {
         TypeInformation<Pojo1> t1 = TypeExtractor.getForClass(Pojo1.class);
         TypeInformation<Tuple2<String, Long>> t2 =
                 new TupleTypeInfo<>(BasicTypeInfo.STRING_TYPE_INFO, BasicTypeInfo.LONG_TYPE_INFO);

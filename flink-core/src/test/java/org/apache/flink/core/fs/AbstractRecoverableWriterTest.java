@@ -303,7 +303,7 @@ public abstract class AbstractRecoverableWriterTest extends TestLogger {
     // TESTS FOR EXCEPTIONS
 
     @Test(expected = IOException.class)
-    public void testExceptionWritingAfterCloseForCommit() throws Exception {
+     void testExceptionWritingAfterCloseForCommit() throws Exception {
         final Path testDir = getBasePathForTest();
 
         final RecoverableWriter writer = getNewFileSystemWriter();
@@ -323,7 +323,7 @@ public abstract class AbstractRecoverableWriterTest extends TestLogger {
     }
 
     @Test(expected = IOException.class)
-    public void testResumeAfterCommit() throws Exception {
+     void testResumeAfterCommit() throws Exception {
         final Path testDir = getBasePathForTest();
 
         final RecoverableWriter writer = getNewFileSystemWriter();

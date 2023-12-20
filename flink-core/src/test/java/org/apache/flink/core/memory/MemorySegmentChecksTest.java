@@ -26,17 +26,17 @@ import java.nio.ByteBuffer;
 public class MemorySegmentChecksTest {
 
     @Test(expected = NullPointerException.class)
-    public void testHeapNullBuffer2() {
+     void testHeapNullBuffer2() {
         new MemorySegment((byte[]) null, new Object());
     }
 
     @Test(expected = NullPointerException.class)
-    public void testOffHeapNullBuffer2() {
+     void testOffHeapNullBuffer2() {
         new MemorySegment((ByteBuffer) null, new Object());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testNonDirectBuffer() {
+     void testNonDirectBuffer() {
         new MemorySegment(ByteBuffer.allocate(1024), new Object());
     }
 }

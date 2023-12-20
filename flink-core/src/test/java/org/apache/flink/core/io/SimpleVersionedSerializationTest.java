@@ -113,7 +113,7 @@ public class SimpleVersionedSerializationTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testUnderflow() throws Exception {
+     void testUnderflow() throws Exception {
         SimpleVersionedSerialization.readVersionAndDeSerialize(
                 new TestStringSerializer(), new byte[7]);
     }

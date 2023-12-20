@@ -46,7 +46,7 @@ public class LocatableSplitAssignerTest {
 
             // get all available splits
             LocatableInputSplitAssigner ia = new LocatableInputSplitAssigner(splits);
-            InputSplit is = null;
+            InputSplit is;
             while ((is = ia.getNextInputSplit(null, 0)) != null) {
                 Assertions.assertTrue(splits.remove(is));
             }
@@ -75,7 +75,7 @@ public class LocatableSplitAssignerTest {
 
             // get all available splits
             LocatableInputSplitAssigner ia = new LocatableInputSplitAssigner(splits);
-            InputSplit is = null;
+            InputSplit is;
             while ((is = ia.getNextInputSplit("testhost", 0)) != null) {
                 Assertions.assertTrue(splits.remove(is));
             }
@@ -106,7 +106,7 @@ public class LocatableSplitAssignerTest {
 
             // get all available splits
             LocatableInputSplitAssigner ia = new LocatableInputSplitAssigner(splits);
-            InputSplit is = null;
+            InputSplit is;
             while ((is = ia.getNextInputSplit("testhost", 0)) != null) {
                 Assertions.assertTrue(splits.remove(is));
             }
@@ -154,7 +154,7 @@ public class LocatableSplitAssignerTest {
 
             // get all available splits
             LocatableInputSplitAssigner ia = new LocatableInputSplitAssigner(splits);
-            InputSplit is = null;
+            InputSplit is;
             int i = 0;
             while ((is = ia.getNextInputSplit(hosts[i++ % hosts.length], 0)) != null) {
                 Assertions.assertTrue(splits.remove(is));
@@ -213,7 +213,7 @@ public class LocatableSplitAssignerTest {
 
             // get all available splits
             LocatableInputSplitAssigner ia = new LocatableInputSplitAssigner(splits);
-            LocatableInputSplit is = null;
+            LocatableInputSplit is;
             for (int i = 0; i < NUM_SPLITS; i++) {
                 String host = requestingHosts[i % requestingHosts.length];
                 is = ia.getNextInputSplit(host, 0);
@@ -258,7 +258,7 @@ public class LocatableSplitAssignerTest {
 
             // get all available splits
             LocatableInputSplitAssigner ia = new LocatableInputSplitAssigner(splits);
-            InputSplit is = null;
+            InputSplit is;
             int i = 0;
             while ((is = ia.getNextInputSplit(hosts[i++ % hosts.length], 0)) != null) {
                 Assertions.assertTrue(splits.remove(is));
