@@ -25,6 +25,7 @@ import org.apache.flink.api.common.typeutils.TypeSerializerMatchers;
 import org.apache.flink.api.common.typeutils.TypeSerializerSchemaCompatibility;
 import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 
+import org.assertj.core.api.Condition;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -32,9 +33,9 @@ import org.hamcrest.TypeSafeMatcher;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import static org.apache.flink.api.common.typeutils.base.TestEnum.EMMA;
-import static org.hamcrest.Matchers.is;
 
 /** Migration tests for {@link EnumSerializer}. */
 class EnumSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<TestEnum, TestEnum> {
@@ -112,12 +113,12 @@ class EnumSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<TestEnum, 
         }
 
         @Override
-        public Matcher<TestEnum> testDataMatcher() {
-            return is(EMMA);
+        public Predicate<TestEnum> testDataMatcher() {
+            return Predicate.isEqual(EMMA);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<TestEnum>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<TestEnum>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -176,12 +177,12 @@ class EnumSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<TestEnum, 
         }
 
         @Override
-        public Matcher<EnumAfter> testDataMatcher() {
-            return is(EnumAfter.EMMA);
+        public Predicate<EnumAfter> testDataMatcher() {
+            return Predicate.isEqual(EnumAfter.EMMA);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<EnumAfter>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<EnumAfter>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleWithReconfiguredSerializer();
         }

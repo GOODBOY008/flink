@@ -30,14 +30,14 @@ import org.apache.flink.api.java.typeutils.runtime.kryo.KryoPojosForMigrationTes
 import org.apache.flink.api.java.typeutils.runtime.kryo.KryoPojosForMigrationTests.Parrot;
 
 import com.esotericsoftware.kryo.serializers.DefaultSerializers;
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import static org.apache.flink.api.common.typeutils.TypeSerializerMatchers.hasSameCompatibilityAs;
 import static org.apache.flink.api.common.typeutils.TypeSerializerSchemaCompatibility.compatibleWithReconfiguredSerializer;
-import static org.hamcrest.Matchers.is;
 
 /** Tests migrations for {@link KryoSerializerSnapshot}. */
 @SuppressWarnings("WeakerAccess")
@@ -101,12 +101,12 @@ class KryoSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Object, Ob
         }
 
         @Override
-        public Matcher<Animal> testDataMatcher() {
-            return is(new Dog("Hasso"));
+        public Predicate<Animal> testDataMatcher() {
+            return Predicate.isEqual(new Dog("Hasso"));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Animal>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Animal>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -130,12 +130,12 @@ class KryoSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Object, Ob
         }
 
         @Override
-        public Matcher<Animal> testDataMatcher() {
-            return is(new Dog("Hasso"));
+        public Predicate<Animal> testDataMatcher() {
+            return Predicate.isEqual(new Dog("Hasso"));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Animal>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Animal>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return hasSameCompatibilityAs(
                     compatibleWithReconfiguredSerializer(
@@ -182,12 +182,12 @@ class KryoSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Object, Ob
         }
 
         @Override
-        public Matcher<Animal> testDataMatcher() {
-            return is(new Dog("Hasso"));
+        public Predicate<Animal> testDataMatcher() {
+            return Predicate.isEqual(new Dog("Hasso"));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Animal>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Animal>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return hasSameCompatibilityAs(
                     compatibleWithReconfiguredSerializer(
@@ -238,12 +238,12 @@ class KryoSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Object, Ob
         }
 
         @Override
-        public Matcher<Animal> testDataMatcher() {
-            return is(new Dog("Hasso"));
+        public Predicate<Animal> testDataMatcher() {
+            return Predicate.isEqual(new Dog("Hasso"));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Animal>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Animal>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return hasSameCompatibilityAs(
                     compatibleWithReconfiguredSerializer(

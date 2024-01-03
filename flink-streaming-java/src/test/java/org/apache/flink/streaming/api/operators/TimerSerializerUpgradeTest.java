@@ -25,12 +25,11 @@ import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 import org.apache.flink.api.common.typeutils.base.IntSerializer;
 import org.apache.flink.api.common.typeutils.base.StringSerializer;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /** Migration test for {@link TimerSerializer}. */
 class TimerSerializerUpgradeTest
@@ -85,12 +84,12 @@ class TimerSerializerUpgradeTest
         }
 
         @Override
-        public Matcher<TimerHeapInternalTimer<String, Integer>> testDataMatcher() {
-            return is(new TimerHeapInternalTimer<>(12345, "key", 678));
+        public Predicate<TimerHeapInternalTimer<String, Integer>> testDataMatcher() {
+            return Predicate.isEqual(new TimerHeapInternalTimer<>(12345, "key", 678));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<TimerHeapInternalTimer<String, Integer>>>
+        public Condition<TypeSerializerSchemaCompatibility<TimerHeapInternalTimer<String, Integer>>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }

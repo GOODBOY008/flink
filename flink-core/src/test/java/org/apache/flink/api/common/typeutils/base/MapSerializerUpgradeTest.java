@@ -24,14 +24,13 @@ import org.apache.flink.api.common.typeutils.TypeSerializerMatchers;
 import org.apache.flink.api.common.typeutils.TypeSerializerSchemaCompatibility;
 import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /** A {@link TypeSerializerUpgradeTestBase} for {@link MapSerializerSnapshot}. */
 class MapSerializerUpgradeTest
@@ -89,16 +88,16 @@ class MapSerializerUpgradeTest
         }
 
         @Override
-        public Matcher<Map<Integer, String>> testDataMatcher() {
+        public Predicate<Map<Integer, String>> testDataMatcher() {
             Map<Integer, String> data = new HashMap<>(3);
             for (int i = 0; i < 3; ++i) {
                 data.put(i, String.valueOf(i));
             }
-            return is(data);
+            return data::equals;
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Map<Integer, String>>>
+        public Condition<TypeSerializerSchemaCompatibility<Map<Integer, String>>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }

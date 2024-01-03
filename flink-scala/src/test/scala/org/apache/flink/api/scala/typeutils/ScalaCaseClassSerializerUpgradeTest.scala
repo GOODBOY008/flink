@@ -25,10 +25,10 @@ import org.apache.flink.api.scala.createTypeInformation
 import org.apache.flink.api.scala.types.CustomCaseClass
 import org.apache.flink.api.scala.typeutils.ScalaCaseClassSerializerUpgradeTest.{ScalaCaseClassSerializerSetup, ScalaCaseClassSerializerVerifier}
 
-import org.hamcrest.Matcher
-import org.hamcrest.Matchers.is
+import org.assertj.core.api.Condition
 
 import java.util
+import java.util.function.Predicate
 
 /** A [[TypeSerializerUpgradeTestBase]] for [[ScalaCaseClassSerializer]]. */
 class ScalaCaseClassSerializerUpgradeTest
@@ -74,10 +74,11 @@ object ScalaCaseClassSerializerUpgradeTest {
     extends TypeSerializerUpgradeTestBase.UpgradeVerifier[CustomCaseClass] {
     override def createUpgradedSerializer: TypeSerializer[CustomCaseClass] = supplier.get()
 
-    override def testDataMatcher: Matcher[CustomCaseClass] = is(CustomCaseClass("flink", 11))
+    override def testDataMatcher: Predicate[CustomCaseClass] =
+      Predicate.isEqual(CustomCaseClass("flink", 11))
 
     override def schemaCompatibilityMatcher(
-        version: FlinkVersion): Matcher[TypeSerializerSchemaCompatibility[CustomCaseClass]] =
+        version: FlinkVersion): Condition[TypeSerializerSchemaCompatibility[CustomCaseClass]] =
       TypeSerializerMatchers.isCompatibleAsIs[CustomCaseClass]()
   }
 }

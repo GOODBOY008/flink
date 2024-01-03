@@ -27,13 +27,12 @@ import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 import org.apache.flink.api.common.typeutils.base.LongSerializer;
 import org.apache.flink.test.util.MigrationTest;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
-
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /** A {@link TypeSerializerUpgradeTestBase} for {@link LinkedListSerializer}. */
 @VisibleForTesting
@@ -101,18 +100,18 @@ public class LinkedListSerializerUpgradeTest
         }
 
         @Override
-        public Matcher<LinkedList<Long>> testDataMatcher() {
+        public Predicate<LinkedList<Long>> testDataMatcher() {
             LinkedList<Long> list = new LinkedList<>();
             list.add(42L);
             list.add(-42L);
             list.add(0L);
             list.add(Long.MAX_VALUE);
             list.add(Long.MIN_VALUE);
-            return is(list);
+            return list::equals;
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<LinkedList<Long>>>
+        public Condition<TypeSerializerSchemaCompatibility<LinkedList<Long>>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             if (version.isNewerVersionThan(FlinkVersion.v1_13)) {
                 return TypeSerializerMatchers.isCompatibleAsIs();

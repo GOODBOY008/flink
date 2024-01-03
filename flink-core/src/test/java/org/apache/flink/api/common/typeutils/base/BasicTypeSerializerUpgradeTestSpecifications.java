@@ -34,14 +34,14 @@ import org.apache.flink.types.NullValue;
 import org.apache.flink.types.ShortValue;
 import org.apache.flink.types.StringValue;
 
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
+import org.assertj.core.api.Condition;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.function.Predicate;
 
 /** Test specifications for {@link BasicTypeSerializerUpgradeTest}. */
 public class BasicTypeSerializerUpgradeTestSpecifications {
@@ -71,12 +71,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<BigDecimal> testDataMatcher() {
-            return Matchers.is(new BigDecimal("123456789012345678901234567890123456.789"));
+        public Predicate<BigDecimal> testDataMatcher() {
+            return Predicate.isEqual(new BigDecimal("123456789012345678901234567890123456.789"));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<BigDecimal>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<BigDecimal>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -108,12 +108,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<BigInteger> testDataMatcher() {
-            return Matchers.is(new BigInteger("123456789012345678901234567890123456"));
+        public Predicate<BigInteger> testDataMatcher() {
+            return Predicate.isEqual(new BigInteger("123456789012345678901234567890123456"));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<BigInteger>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<BigInteger>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -145,12 +145,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<Boolean> testDataMatcher() {
-            return Matchers.is(Boolean.TRUE);
+        public Predicate<Boolean> testDataMatcher() {
+            return Predicate.isEqual(Boolean.TRUE);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Boolean>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Boolean>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -182,13 +182,13 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<BooleanValue> testDataMatcher() {
-            return Matchers.is(BooleanValue.TRUE);
+        public Predicate<BooleanValue> testDataMatcher() {
+            return Predicate.isEqual(BooleanValue.TRUE);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<BooleanValue>> schemaCompatibilityMatcher(
-                FlinkVersion version) {
+        public Condition<TypeSerializerSchemaCompatibility<BooleanValue>>
+                schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
     }
@@ -219,12 +219,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<Byte> testDataMatcher() {
-            return Matchers.is(Byte.valueOf("42"));
+        public Predicate<Byte> testDataMatcher() {
+            return Predicate.isEqual(Byte.valueOf("42"));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Byte>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Byte>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -256,12 +256,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<ByteValue> testDataMatcher() {
-            return Matchers.is(new ByteValue((byte) 42));
+        public Predicate<ByteValue> testDataMatcher() {
+            return Predicate.isEqual(new ByteValue((byte) 42));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<ByteValue>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<ByteValue>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -293,12 +293,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<Character> testDataMatcher() {
-            return Matchers.is(Character.MAX_VALUE);
+        public Predicate<Character> testDataMatcher() {
+            return Predicate.isEqual(Character.MAX_VALUE);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Character>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Character>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -330,12 +330,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<CharValue> testDataMatcher() {
-            return Matchers.is(new CharValue((char) 42));
+        public Predicate<CharValue> testDataMatcher() {
+            return Predicate.isEqual(new CharValue((char) 42));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<CharValue>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<CharValue>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -367,12 +367,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<Date> testDataMatcher() {
-            return Matchers.is(new Date(1580382960L));
+        public Predicate<Date> testDataMatcher() {
+            return Predicate.isEqual(new Date(1580382960L));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Date>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Date>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -404,12 +404,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<Double> testDataMatcher() {
-            return Matchers.is(new Double("12345.6789"));
+        public Predicate<Double> testDataMatcher() {
+            return Predicate.isEqual(new Double("12345.6789"));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Double>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Double>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -441,12 +441,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<DoubleValue> testDataMatcher() {
-            return Matchers.is(new DoubleValue(12345.6789));
+        public Predicate<DoubleValue> testDataMatcher() {
+            return Predicate.isEqual(new DoubleValue(12345.6789));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<DoubleValue>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<DoubleValue>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -478,12 +478,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<Float> testDataMatcher() {
-            return Matchers.is(new Float("123.456"));
+        public Predicate<Float> testDataMatcher() {
+            return Predicate.isEqual(new Float("123.456"));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Float>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Float>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -515,12 +515,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<FloatValue> testDataMatcher() {
-            return Matchers.is(new FloatValue(123.456f));
+        public Predicate<FloatValue> testDataMatcher() {
+            return Predicate.isEqual(new FloatValue(123.456f));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<FloatValue>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<FloatValue>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -552,12 +552,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<Integer> testDataMatcher() {
-            return Matchers.is(123456);
+        public Predicate<Integer> testDataMatcher() {
+            return Predicate.isEqual(123456);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Integer>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Integer>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -589,12 +589,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<IntValue> testDataMatcher() {
-            return Matchers.is(new IntValue(123456));
+        public Predicate<IntValue> testDataMatcher() {
+            return Predicate.isEqual(new IntValue(123456));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<IntValue>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<IntValue>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -626,12 +626,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<Long> testDataMatcher() {
-            return Matchers.is(1234567890L);
+        public Predicate<Long> testDataMatcher() {
+            return Predicate.isEqual(1234567890L);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Long>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Long>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -663,12 +663,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<LongValue> testDataMatcher() {
-            return Matchers.is(new LongValue(1234567890));
+        public Predicate<LongValue> testDataMatcher() {
+            return Predicate.isEqual(new LongValue(1234567890));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<LongValue>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<LongValue>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -700,12 +700,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<NullValue> testDataMatcher() {
-            return Matchers.is(NullValue.getInstance());
+        public Predicate<NullValue> testDataMatcher() {
+            return Predicate.isEqual(NullValue.getInstance());
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<NullValue>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<NullValue>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -737,12 +737,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<Short> testDataMatcher() {
-            return Matchers.is((short) 123);
+        public Predicate<Short> testDataMatcher() {
+            return Predicate.isEqual((short) 123);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Short>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Short>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -774,12 +774,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<ShortValue> testDataMatcher() {
-            return Matchers.is(new ShortValue((short) 123));
+        public Predicate<ShortValue> testDataMatcher() {
+            return Predicate.isEqual(new ShortValue((short) 123));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<ShortValue>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<ShortValue>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -811,13 +811,13 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<java.sql.Date> testDataMatcher() {
-            return Matchers.is(new java.sql.Date(1580382960L));
+        public Predicate<java.sql.Date> testDataMatcher() {
+            return Predicate.isEqual(new java.sql.Date(1580382960L));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<java.sql.Date>> schemaCompatibilityMatcher(
-                FlinkVersion version) {
+        public Condition<TypeSerializerSchemaCompatibility<java.sql.Date>>
+                schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
     }
@@ -848,12 +848,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<Time> testDataMatcher() {
-            return Matchers.is(new Time(1580382960L));
+        public Predicate<Time> testDataMatcher() {
+            return Predicate.isEqual(new Time(1580382960L));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Time>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Time>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -885,12 +885,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<Timestamp> testDataMatcher() {
-            return Matchers.is(new Timestamp(1580382960L));
+        public Predicate<Timestamp> testDataMatcher() {
+            return Predicate.isEqual(new Timestamp(1580382960L));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Timestamp>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Timestamp>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -922,12 +922,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<String> testDataMatcher() {
-            return Matchers.is("123456789012345678901234567890123456");
+        public Predicate<String> testDataMatcher() {
+            return Predicate.isEqual("123456789012345678901234567890123456");
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<String>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<String>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -959,12 +959,12 @@ public class BasicTypeSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<StringValue> testDataMatcher() {
-            return Matchers.is(new StringValue("123456789012345678901234567890123456"));
+        public Predicate<StringValue> testDataMatcher() {
+            return Predicate.isEqual(new StringValue("123456789012345678901234567890123456"));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<StringValue>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<StringValue>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }

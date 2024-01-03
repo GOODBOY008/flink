@@ -25,12 +25,11 @@ import org.apache.flink.api.common.typeutils.TypeSerializerSchemaCompatibility;
 import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 import org.apache.flink.api.common.typeutils.base.StringSerializer;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /** A {@link TypeSerializerUpgradeTestBase} for {@link ArrayListSerializerSnapshot}. */
 class ArrayListSerializerUpgradeTest
@@ -86,15 +85,15 @@ class ArrayListSerializerUpgradeTest
         }
 
         @Override
-        public Matcher<ArrayList<String>> testDataMatcher() {
+        public Predicate<ArrayList<String>> testDataMatcher() {
             ArrayList<String> data = new ArrayList<>(2);
             data.add("Apache");
             data.add("Flink");
-            return is(data);
+            return data::equals;
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<ArrayList<String>>>
+        public Condition<TypeSerializerSchemaCompatibility<ArrayList<String>>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }

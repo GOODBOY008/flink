@@ -25,12 +25,11 @@ import org.apache.flink.api.common.typeutils.base.StringSerializer;
 import org.apache.flink.api.java.typeutils.runtime.EitherSerializer;
 import org.apache.flink.types.Either;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /** A {@link TypeSerializerUpgradeTestBase} for {@link GenericArraySerializer}. */
 class CompositeTypeSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Object, Object> {
@@ -87,12 +86,12 @@ class CompositeTypeSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<O
         }
 
         @Override
-        public Matcher<Either<String, Integer>> testDataMatcher() {
-            return is(new Either.Left<>("ApacheFlink"));
+        public Predicate<Either<String, Integer>> testDataMatcher() {
+            return Predicate.isEqual(new Either.Left<>("ApacheFlink"));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Either<String, Integer>>>
+        public Condition<TypeSerializerSchemaCompatibility<Either<String, Integer>>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -132,13 +131,13 @@ class CompositeTypeSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<O
         }
 
         @Override
-        public Matcher<String[]> testDataMatcher() {
+        public Predicate<String[]> testDataMatcher() {
             String[] data = {"Apache", "Flink"};
-            return is(data);
+            return data::equals;
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<String[]>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<String[]>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }

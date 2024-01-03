@@ -26,7 +26,7 @@ import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 import org.apache.flink.api.java.typeutils.runtime.WritableSerializerUpgradeTest.WritableName;
 
 import org.apache.hadoop.io.Writable;
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -34,8 +34,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
-
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /** A {@link TypeSerializerUpgradeTestBase} for {@link WritableSerializer}. */
 class WritableSerializerUpgradeTest
@@ -129,15 +128,15 @@ class WritableSerializerUpgradeTest
         }
 
         @Override
-        public Matcher<WritableName> testDataMatcher() {
+        public Predicate<WritableName> testDataMatcher() {
             WritableName writable = new WritableName();
             writable.setName("flink");
-            return is(writable);
+            return Predicate.isEqual(writable);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<WritableName>> schemaCompatibilityMatcher(
-                FlinkVersion version) {
+        public Condition<TypeSerializerSchemaCompatibility<WritableName>>
+                schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
     }

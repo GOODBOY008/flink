@@ -18,18 +18,14 @@
 
 package org.apache.flink.api.common.typeutils;
 
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
-import org.hamcrest.TypeSafeMatcher;
+import org.assertj.core.api.Condition;
 
 import java.util.function.Predicate;
 
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
- * A Collection of useful {@link Matcher}s for {@link TypeSerializer} and {@link
+ * A Collection of useful {@link Condition}s for {@link TypeSerializer} and {@link
  * TypeSerializerSchemaCompatibility}.
  */
 public final class TypeSerializerMatchers {
@@ -37,17 +33,17 @@ public final class TypeSerializerMatchers {
     private TypeSerializerMatchers() {}
 
     // -------------------------------------------------------------------------------------------------------------
-    // Matcher Factories
+    // Condition Factories
     // -------------------------------------------------------------------------------------------------------------
 
     /**
      * Matches {@code compatibleAsIs} {@link TypeSerializerSchemaCompatibility}.
      *
      * @param <T> element type
-     * @return a {@code Matcher} that matches {@code compatibleAsIs} {@link
+     * @return a {@code Condition} that matches {@code compatibleAsIs} {@link
      *     TypeSerializerSchemaCompatibility}.
      */
-    public static <T> Matcher<TypeSerializerSchemaCompatibility<T>> isCompatibleAsIs() {
+    public static <T> Condition<TypeSerializerSchemaCompatibility<T>> isCompatibleAsIs() {
         return propertyMatcher(
                 TypeSerializerSchemaCompatibility::isCompatibleAsIs,
                 "type serializer schema that is a compatible as is");
@@ -57,10 +53,10 @@ public final class TypeSerializerMatchers {
      * Matches {@code isIncompatible} {@link TypeSerializerSchemaCompatibility}.
      *
      * @param <T> element type
-     * @return a {@code Matcher} that matches {@code isIncompatible} {@link
+     * @return a {@code Condition} that matches {@code isIncompatible} {@link
      *     TypeSerializerSchemaCompatibility}.
      */
-    public static <T> Matcher<TypeSerializerSchemaCompatibility<T>> isIncompatible() {
+    public static <T> Condition<TypeSerializerSchemaCompatibility<T>> isIncompatible() {
         return propertyMatcher(
                 TypeSerializerSchemaCompatibility::isIncompatible,
                 "type serializer schema that is incompatible");
@@ -70,10 +66,10 @@ public final class TypeSerializerMatchers {
      * Matches {@code isCompatibleAfterMigration} {@link TypeSerializerSchemaCompatibility}.
      *
      * @param <T> element type
-     * @return a {@code Matcher} that matches {@code isCompatibleAfterMigration} {@link
+     * @return a {@code Condition} that matches {@code isCompatibleAfterMigration} {@link
      *     TypeSerializerSchemaCompatibility}.
      */
-    public static <T> Matcher<TypeSerializerSchemaCompatibility<T>> isCompatibleAfterMigration() {
+    public static <T> Condition<TypeSerializerSchemaCompatibility<T>> isCompatibleAfterMigration() {
         return propertyMatcher(
                 TypeSerializerSchemaCompatibility::isCompatibleAfterMigration,
                 "type serializer schema that is compatible after migration");
@@ -84,14 +80,14 @@ public final class TypeSerializerMatchers {
      * TypeSerializerSchemaCompatibility}.
      *
      * @param <T> element type
-     * @return a {@code Matcher} that matches {@code isCompatibleWithReconfiguredSerializer} {@link
-     *     TypeSerializerSchemaCompatibility}.
+     * @return a {@code Condition} that matches {@code isCompatibleWithReconfiguredSerializer}
+     *     {@link TypeSerializerSchemaCompatibility}.
      */
     public static <T>
-            Matcher<TypeSerializerSchemaCompatibility<T>> isCompatibleWithReconfiguredSerializer() {
+            Condition<TypeSerializerSchemaCompatibility<T>>
+                    isCompatibleWithReconfiguredSerializer() {
         @SuppressWarnings("unchecked")
-        Matcher<TypeSerializer<T>> anything =
-                (Matcher<TypeSerializer<T>>) (Matcher<?>) CoreMatchers.anything();
+        Condition<TypeSerializer<T>> anything = new Condition<>(t -> true, "anything");
 
         return new CompatibleAfterReconfiguration<>(anything);
     }
@@ -102,12 +98,12 @@ public final class TypeSerializerMatchers {
      *
      * @param reconfiguredSerializerMatcher matches the reconfigured serializer.
      * @param <T> element type
-     * @return a {@code Matcher} that matches {@code isCompatibleWithReconfiguredSerializer} {@link
-     *     TypeSerializerSchemaCompatibility}.
+     * @return a {@code Condition} that matches {@code isCompatibleWithReconfiguredSerializer}
+     *     {@link TypeSerializerSchemaCompatibility}.
      */
     public static <T>
-            Matcher<TypeSerializerSchemaCompatibility<T>> isCompatibleWithReconfiguredSerializer(
-                    Matcher<? extends TypeSerializer<T>> reconfiguredSerializerMatcher) {
+            Condition<TypeSerializerSchemaCompatibility<T>> isCompatibleWithReconfiguredSerializer(
+                    Condition<TypeSerializer<T>> reconfiguredSerializerMatcher) {
 
         return new CompatibleAfterReconfiguration<>(reconfiguredSerializerMatcher);
     }
@@ -118,10 +114,10 @@ public final class TypeSerializerMatchers {
      *
      * @param expectedCompatibility the compatibility to match to.
      * @param <T> element type.
-     * @return a {@code Matcher} that matches if it has the same compatibility as {@code
+     * @return a {@code Condition} that matches if it has the same compatibility as {@code
      *     expectedCompatibility}.
      */
-    public static <T> Matcher<TypeSerializerSchemaCompatibility<T>> hasSameCompatibilityAs(
+    public static <T> Condition<TypeSerializerSchemaCompatibility<T>> hasSameCompatibilityAs(
             TypeSerializerSchemaCompatibility<T> expectedCompatibility) {
 
         return new SchemaCompatibilitySameAs<>(expectedCompatibility);
@@ -131,20 +127,9 @@ public final class TypeSerializerMatchers {
     // Helpers
     // -------------------------------------------------------------------------------------------------------------
 
-    private static <T> Matcher<T> propertyMatcher(
+    private static <T> Condition<T> propertyMatcher(
             Predicate<T> predicate, String matcherDescription) {
-        return new TypeSafeMatcher<T>() {
-
-            @Override
-            protected boolean matchesSafely(T item) {
-                return predicate.test(item);
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText(matcherDescription);
-            }
-        };
+        return new Condition<T>(predicate, matcherDescription);
     }
 
     // -------------------------------------------------------------------------------------------------------------
@@ -152,43 +137,28 @@ public final class TypeSerializerMatchers {
     // -------------------------------------------------------------------------------------------------------------
 
     private static final class CompatibleAfterReconfiguration<T>
-            extends TypeSafeDiagnosingMatcher<TypeSerializerSchemaCompatibility<T>> {
+            extends Condition<TypeSerializerSchemaCompatibility<T>> {
 
-        private final Matcher<? extends TypeSerializer<T>> reconfiguredSerializerMatcher;
+        private final Condition<TypeSerializer<T>> reconfiguredSerializerMatcher;
 
         private CompatibleAfterReconfiguration(
-                Matcher<? extends TypeSerializer<T>> reconfiguredSerializerMatcher) {
+                Condition<TypeSerializer<T>> reconfiguredSerializerMatcher) {
             this.reconfiguredSerializerMatcher = checkNotNull(reconfiguredSerializerMatcher);
         }
 
         @Override
-        protected boolean matchesSafely(
-                TypeSerializerSchemaCompatibility<T> item, Description mismatchDescription) {
+        public boolean matches(TypeSerializerSchemaCompatibility<T> item) {
             if (!item.isCompatibleWithReconfiguredSerializer()) {
-                mismatchDescription.appendText(
-                        "serializer schema is not compatible with a reconfigured serializer");
+
                 return false;
             }
             TypeSerializer<T> reconfiguredSerializer = item.getReconfiguredSerializer();
-            if (!reconfiguredSerializerMatcher.matches(reconfiguredSerializer)) {
-                reconfiguredSerializerMatcher.describeMismatch(
-                        reconfiguredSerializer, mismatchDescription);
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description
-                    .appendText("type serializer schema that is compatible after reconfiguration,")
-                    .appendText("with a reconfigured serializer matching ")
-                    .appendDescriptionOf(reconfiguredSerializerMatcher);
+            return reconfiguredSerializerMatcher.matches(reconfiguredSerializer);
         }
     }
 
     private static class SchemaCompatibilitySameAs<T>
-            extends TypeSafeMatcher<TypeSerializerSchemaCompatibility<T>> {
+            extends Condition<TypeSerializerSchemaCompatibility<T>> {
 
         private final TypeSerializerSchemaCompatibility<T> expectedCompatibility;
 
@@ -198,8 +168,7 @@ public final class TypeSerializerMatchers {
         }
 
         @Override
-        protected boolean matchesSafely(
-                TypeSerializerSchemaCompatibility<T> testResultCompatibility) {
+        public boolean matches(TypeSerializerSchemaCompatibility<T> testResultCompatibility) {
             if (expectedCompatibility.isCompatibleAsIs()) {
                 return testResultCompatibility.isCompatibleAsIs();
             } else if (expectedCompatibility.isIncompatible()) {
@@ -210,11 +179,6 @@ public final class TypeSerializerMatchers {
                 return testResultCompatibility.isCompatibleWithReconfiguredSerializer();
             }
             return false;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("same compatibility as ").appendValue(expectedCompatibility);
         }
     }
 }

@@ -26,12 +26,11 @@ import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /**
  * A {@link TypeSerializerUpgradeTestBase} for {@link TimeWindow.Serializer} and {@link
@@ -90,12 +89,12 @@ class WindowSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Object, 
         }
 
         @Override
-        public Matcher<TimeWindow> testDataMatcher() {
-            return is(new TimeWindow(12345, 67890));
+        public Predicate<TimeWindow> testDataMatcher() {
+            return Predicate.isEqual(new TimeWindow(12345, 67890));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<TimeWindow>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<TimeWindow>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -133,13 +132,13 @@ class WindowSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Object, 
         }
 
         @Override
-        public Matcher<GlobalWindow> testDataMatcher() {
-            return is(GlobalWindow.get());
+        public Predicate<GlobalWindow> testDataMatcher() {
+            return Predicate.isEqual(GlobalWindow.get());
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<GlobalWindow>> schemaCompatibilityMatcher(
-                FlinkVersion version) {
+        public Condition<TypeSerializerSchemaCompatibility<GlobalWindow>>
+                schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
     }

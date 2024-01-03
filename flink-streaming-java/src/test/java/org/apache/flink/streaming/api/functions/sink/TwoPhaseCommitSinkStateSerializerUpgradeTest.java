@@ -26,14 +26,13 @@ import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 import org.apache.flink.api.common.typeutils.base.IntSerializer;
 import org.apache.flink.api.common.typeutils.base.StringSerializer;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /**
  * A {@link TypeSerializerUpgradeTestBase} for {@link TwoPhaseCommitSinkFunction.StateSerializer}.
@@ -105,17 +104,18 @@ public class TwoPhaseCommitSinkStateSerializerUpgradeTest
         }
 
         @Override
-        public Matcher<TwoPhaseCommitSinkFunction.State<Integer, String>> testDataMatcher() {
+        public Predicate<TwoPhaseCommitSinkFunction.State<Integer, String>> testDataMatcher() {
             TwoPhaseCommitSinkFunction.TransactionHolder<Integer> pendingTransaction =
                     new TwoPhaseCommitSinkFunction.TransactionHolder<>(12, 1523467890);
             List<TwoPhaseCommitSinkFunction.TransactionHolder<Integer>> list = new ArrayList<>();
             list.add(new TwoPhaseCommitSinkFunction.TransactionHolder<>(123, 1567234890));
             Optional<String> optional = Optional.of("flink");
-            return is(new TwoPhaseCommitSinkFunction.State<>(pendingTransaction, list, optional));
+            return Predicate.isEqual(
+                    new TwoPhaseCommitSinkFunction.State<>(pendingTransaction, list, optional));
         }
 
         @Override
-        public Matcher<
+        public Condition<
                         TypeSerializerSchemaCompatibility<
                                 TwoPhaseCommitSinkFunction.State<Integer, String>>>
                 schemaCompatibilityMatcher(FlinkVersion version) {

@@ -27,12 +27,11 @@ import org.apache.flink.api.common.typeutils.base.IntSerializer;
 import org.apache.flink.api.common.typeutils.base.StringSerializer;
 import org.apache.flink.api.java.tuple.Tuple3;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /** {@link TupleSerializer} upgrade test. */
 class TupleSerializerUpgradeTest
@@ -92,12 +91,12 @@ class TupleSerializerUpgradeTest
         }
 
         @Override
-        public Matcher<Tuple3<String, String, Integer>> testDataMatcher() {
-            return is(new Tuple3<>("hello Gordon", "ciao", 14));
+        public Predicate<Tuple3<String, String, Integer>> testDataMatcher() {
+            return Predicate.isEqual(new Tuple3<>("hello Gordon", "ciao", 14));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Tuple3<String, String, Integer>>>
+        public Condition<TypeSerializerSchemaCompatibility<Tuple3<String, String, Integer>>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }

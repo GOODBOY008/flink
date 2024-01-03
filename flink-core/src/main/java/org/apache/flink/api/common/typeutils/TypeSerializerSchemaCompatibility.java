@@ -175,9 +175,9 @@ public class TypeSerializerSchemaCompatibility<T> {
     }
 
     /**
-     * Returns whether or not the type of the compatibility is {@link Type#INCOMPATIBLE}.
+     * Returns whether the type of the compatibility is {@link Type#INCOMPATIBLE}.
      *
-     * @return whether or not the type of the compatibility is {@link Type#INCOMPATIBLE}.
+     * @return whether the type of the compatibility is {@link Type#INCOMPATIBLE}.
      */
     public boolean isIncompatible() {
         return resultType == Type.INCOMPATIBLE;

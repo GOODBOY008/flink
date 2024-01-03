@@ -28,15 +28,15 @@ import org.apache.flink.core.memory.DataInputView;
 import org.apache.flink.core.memory.DataOutputView;
 import org.apache.flink.types.CopyableValue;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.is;
 
 /** A {@link TypeSerializerUpgradeTestBase} for {@link CopyableValueSerializer}. */
 class CopyableSerializerUpgradeTest
@@ -146,12 +146,12 @@ class CopyableSerializerUpgradeTest
         }
 
         @Override
-        public Matcher<SimpleCopyable> testDataMatcher() {
-            return is(new SimpleCopyable(123456));
+        public Predicate<SimpleCopyable> testDataMatcher() {
+            return Predicate.isEqual(new SimpleCopyable(123456));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<SimpleCopyable>>
+        public Condition<TypeSerializerSchemaCompatibility<SimpleCopyable>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }

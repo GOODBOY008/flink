@@ -27,11 +27,11 @@ import org.apache.flink.api.common.typeutils.TypeSerializerSchemaCompatibility;
 import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.Objects;
+import java.util.function.Predicate;
 
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertSame;
 
 /** A collection of test specifications for the {@link PojoSerializerUpgradeTest}. */
@@ -233,12 +233,13 @@ public class PojoSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<StaticSchemaPojo> testDataMatcher() {
-            return is(new StaticSchemaPojo("Gordon", 27, StaticSchemaPojo.Color.BLUE, false));
+        public Predicate<StaticSchemaPojo> testDataMatcher() {
+            return Predicate.isEqual(
+                    new StaticSchemaPojo("Gordon", 27, StaticSchemaPojo.Color.BLUE, false));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<StaticSchemaPojo>>
+        public Condition<TypeSerializerSchemaCompatibility<StaticSchemaPojo>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -347,12 +348,12 @@ public class PojoSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<PojoAfterSchemaUpgrade> testDataMatcher() {
-            return is(new PojoAfterSchemaUpgrade("Gordon", 27, null, false));
+        public Predicate<PojoAfterSchemaUpgrade> testDataMatcher() {
+            return Predicate.isEqual(new PojoAfterSchemaUpgrade("Gordon", 27, null, false));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<PojoAfterSchemaUpgrade>>
+        public Condition<TypeSerializerSchemaCompatibility<PojoAfterSchemaUpgrade>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAfterMigration();
         }
@@ -421,12 +422,14 @@ public class PojoSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<PojoWithStringField> testDataMatcher() {
-            throw new UnsupportedOperationException();
+        public Predicate<PojoWithStringField> testDataMatcher() {
+            return pojoWithStringField -> {
+                throw new UnsupportedOperationException();
+            };
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<PojoWithStringField>>
+        public Condition<TypeSerializerSchemaCompatibility<PojoWithStringField>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isIncompatible();
         }
@@ -562,12 +565,13 @@ public class PojoSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<BasePojo> testDataMatcher() {
-            return is(new SubclassPojoAfterSchemaUpgrade(911108, "Gordon", true, 0, 0.0));
+        public Predicate<BasePojo> testDataMatcher() {
+            return Predicate.isEqual(
+                    new SubclassPojoAfterSchemaUpgrade(911108, "Gordon", true, 0, 0.0));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<BasePojo>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<BasePojo>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAfterMigration();
         }
@@ -645,14 +649,14 @@ public class PojoSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<StaticSchemaPojo> testDataMatcher() {
-            return is(
+        public Predicate<StaticSchemaPojo> testDataMatcher() {
+            return Predicate.isEqual(
                     new SubclassPojoWithStringField(
                             "gt", 7, StaticSchemaPojo.Color.BLUE, false, "911108"));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<StaticSchemaPojo>>
+        public Condition<TypeSerializerSchemaCompatibility<StaticSchemaPojo>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isIncompatible();
         }
@@ -694,14 +698,14 @@ public class PojoSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<StaticSchemaPojo> testDataMatcher() {
-            return is(
+        public Predicate<StaticSchemaPojo> testDataMatcher() {
+            return Predicate.isEqual(
                     new StaticSchemaPojoSubclassA(
                             "gt", 7, StaticSchemaPojo.Color.BLUE, false, 911108));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<StaticSchemaPojo>>
+        public Condition<TypeSerializerSchemaCompatibility<StaticSchemaPojo>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleWithReconfiguredSerializer();
         }
@@ -751,15 +755,15 @@ public class PojoSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<StaticSchemaPojo> testDataMatcher() {
+        public Predicate<StaticSchemaPojo> testDataMatcher() {
 
-            return is(
+            return Predicate.isEqual(
                     new StaticSchemaPojoSubclassB(
                             "gt", 7, StaticSchemaPojo.Color.BLUE, false, true));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<StaticSchemaPojo>>
+        public Condition<TypeSerializerSchemaCompatibility<StaticSchemaPojo>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleWithReconfiguredSerializer();
         }
@@ -808,14 +812,14 @@ public class PojoSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<StaticSchemaPojo> testDataMatcher() {
-            return is(
+        public Predicate<StaticSchemaPojo> testDataMatcher() {
+            return Predicate.isEqual(
                     new StaticSchemaPojoSubclassB(
                             "gt", 7, StaticSchemaPojo.Color.BLUE, false, true));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<StaticSchemaPojo>>
+        public Condition<TypeSerializerSchemaCompatibility<StaticSchemaPojo>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleWithReconfiguredSerializer();
         }
@@ -863,14 +867,14 @@ public class PojoSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<StaticSchemaPojo> testDataMatcher() {
-            return is(
+        public Predicate<StaticSchemaPojo> testDataMatcher() {
+            return Predicate.isEqual(
                     new StaticSchemaPojoSubclassA(
                             "gt", 7, StaticSchemaPojo.Color.BLUE, false, 911108));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<StaticSchemaPojo>>
+        public Condition<TypeSerializerSchemaCompatibility<StaticSchemaPojo>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleWithReconfiguredSerializer();
         }
@@ -919,14 +923,14 @@ public class PojoSerializerUpgradeTestSpecifications {
         }
 
         @Override
-        public Matcher<StaticSchemaPojo> testDataMatcher() {
-            return is(
+        public Predicate<StaticSchemaPojo> testDataMatcher() {
+            return Predicate.isEqual(
                     new StaticSchemaPojoSubclassB(
                             "gt", 7, StaticSchemaPojo.Color.BLUE, false, true));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<StaticSchemaPojo>>
+        public Condition<TypeSerializerSchemaCompatibility<StaticSchemaPojo>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleWithReconfiguredSerializer();
         }

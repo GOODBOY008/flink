@@ -27,12 +27,11 @@ import org.apache.flink.formats.avro.generated.Address;
 
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /** Tests based on {@link TypeSerializerUpgradeTestBase} for the {@link AvroSerializer}. */
 class AvroSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Object, Object> {
@@ -99,19 +98,19 @@ class AvroSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Object, Ob
         }
 
         @Override
-        public Matcher<GenericRecord> testDataMatcher() {
+        public Predicate<GenericRecord> testDataMatcher() {
             GenericData.Record record = new GenericData.Record(Address.getClassSchema());
             record.put("num", 239);
             record.put("street", "Baker Street");
             record.put("city", "London");
             record.put("state", "London");
             record.put("zip", "NW1 6XE");
-            return is(record);
+            return Predicate.isEqual(record);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<GenericRecord>> schemaCompatibilityMatcher(
-                FlinkVersion version) {
+        public Condition<TypeSerializerSchemaCompatibility<GenericRecord>>
+                schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
     }
@@ -161,18 +160,18 @@ class AvroSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Object, Ob
         }
 
         @Override
-        public Matcher<Address> testDataMatcher() {
+        public Predicate<Address> testDataMatcher() {
             Address addr = new Address();
             addr.setNum(239);
             addr.setStreet("Baker Street");
             addr.setCity("London");
             addr.setState("London");
             addr.setZip("NW1 6XE");
-            return is(addr);
+            return Predicate.isEqual(addr);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Address>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Address>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }

@@ -25,14 +25,13 @@ import org.apache.flink.api.common.typeutils.TypeSerializerSchemaCompatibility;
 import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 import org.apache.flink.api.common.typeutils.base.StringSerializer;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import scala.Option;
-
-import static org.hamcrest.CoreMatchers.is;
 
 /**
  * A {@link org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase} for {@link
@@ -89,12 +88,12 @@ class OptionSerializerUpgradeTest
         }
 
         @Override
-        public Matcher<Option<String>> testDataMatcher() {
-            return is(Option.empty());
+        public Predicate<Option<String>> testDataMatcher() {
+            return Predicate.isEqual(Option.empty());
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Option<String>>>
+        public Condition<TypeSerializerSchemaCompatibility<Option<String>>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }

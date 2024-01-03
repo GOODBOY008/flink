@@ -28,12 +28,11 @@ import org.apache.flink.api.common.typeutils.base.StringSerializer;
 import org.apache.flink.streaming.api.datastream.CoGroupedStreams.TaggedUnion;
 import org.apache.flink.streaming.api.datastream.CoGroupedStreams.UnionSerializer;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /** A {@link TypeSerializerUpgradeTestBase} for {@link UnionSerializer}. */
 class UnionSerializerUpgradeTest
@@ -95,12 +94,12 @@ class UnionSerializerUpgradeTest
         }
 
         @Override
-        public Matcher<TaggedUnion<String, Long>> testDataMatcher() {
-            return is(TaggedUnion.one("flink"));
+        public Predicate<TaggedUnion<String, Long>> testDataMatcher() {
+            return Predicate.isEqual(TaggedUnion.one("flink"));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<TaggedUnion<String, Long>>>
+        public Condition<TypeSerializerSchemaCompatibility<TaggedUnion<String, Long>>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -139,12 +138,12 @@ class UnionSerializerUpgradeTest
         }
 
         @Override
-        public Matcher<TaggedUnion<String, Long>> testDataMatcher() {
-            return is(TaggedUnion.two(23456L));
+        public Predicate<TaggedUnion<String, Long>> testDataMatcher() {
+            return Predicate.isEqual(TaggedUnion.two(23456L));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<TaggedUnion<String, Long>>>
+        public Condition<TypeSerializerSchemaCompatibility<TaggedUnion<String, Long>>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }

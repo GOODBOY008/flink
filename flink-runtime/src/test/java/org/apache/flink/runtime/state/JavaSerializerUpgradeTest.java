@@ -24,13 +24,12 @@ import org.apache.flink.api.common.typeutils.TypeSerializerMatchers;
 import org.apache.flink.api.common.typeutils.TypeSerializerSchemaCompatibility;
 import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /** A {@link TypeSerializerUpgradeTestBase} for {@link JavaSerializer}. */
 class JavaSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Serializable, Serializable> {
@@ -85,13 +84,13 @@ class JavaSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Serializab
         }
 
         @Override
-        public Matcher<Serializable> testDataMatcher() {
-            return is(26);
+        public Predicate<Serializable> testDataMatcher() {
+            return Predicate.isEqual(26);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Serializable>> schemaCompatibilityMatcher(
-                FlinkVersion version) {
+        public Condition<TypeSerializerSchemaCompatibility<Serializable>>
+                schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
     }

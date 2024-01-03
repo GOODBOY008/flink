@@ -27,13 +27,11 @@ import org.apache.flink.api.common.typeutils.base.StringSerializer;
 import org.apache.flink.streaming.api.operators.co.IntervalJoinOperator.BufferEntry;
 import org.apache.flink.streaming.api.operators.co.IntervalJoinOperator.BufferEntrySerializer;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import static org.apache.flink.streaming.api.operators.co.BufferEntryMatchers.bufferEntry;
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /** State migration tests for {@link BufferEntrySerializer}. */
 class BufferEntrySerializerUpgradeTest
@@ -90,12 +88,12 @@ class BufferEntrySerializerUpgradeTest
         }
 
         @Override
-        public Matcher<BufferEntry<String>> testDataMatcher() {
-            return bufferEntry(is("hello"), is(false));
+        public Predicate<BufferEntry<String>> testDataMatcher() {
+            return stringBufferEntry -> stringBufferEntry.getElement().equals("hello");
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<BufferEntry<String>>>
+        public Condition<TypeSerializerSchemaCompatibility<BufferEntry<String>>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }

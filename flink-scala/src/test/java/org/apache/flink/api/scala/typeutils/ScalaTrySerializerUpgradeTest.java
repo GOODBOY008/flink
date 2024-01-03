@@ -26,16 +26,15 @@ import org.apache.flink.api.common.typeutils.TypeSerializerSchemaCompatibility;
 import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 import org.apache.flink.api.common.typeutils.base.StringSerializer;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import scala.util.Failure;
 import scala.util.Try;
-
-import static org.hamcrest.Matchers.is;
 
 /** A {@link TypeSerializerUpgradeTestBase} for {@link TrySerializer}. */
 class ScalaTrySerializerUpgradeTest
@@ -90,12 +89,13 @@ class ScalaTrySerializerUpgradeTest
 
         @SuppressWarnings("unchecked")
         @Override
-        public Matcher<Try<String>> testDataMatcher() {
-            return is(new Failure(new SpecifiedException("Specified exception for ScalaTry.")));
+        public Predicate<Try<String>> testDataMatcher() {
+            return Predicate.isEqual(
+                    new Failure(new SpecifiedException("Specified exception for ScalaTry.")));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Try<String>>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Try<String>>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }

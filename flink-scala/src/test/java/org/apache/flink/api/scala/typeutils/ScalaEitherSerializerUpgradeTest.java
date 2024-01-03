@@ -26,15 +26,14 @@ import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 import org.apache.flink.api.common.typeutils.base.IntSerializer;
 import org.apache.flink.api.common.typeutils.base.StringSerializer;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import scala.util.Either;
 import scala.util.Right;
-
-import static org.hamcrest.Matchers.is;
 
 /** A {@link TypeSerializerUpgradeTestBase} for {@link ScalaEitherSerializerSnapshot}. */
 class ScalaEitherSerializerUpgradeTest
@@ -88,12 +87,12 @@ class ScalaEitherSerializerUpgradeTest
         }
 
         @Override
-        public Matcher<Either<Integer, String>> testDataMatcher() {
-            return is(new Right<>("Hello world"));
+        public Predicate<Either<Integer, String>> testDataMatcher() {
+            return Predicate.isEqual(new Right<>("Hello world"));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Either<Integer, String>>>
+        public Condition<TypeSerializerSchemaCompatibility<Either<Integer, String>>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }

@@ -25,13 +25,11 @@ import org.apache.flink.api.common.typeutils.TypeSerializerSchemaCompatibility;
 import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 import org.apache.flink.api.common.typeutils.base.StringSerializer;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import static org.apache.flink.streaming.util.StreamRecordMatchers.streamRecord;
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /** Migration tests for {@link StreamElementSerializer}. */
 class StreamElementSerializerUpgradeTest
@@ -85,13 +83,16 @@ class StreamElementSerializerUpgradeTest
 
         @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
-        public Matcher<StreamElement> testDataMatcher() {
-            return (Matcher) streamRecord(is("key"), is(123456L));
+        public Predicate<StreamElement> testDataMatcher() {
+            return streamElement ->
+                    streamElement.isRecord()
+                            && streamElement.asRecord().getValue().equals("key")
+                            && streamElement.asRecord().getTimestamp() == 123456L;
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<StreamElement>> schemaCompatibilityMatcher(
-                FlinkVersion version) {
+        public Condition<TypeSerializerSchemaCompatibility<StreamElement>>
+                schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
     }

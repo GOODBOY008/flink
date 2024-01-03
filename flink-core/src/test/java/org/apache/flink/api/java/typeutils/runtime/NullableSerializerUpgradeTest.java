@@ -25,12 +25,11 @@ import org.apache.flink.api.common.typeutils.TypeSerializerSchemaCompatibility;
 import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 import org.apache.flink.api.common.typeutils.base.LongSerializer;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import static org.hamcrest.CoreMatchers.is;
+import java.util.function.Predicate;
 
 /** A {@link TypeSerializerUpgradeTestBase} for {@link NullableSerializer}. */
 class NullableSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Long, Long> {
@@ -88,12 +87,12 @@ class NullableSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Long, 
         }
 
         @Override
-        public Matcher<Long> testDataMatcher() {
-            return is((Long) null);
+        public Predicate<Long> testDataMatcher() {
+            return Predicate.isEqual((Long) null);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Long>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Long>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
@@ -132,12 +131,12 @@ class NullableSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Long, 
         }
 
         @Override
-        public Matcher<Long> testDataMatcher() {
-            return is((Long) null);
+        public Predicate<Long> testDataMatcher() {
+            return Predicate.isEqual((Long) null);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Long>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Long>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }

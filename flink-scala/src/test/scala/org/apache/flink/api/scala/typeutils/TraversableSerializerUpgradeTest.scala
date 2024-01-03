@@ -26,11 +26,10 @@ import org.apache.flink.api.scala.createTypeInformation
 import org.apache.flink.api.scala.typeutils.TraversableSerializerUpgradeTest._
 import org.apache.flink.api.scala.typeutils.TraversableSerializerUpgradeTest.Types.Pojo
 
-import org.hamcrest.Matcher
-import org.hamcrest.Matchers.is
+import org.assertj.core.api.Condition
 
 import java.util
-import java.util.function.Supplier
+import java.util.function.{Predicate, Supplier}
 
 import scala.collection.{mutable, BitSet, LinearSeq}
 
@@ -143,10 +142,10 @@ object TraversableSerializerUpgradeTest {
     override def createUpgradedSerializer: TypeSerializer[BitSet] =
       new TypeSerializerSupplier(bitsetTypeInfo).get()
 
-    override def testDataMatcher: Matcher[BitSet] = is(BitSet(3, 2, 0))
+    override def testDataMatcher: Predicate[BitSet] = Predicate.isEqual(BitSet(3, 2, 0))
 
     override def schemaCompatibilityMatcher(
-        version: FlinkVersion): Matcher[TypeSerializerSchemaCompatibility[BitSet]] =
+        version: FlinkVersion): Condition[TypeSerializerSchemaCompatibility[BitSet]] =
       TypeSerializerMatchers.isCompatibleAsIs[BitSet]()
   }
 
@@ -163,10 +162,11 @@ object TraversableSerializerUpgradeTest {
     override def createUpgradedSerializer: TypeSerializer[IndexedSeq[Int]] =
       new TypeSerializerSupplier(indexedSeqTypeInfo).get()
 
-    override def testDataMatcher: Matcher[IndexedSeq[Int]] = is(IndexedSeq(1, 2, 3))
+    override def testDataMatcher: Predicate[IndexedSeq[Int]] =
+      Predicate.isEqual(IndexedSeq(1, 2, 3))
 
     override def schemaCompatibilityMatcher(
-        version: FlinkVersion): Matcher[TypeSerializerSchemaCompatibility[IndexedSeq[Int]]] =
+        version: FlinkVersion): Condition[TypeSerializerSchemaCompatibility[IndexedSeq[Int]]] =
       TypeSerializerMatchers.isCompatibleAsIs[IndexedSeq[Int]]()
   }
 
@@ -183,10 +183,10 @@ object TraversableSerializerUpgradeTest {
     override def createUpgradedSerializer: TypeSerializer[LinearSeq[Int]] =
       new TypeSerializerSupplier(linearSeqTypeInfo).get()
 
-    override def testDataMatcher: Matcher[LinearSeq[Int]] = is(LinearSeq(2, 3, 4))
+    override def testDataMatcher: Predicate[LinearSeq[Int]] = Predicate.isEqual(LinearSeq(2, 3, 4))
 
     override def schemaCompatibilityMatcher(
-        version: FlinkVersion): Matcher[TypeSerializerSchemaCompatibility[LinearSeq[Int]]] =
+        version: FlinkVersion): Condition[TypeSerializerSchemaCompatibility[LinearSeq[Int]]] =
       TypeSerializerMatchers.isCompatibleAsIs[LinearSeq[Int]]()
   }
 
@@ -203,10 +203,11 @@ object TraversableSerializerUpgradeTest {
     override def createUpgradedSerializer: TypeSerializer[Map[String, Int]] =
       new TypeSerializerSupplier(mapTypeInfo).get()
 
-    override def testDataMatcher: Matcher[Map[String, Int]] = is(Map("Apache" -> 0, "Flink" -> 1))
+    override def testDataMatcher: Predicate[Map[String, Int]] =
+      Predicate.isEqual(Map("Apache" -> 0, "Flink" -> 1))
 
     override def schemaCompatibilityMatcher(
-        version: FlinkVersion): Matcher[TypeSerializerSchemaCompatibility[Map[String, Int]]] =
+        version: FlinkVersion): Condition[TypeSerializerSchemaCompatibility[Map[String, Int]]] =
       TypeSerializerMatchers.isCompatibleAsIs[Map[String, Int]]()
   }
 
@@ -223,11 +224,11 @@ object TraversableSerializerUpgradeTest {
     override def createUpgradedSerializer: TypeSerializer[mutable.MutableList[Int]] =
       new TypeSerializerSupplier(mutableListTypeInfo).get()
 
-    override def testDataMatcher: Matcher[mutable.MutableList[Int]] =
-      is(mutable.MutableList(1, 2, 3))
+    override def testDataMatcher: Predicate[mutable.MutableList[Int]] =
+      Predicate.isEqual(mutable.MutableList(1, 2, 3))
 
     override def schemaCompatibilityMatcher(version: FlinkVersion)
-        : Matcher[TypeSerializerSchemaCompatibility[mutable.MutableList[Int]]] =
+        : Condition[TypeSerializerSchemaCompatibility[mutable.MutableList[Int]]] =
       TypeSerializerMatchers.isCompatibleAsIs[mutable.MutableList[Int]]()
   }
 
@@ -243,10 +244,10 @@ object TraversableSerializerUpgradeTest {
     override def createUpgradedSerializer: TypeSerializer[Seq[Int]] =
       new TypeSerializerSupplier(seqTypeInfo).get()
 
-    override def testDataMatcher: Matcher[Seq[Int]] = is(Seq(1, 2, 3))
+    override def testDataMatcher: Predicate[Seq[Int]] = Predicate.isEqual(Seq(1, 2, 3))
 
     override def schemaCompatibilityMatcher(
-        version: FlinkVersion): Matcher[TypeSerializerSchemaCompatibility[Seq[Int]]] =
+        version: FlinkVersion): Condition[TypeSerializerSchemaCompatibility[Seq[Int]]] =
       TypeSerializerMatchers.isCompatibleAsIs[Seq[Int]]()
   }
 
@@ -262,10 +263,10 @@ object TraversableSerializerUpgradeTest {
     override def createUpgradedSerializer: TypeSerializer[Set[Int]] =
       new TypeSerializerSupplier(setTypeInfo).get()
 
-    override def testDataMatcher: Matcher[Set[Int]] = is(Set(2, 3, 4))
+    override def testDataMatcher: Predicate[Set[Int]] = Predicate.isEqual(Set(2, 3, 4))
 
     override def schemaCompatibilityMatcher(
-        version: FlinkVersion): Matcher[TypeSerializerSchemaCompatibility[Set[Int]]] =
+        version: FlinkVersion): Condition[TypeSerializerSchemaCompatibility[Set[Int]]] =
       TypeSerializerMatchers.isCompatibleAsIs[Set[Int]]()
   }
 
@@ -282,10 +283,11 @@ object TraversableSerializerUpgradeTest {
     override def createUpgradedSerializer: TypeSerializer[Seq[(Int, String)]] =
       new TypeSerializerSupplier(seqTupleTypeInfo).get()
 
-    override def testDataMatcher: Matcher[Seq[(Int, String)]] = is(Seq((0, "Apache"), (1, "Flink")))
+    override def testDataMatcher: Predicate[Seq[(Int, String)]] =
+      Predicate.isEqual(Seq((0, "Apache"), (1, "Flink")))
 
     override def schemaCompatibilityMatcher(
-        version: FlinkVersion): Matcher[TypeSerializerSchemaCompatibility[Seq[(Int, String)]]] =
+        version: FlinkVersion): Condition[TypeSerializerSchemaCompatibility[Seq[(Int, String)]]] =
       TypeSerializerMatchers.isCompatibleAsIs[Seq[(Int, String)]]()
   }
 
@@ -300,11 +302,11 @@ object TraversableSerializerUpgradeTest {
     override def createUpgradedSerializer: TypeSerializer[Seq[Pojo]] =
       new TypeSerializerSupplier(seqPojoTypeInfo).get()
 
-    override def testDataMatcher: Matcher[Seq[Pojo]] =
-      is(Seq(new Pojo("Apache", 0), new Pojo("Flink", 1)))
+    override def testDataMatcher: Predicate[Seq[Pojo]] =
+      Predicate.isEqual(Seq(new Pojo("Apache", 0), new Pojo("Flink", 1)))
 
     override def schemaCompatibilityMatcher(
-        version: FlinkVersion): Matcher[TypeSerializerSchemaCompatibility[Seq[Pojo]]] =
+        version: FlinkVersion): Condition[TypeSerializerSchemaCompatibility[Seq[Pojo]]] =
       TypeSerializerMatchers.isCompatibleAsIs[Seq[Pojo]]()
   }
 

@@ -27,14 +27,13 @@ import org.apache.flink.core.memory.DataInputView;
 import org.apache.flink.core.memory.DataOutputView;
 import org.apache.flink.types.Value;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
-
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /** State migration test for {@link RowSerializer}. */
 class ValueSerializerUpgradeTest
@@ -77,14 +76,14 @@ class ValueSerializerUpgradeTest
         }
 
         @Override
-        public Matcher<NameValue> testDataMatcher() {
+        public Predicate<NameValue> testDataMatcher() {
             NameValue value = new NameValue();
             value.setName("klion26");
-            return is(value);
+            return Predicate.isEqual(value);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<NameValue>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<NameValue>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }

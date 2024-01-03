@@ -30,14 +30,13 @@ import org.apache.flink.api.java.typeutils.RowTypeInfo;
 import org.apache.flink.types.Row;
 import org.apache.flink.types.RowKind;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /** A {@link TypeSerializerUpgradeTestBase} for {@link RowSerializer}. */
 @VisibleForTesting
@@ -114,17 +113,17 @@ public class RowSerializerUpgradeTest extends TypeSerializerUpgradeTestBase<Row,
         }
 
         @Override
-        public Matcher<Row> testDataMatcher() {
+        public Predicate<Row> testDataMatcher() {
             Row row = new Row(RowKind.INSERT, 4);
             row.setField(0, null);
             row.setField(1, 42L);
             row.setField(2, "My string.");
             row.setField(3, null);
-            return is(row);
+            return Predicate.isEqual(row);
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Row>> schemaCompatibilityMatcher(
+        public Condition<TypeSerializerSchemaCompatibility<Row>> schemaCompatibilityMatcher(
                 FlinkVersion version) {
             if (version.isNewerVersionThan(FlinkVersion.v1_10)) {
                 return TypeSerializerMatchers.isCompatibleAsIs();

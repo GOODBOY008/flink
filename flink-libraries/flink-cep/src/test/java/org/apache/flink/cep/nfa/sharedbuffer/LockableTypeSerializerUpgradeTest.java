@@ -25,12 +25,11 @@ import org.apache.flink.api.common.typeutils.TypeSerializerSchemaCompatibility;
 import org.apache.flink.api.common.typeutils.TypeSerializerUpgradeTestBase;
 import org.apache.flink.api.common.typeutils.base.StringSerializer;
 
-import org.hamcrest.Matcher;
+import org.assertj.core.api.Condition;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import static org.hamcrest.Matchers.is;
+import java.util.function.Predicate;
 
 /** A {@link TypeSerializerUpgradeTestBase} for {@link Lockable.LockableTypeSerializer}. */
 class LockableTypeSerializerUpgradeTest
@@ -84,12 +83,12 @@ class LockableTypeSerializerUpgradeTest
         }
 
         @Override
-        public Matcher<Lockable<String>> testDataMatcher() {
-            return is(new Lockable<>("flink", 10));
+        public Predicate<Lockable<String>> testDataMatcher() {
+            return Predicate.isEqual(new Lockable<>("flink", 10));
         }
 
         @Override
-        public Matcher<TypeSerializerSchemaCompatibility<Lockable<String>>>
+        public Condition<TypeSerializerSchemaCompatibility<Lockable<String>>>
                 schemaCompatibilityMatcher(FlinkVersion version) {
             return TypeSerializerMatchers.isCompatibleAsIs();
         }
