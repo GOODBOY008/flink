@@ -24,8 +24,9 @@ import org.apache.flink.core.testutils.CheckedThread;
 import org.apache.flink.core.testutils.OneShotLatch;
 import org.apache.flink.util.TestLogger;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,23 +34,23 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 /** Tests for {@link Transformation}. */
 public class TransformationTest extends TestLogger {
 
     private Transformation<Void> transformation;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         transformation = new TestTransformation<>("t", null, 1);
     }
 
     @Test
-    public void testGetNewNodeIdIsThreadSafe() throws Exception {
+    void testGetNewNodeIdIsThreadSafe() throws Exception {
         final int numThreads = 10;
         final int numIdsPerThread = 100;
 
@@ -84,43 +85,57 @@ public class TransformationTest extends TestLogger {
         final Set<Integer> deduplicatedIds =
                 idLists.stream().flatMap(List::stream).collect(Collectors.toSet());
 
-        assertEquals(numThreads * numIdsPerThread, deduplicatedIds.size());
+        assertThat(deduplicatedIds.size()).isEqualTo(numThreads * numIdsPerThread);
     }
 
     @Test
-    public void testDeclareManagedMemoryUseCase() {
+    void testDeclareManagedMemoryUseCase() {
         transformation.declareManagedMemoryUseCaseAtOperatorScope(
                 ManagedMemoryUseCase.OPERATOR, 123);
         transformation.declareManagedMemoryUseCaseAtSlotScope(ManagedMemoryUseCase.STATE_BACKEND);
-        assertThat(
+        MatcherAssert.assertThat(
                 transformation
                         .getManagedMemoryOperatorScopeUseCaseWeights()
                         .get(ManagedMemoryUseCase.OPERATOR),
                 is(123));
-        assertThat(
+        MatcherAssert.assertThat(
                 transformation.getManagedMemorySlotScopeUseCases(),
                 contains(ManagedMemoryUseCase.STATE_BACKEND));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testDeclareManagedMemoryOperatorScopeUseCaseFailWrongScope() {
-        transformation.declareManagedMemoryUseCaseAtOperatorScope(ManagedMemoryUseCase.PYTHON, 123);
+    @Test
+    void testDeclareManagedMemoryOperatorScopeUseCaseFailWrongScope() {
+        assertThatThrownBy(
+                        () ->
+                                transformation.declareManagedMemoryUseCaseAtOperatorScope(
+                                        ManagedMemoryUseCase.STATE_BACKEND, 123))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testDeclareManagedMemoryOperatorScopeUseCaseFailZeroWeight() {
-        transformation.declareManagedMemoryUseCaseAtOperatorScope(ManagedMemoryUseCase.OPERATOR, 0);
+    @Test
+    void testDeclareManagedMemoryOperatorScopeUseCaseFailZeroWeight() {
+        assertThatThrownBy(
+                        () ->
+                                transformation.declareManagedMemoryUseCaseAtOperatorScope(
+                                        ManagedMemoryUseCase.OPERATOR, 0))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testDeclareManagedMemoryOperatorScopeUseCaseFailNegativeWeight() {
-        transformation.declareManagedMemoryUseCaseAtOperatorScope(
-                ManagedMemoryUseCase.OPERATOR, -1);
+    @Test
+    void testDeclareManagedMemoryOperatorScopeUseCaseFailNegativeWeight() {
+        assertThatThrownBy(
+                        () ->
+                                transformation.declareManagedMemoryUseCaseAtOperatorScope(
+                                        ManagedMemoryUseCase.OPERATOR, -1))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testDeclareManagedMemorySlotScopeUseCaseFailWrongScope() {
-        transformation.declareManagedMemoryUseCaseAtSlotScope(ManagedMemoryUseCase.OPERATOR);
+    @Test void testDeclareManagedMemorySlotScopeUseCaseFailWrongScope() {
+        assertThatThrownBy(
+                        () ->
+                                transformation.declareManagedMemoryUseCaseAtSlotScope(
+                                        ManagedMemoryUseCase.OPERATOR))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     /** A test implementation of {@link Transformation}. */

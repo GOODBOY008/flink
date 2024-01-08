@@ -23,10 +23,12 @@ import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.util.TestLogger;
 
-import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Abstract test base for TuplePairComparators.
@@ -42,24 +44,24 @@ public abstract class TuplePairComparatorTestBase<T extends Tuple, R extends Tup
     protected abstract Tuple2<T[], R[]> getSortedTestData();
 
     @Test
-    public void testEqualityWithReference() {
+    void testEqualityWithReference() {
         try {
             TypePairComparator<T, R> comparator = getComparator(true);
             Tuple2<T[], R[]> data = getSortedData();
             for (int x = 0; x < data.f0.length; x++) {
                 comparator.setReference(data.f0[x]);
 
-                assertTrue(comparator.equalToReference(data.f1[x]));
+           assertTrue(comparator.equalToReference(data.f1[x]));
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 
     @Test
-    public void testInequalityWithReference() {
+    void testInequalityWithReference() {
         testGreatSmallAscDescWithReference(true);
         testGreatSmallAscDescWithReference(false);
     }
@@ -75,16 +77,16 @@ public abstract class TuplePairComparatorTestBase<T extends Tuple, R extends Tup
                 for (int y = x + 1; y < data.f1.length; y++) {
                     comparator.setReference(data.f0[x]);
                     if (ascending) {
-                        assertTrue(comparator.compareToReference(data.f1[y]) > 0);
+                   assertTrue(comparator.compareToReference(data.f1[y]) > 0);
                     } else {
-                        assertTrue(comparator.compareToReference(data.f1[y]) < 0);
+                   assertTrue(comparator.compareToReference(data.f1[y]) < 0);
                     }
                 }
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            fail("Exception in test: " + e.getMessage());
+       fail("Exception in test: " + e.getMessage());
         }
     }
 

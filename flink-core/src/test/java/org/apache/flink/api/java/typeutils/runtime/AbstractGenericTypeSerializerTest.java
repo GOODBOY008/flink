@@ -22,7 +22,11 @@ import org.apache.flink.api.common.typeutils.SerializerTestInstance;
 import org.apache.flink.api.common.typeutils.TypeSerializer;
 import org.apache.flink.util.StringUtils;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +40,7 @@ public abstract class AbstractGenericTypeSerializerTest {
     private final Random rnd = new Random(349712539451944123L);
 
     @Test
-    public void testString() {
+    void testString() {
         runTests(
                 "abc",
                 "",
@@ -48,7 +52,7 @@ public abstract class AbstractGenericTypeSerializerTest {
     }
 
     @Test
-    public void testSimpleTypesObjects() {
+    void testSimpleTypesObjects() {
         SimpleTypes a = new SimpleTypes();
         SimpleTypes b =
                 new SimpleTypes(
@@ -103,7 +107,7 @@ public abstract class AbstractGenericTypeSerializerTest {
     }
 
     @Test
-    public void testCompositeObject() {
+    void testCompositeObject() {
         ComplexNestedObject1 o1 = new ComplexNestedObject1(5626435);
         ComplexNestedObject1 o2 = new ComplexNestedObject1(76923);
         ComplexNestedObject1 o3 = new ComplexNestedObject1(-1100);
@@ -114,7 +118,7 @@ public abstract class AbstractGenericTypeSerializerTest {
     }
 
     @Test
-    public void testNestedObjects() {
+    void testNestedObjects() {
         ComplexNestedObject2 o1 = new ComplexNestedObject2(rnd);
         ComplexNestedObject2 o2 = new ComplexNestedObject2();
         ComplexNestedObject2 o3 = new ComplexNestedObject2(rnd);
@@ -124,7 +128,7 @@ public abstract class AbstractGenericTypeSerializerTest {
     }
 
     @Test
-    public void testBeanStyleObjects() {
+    void testBeanStyleObjects() {
         {
             Book b1 = new Book(976243875L, "The Serialization Odyssey", 42);
             Book b2 = new Book(0L, "Debugging byte streams", 1337);
@@ -135,7 +139,7 @@ public abstract class AbstractGenericTypeSerializerTest {
 
         // object with collection
         {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             list.add("A");
             list.add("B");
             list.add("C");
@@ -144,7 +148,7 @@ public abstract class AbstractGenericTypeSerializerTest {
 
             BookAuthor b1 = new BookAuthor(976243875L, list, "Arno Nym");
 
-            ArrayList<String> list2 = new ArrayList<String>();
+            ArrayList<String> list2 = new ArrayList<>();
             BookAuthor b2 = new BookAuthor(987654321L, list2, "The Saurus");
 
             runTests(b1, b2);
@@ -152,7 +156,7 @@ public abstract class AbstractGenericTypeSerializerTest {
     }
 
     @Test
-    public void testNestedInterfaces() {
+    void testNestedInterfaces() {
         {
             SimpleWithNestedInterfaces s1 = new SimpleWithNestedInterfaces("Hello", 1);
             SimpleWithNestedInterfaces s2 = new SimpleWithNestedInterfaces("Ciao", 2);
@@ -163,7 +167,7 @@ public abstract class AbstractGenericTypeSerializerTest {
 
         // object with collection
         {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             list.add("A");
             list.add("B");
             list.add("C");
@@ -172,7 +176,7 @@ public abstract class AbstractGenericTypeSerializerTest {
 
             BookAuthor b1 = new BookAuthor(976243875L, list, "Arno Nym");
 
-            ArrayList<String> list2 = new ArrayList<String>();
+            ArrayList<String> list2 = new ArrayList<>();
             BookAuthor b2 = new BookAuthor(987654321L, list2, "The Saurus");
 
             runTests(b1, b2);
@@ -200,18 +204,18 @@ public abstract class AbstractGenericTypeSerializerTest {
     // --------------------------------------------------------------------------------------------
 
     public static final class SimpleWithNestedInterfaces {
-        Map<String, Integer> map1;
-        List<String> list;
+        final Map<String, Integer> map1;
+        final List<String> list;
 
         public SimpleWithNestedInterfaces() {
-            map1 = new HashMap<String, Integer>();
-            list = new ArrayList<String>();
+            map1 = new HashMap<>();
+            list = new ArrayList<>();
         }
 
         public SimpleWithNestedInterfaces(String str, Integer i) {
-            map1 = new HashMap<String, Integer>();
+            map1 = new HashMap<>();
             map1.put(str, i);
-            list = new ArrayList<String>();
+            list = new ArrayList<>();
             list.add(str);
         }
 
@@ -229,11 +233,7 @@ public abstract class AbstractGenericTypeSerializerTest {
             if (!list.equals(that.list)) {
                 return false;
             }
-            if (!map1.equals(that.map1)) {
-                return false;
-            }
-
-            return true;
+            return map1.equals(that.map1);
         }
 
         @Override
@@ -300,7 +300,7 @@ public abstract class AbstractGenericTypeSerializerTest {
         public ComplexNestedObject1(int offInit) {
             this.doubleValue = 6293485.6723 + offInit;
 
-            this.stringList = new ArrayList<String>();
+            this.stringList = new ArrayList<>();
             this.stringList.add("A" + offInit);
             this.stringList.add("somewhat" + offInit);
             this.stringList.add("random" + offInit);
@@ -325,8 +325,7 @@ public abstract class AbstractGenericTypeSerializerTest {
 
         private long longValue;
 
-        private Map<String, ComplexNestedObject1> theMap =
-                new HashMap<String, ComplexNestedObject1>();
+        private final Map<String, ComplexNestedObject1> theMap = new HashMap<>();
 
         public ComplexNestedObject2() {}
 

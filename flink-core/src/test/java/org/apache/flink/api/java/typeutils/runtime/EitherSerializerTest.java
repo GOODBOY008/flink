@@ -33,15 +33,17 @@ import org.apache.flink.types.Either;
 import org.apache.flink.types.LongValue;
 import org.apache.flink.types.StringValue;
 
+
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
-import static junit.framework.TestCase.assertSame;
 import static org.apache.flink.types.Either.Left;
 import static org.apache.flink.types.Either.Right;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 class EitherSerializerTest {
 
@@ -59,14 +61,13 @@ class EitherSerializerTest {
                 };
 
         EitherTypeInfo<String, Double> eitherTypeInfo =
-                (EitherTypeInfo<String, Double>)
-                        new EitherTypeInfo<String, Double>(
-                                BasicTypeInfo.STRING_TYPE_INFO, BasicTypeInfo.DOUBLE_TYPE_INFO);
+                new EitherTypeInfo<>(
+                        BasicTypeInfo.STRING_TYPE_INFO, BasicTypeInfo.DOUBLE_TYPE_INFO);
         EitherSerializer<String, Double> eitherSerializer =
                 (EitherSerializer<String, Double>)
                         eitherTypeInfo.createSerializer(new ExecutionConfig());
         SerializerTestInstance<Either<String, Double>> testInstance =
-                new EitherSerializerTestInstance<Either<String, Double>>(
+                new EitherSerializerTestInstance<>(
                         eitherSerializer, eitherTypeInfo.getTypeClass(), -1, testData);
         testInstance.testAll();
     }
@@ -110,16 +111,15 @@ class EitherSerializerTest {
                 };
 
         EitherTypeInfo<Tuple2<Long, Long>, Double> eitherTypeInfo =
-                (EitherTypeInfo<Tuple2<Long, Long>, Double>)
-                        new EitherTypeInfo<Tuple2<Long, Long>, Double>(
-                                new TupleTypeInfo<Tuple2<Long, Long>>(
-                                        BasicTypeInfo.LONG_TYPE_INFO, BasicTypeInfo.LONG_TYPE_INFO),
-                                BasicTypeInfo.DOUBLE_TYPE_INFO);
+                new EitherTypeInfo<>(
+                        new TupleTypeInfo<>(
+                                BasicTypeInfo.LONG_TYPE_INFO, BasicTypeInfo.LONG_TYPE_INFO),
+                        BasicTypeInfo.DOUBLE_TYPE_INFO);
         EitherSerializer<Tuple2<Long, Long>, Double> eitherSerializer =
                 (EitherSerializer<Tuple2<Long, Long>, Double>)
                         eitherTypeInfo.createSerializer(new ExecutionConfig());
         SerializerTestInstance<Either<Tuple2<Long, Long>, Double>> testInstance =
-                new EitherSerializerTestInstance<Either<Tuple2<Long, Long>, Double>>(
+                new EitherSerializerTestInstance<>(
                         eitherSerializer, eitherTypeInfo.getTypeClass(), -1, testData);
         testInstance.testAll();
     }
@@ -140,7 +140,7 @@ class EitherSerializerTest {
 
         EitherTypeInfo<Tuple2<LongValue, LongValue>, DoubleValue> eitherTypeInfo =
                 new EitherTypeInfo<>(
-                        new TupleTypeInfo<Tuple2<LongValue, LongValue>>(
+                        new TupleTypeInfo<>(
                                 ValueTypeInfo.LONG_VALUE_TYPE_INFO,
                                 ValueTypeInfo.LONG_VALUE_TYPE_INFO),
                         ValueTypeInfo.DOUBLE_VALUE_TYPE_INFO);
@@ -176,12 +176,12 @@ class EitherSerializerTest {
         Either<LongValue, DoubleValue> copy2 = eitherSerializer.copy(left, copy1);
 
         // validate reference equality
-        assertSame(right, copy1);
-        assertSame(copy0, copy2);
+   assertThat(copy1).isSameAs(right);
+   assertThat(copy2).isSameAs(copy0);
 
         // validate reference equality of contained objects
-        assertSame(right.right(), copy1.right());
-        assertSame(copy0.left(), copy2.left());
+   assertThat(copy1.right()).isSameAs(right.right());
+   assertThat(copy2.left()).isSameAs(copy0.left());
     }
 
     @Test
@@ -213,12 +213,12 @@ class EitherSerializerTest {
         Either<LongValue, DoubleValue> copy2 = eitherSerializer.deserialize(copy1, in);
 
         // validate reference equality
-        assertSame(right, copy1);
-        assertSame(copy0, copy2);
+   assertThat(copy1).isSameAs(right);
+   assertThat(copy2).isSameAs(copy0);
 
         // validate reference equality of contained objects
-        assertSame(right.right(), copy1.right());
-        assertSame(copy0.left(), copy2.left());
+   assertThat(copy1.right()).isSameAs(right.right());
+   assertThat(copy2.left()).isSameAs(copy0.left());
     }
 
     /**
@@ -240,14 +240,14 @@ class EitherSerializerTest {
                 TypeSerializer<T> serializer = getSerializer();
 
                 T instance = serializer.createInstance();
-                assertNotNull("The created instance must not be null.", instance);
+           assertThat(instance).as("The created instance must not be null.").isNotNull();
 
                 Class<T> type = getTypeClass();
-                assertNotNull("The test is corrupt: type class is null.", type);
+           assertThat(type).as("The test is corrupt: type class is null.").isNotNull();
             } catch (Exception e) {
                 System.err.println(e.getMessage());
                 e.printStackTrace();
-                fail("Exception in test: " + e.getMessage());
+           fail("Exception in test: " + e.getMessage());
             }
         }
     }

@@ -35,7 +35,11 @@ import org.apache.flink.api.java.typeutils.runtime.AbstractGenericTypeSerializer
 import org.apache.flink.api.java.typeutils.runtime.AbstractGenericTypeSerializerTest.SimpleTypes;
 import org.apache.flink.util.StringUtils;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -43,48 +47,48 @@ import java.util.Random;
 public class TupleSerializerTest {
 
     @Test
-    public void testTuple0() {
+    void testTuple0() {
         Tuple0[] testTuples = new Tuple0[] {Tuple0.INSTANCE, Tuple0.INSTANCE, Tuple0.INSTANCE};
 
         runTests(1, testTuples);
     }
 
     @Test
-    public void testTuple1Int() {
-        @SuppressWarnings({"unchecked", "rawtypes"})
+    void testTuple1Int() {
+        @SuppressWarnings({"unchecked"})
         Tuple1<Integer>[] testTuples =
                 new Tuple1[] {
-                    new Tuple1<Integer>(42),
-                    new Tuple1<Integer>(1),
-                    new Tuple1<Integer>(0),
-                    new Tuple1<Integer>(-1),
-                    new Tuple1<Integer>(Integer.MAX_VALUE),
-                    new Tuple1<Integer>(Integer.MIN_VALUE)
+                    new Tuple1<>(42),
+                    new Tuple1<>(1),
+                    new Tuple1<>(0),
+                    new Tuple1<>(-1),
+                    new Tuple1<>(Integer.MAX_VALUE),
+                    new Tuple1<>(Integer.MIN_VALUE)
                 };
 
         runTests(4, testTuples);
     }
 
     @Test
-    public void testTuple1String() {
+    void testTuple1String() {
         Random rnd = new Random(68761564135413L);
 
-        @SuppressWarnings({"unchecked", "rawtypes"})
+        @SuppressWarnings({"unchecked"})
         Tuple1<String>[] testTuples =
                 new Tuple1[] {
-                    new Tuple1<String>(StringUtils.getRandomString(rnd, 10, 100)),
-                    new Tuple1<String>("abc"),
-                    new Tuple1<String>(""),
-                    new Tuple1<String>(StringUtils.getRandomString(rnd, 30, 170)),
-                    new Tuple1<String>(StringUtils.getRandomString(rnd, 15, 50)),
-                    new Tuple1<String>("")
+                    new Tuple1<>(StringUtils.getRandomString(rnd, 10, 100)),
+                    new Tuple1<>("abc"),
+                    new Tuple1<>(""),
+                    new Tuple1<>(StringUtils.getRandomString(rnd, 30, 170)),
+                    new Tuple1<>(StringUtils.getRandomString(rnd, 15, 50)),
+                    new Tuple1<>("")
                 };
 
         runTests(-1, testTuples);
     }
 
     @Test
-    public void testTuple1StringArray() {
+    void testTuple1StringArray() {
         Random rnd = new Random(289347567856686223L);
 
         String[] arr1 =
@@ -110,37 +114,31 @@ public class TupleSerializerTest {
                 };
 
         @SuppressWarnings("unchecked")
-        Tuple1<String[]>[] testTuples =
-                new Tuple1[] {new Tuple1<String[]>(arr1), new Tuple1<String[]>(arr2)};
+        Tuple1<String[]>[] testTuples = new Tuple1[] {new Tuple1<>(arr1), new Tuple1<>(arr2)};
 
         runTests(-1, testTuples);
     }
 
     @Test
-    public void testTuple2StringDouble() {
+    void testTuple2StringDouble() {
         Random rnd = new Random(807346528946L);
 
         @SuppressWarnings("unchecked")
         Tuple2<String, Double>[] testTuples =
                 new Tuple2[] {
-                    new Tuple2<String, Double>(
-                            StringUtils.getRandomString(rnd, 10, 100), rnd.nextDouble()),
-                    new Tuple2<String, Double>(
-                            StringUtils.getRandomString(rnd, 10, 100), rnd.nextDouble()),
-                    new Tuple2<String, Double>(
-                            StringUtils.getRandomString(rnd, 10, 100), rnd.nextDouble()),
-                    new Tuple2<String, Double>("", rnd.nextDouble()),
-                    new Tuple2<String, Double>(
-                            StringUtils.getRandomString(rnd, 10, 100), rnd.nextDouble()),
-                    new Tuple2<String, Double>(
-                            StringUtils.getRandomString(rnd, 10, 100), rnd.nextDouble())
+                    new Tuple2<>(StringUtils.getRandomString(rnd, 10, 100), rnd.nextDouble()),
+                    new Tuple2<>(StringUtils.getRandomString(rnd, 10, 100), rnd.nextDouble()),
+                    new Tuple2<>(StringUtils.getRandomString(rnd, 10, 100), rnd.nextDouble()),
+                    new Tuple2<>("", rnd.nextDouble()),
+                    new Tuple2<>(StringUtils.getRandomString(rnd, 10, 100), rnd.nextDouble()),
+                    new Tuple2<>(StringUtils.getRandomString(rnd, 10, 100), rnd.nextDouble())
                 };
 
         runTests(-1, testTuples);
     }
 
     @Test
-    public void testTuple2StringStringArray() {
+    void testTuple2StringStringArray() {
         Random rnd = new Random(289347567856686223L);
 
         String[] arr1 =
@@ -168,18 +166,18 @@ public class TupleSerializerTest {
         @SuppressWarnings("unchecked")
         Tuple2<String, String[]>[] testTuples =
                 new Tuple2[] {
-                    new Tuple2<String, String[]>(StringUtils.getRandomString(rnd, 30, 170), arr1),
-                    new Tuple2<String, String[]>(StringUtils.getRandomString(rnd, 30, 170), arr2),
-                    new Tuple2<String, String[]>(StringUtils.getRandomString(rnd, 30, 170), arr1),
-                    new Tuple2<String, String[]>(StringUtils.getRandomString(rnd, 30, 170), arr2),
-                    new Tuple2<String, String[]>(StringUtils.getRandomString(rnd, 30, 170), arr2)
+                    new Tuple2<>(StringUtils.getRandomString(rnd, 30, 170), arr1),
+                    new Tuple2<>(StringUtils.getRandomString(rnd, 30, 170), arr2),
+                    new Tuple2<>(StringUtils.getRandomString(rnd, 30, 170), arr1),
+                    new Tuple2<>(StringUtils.getRandomString(rnd, 30, 170), arr2),
+                    new Tuple2<>(StringUtils.getRandomString(rnd, 30, 170), arr2)
                 };
 
         runTests(-1, testTuples);
     }
 
     @Test
-    public void testTuple5CustomObjects() {
+    void testTuple5CustomObjects() {
         Random rnd = new Random(807346528946L);
 
         SimpleTypes a = new SimpleTypes();
@@ -250,7 +248,7 @@ public class TupleSerializerTest {
         Book b5 = new Book(Long.MIN_VALUE, "Winnign a prize for creative test strings", 0xBADF00);
         Book b6 = new Book(-2L, "Distributed Systems", 0xABCDEF0123456789L);
 
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         list.add("A");
         list.add("B");
         list.add("C");
@@ -259,55 +257,20 @@ public class TupleSerializerTest {
 
         BookAuthor ba1 = new BookAuthor(976243875L, list, "Arno Nym");
 
-        ArrayList<String> list2 = new ArrayList<String>();
+        ArrayList<String> list2 = new ArrayList<>();
         BookAuthor ba2 = new BookAuthor(987654321L, list2, "The Saurus");
 
         @SuppressWarnings("unchecked")
         Tuple5<SimpleTypes, Book, ComplexNestedObject1, BookAuthor, ComplexNestedObject2>[]
                 testTuples =
                         new Tuple5[] {
-                            new Tuple5<
-                                    SimpleTypes,
-                                    Book,
-                                    ComplexNestedObject1,
-                                    BookAuthor,
-                                    ComplexNestedObject2>(a, b1, o1, ba1, co1),
-                            new Tuple5<
-                                    SimpleTypes,
-                                    Book,
-                                    ComplexNestedObject1,
-                                    BookAuthor,
-                                    ComplexNestedObject2>(b, b2, o2, ba2, co2),
-                            new Tuple5<
-                                    SimpleTypes,
-                                    Book,
-                                    ComplexNestedObject1,
-                                    BookAuthor,
-                                    ComplexNestedObject2>(c, b3, o3, ba1, co3),
-                            new Tuple5<
-                                    SimpleTypes,
-                                    Book,
-                                    ComplexNestedObject1,
-                                    BookAuthor,
-                                    ComplexNestedObject2>(d, b2, o4, ba1, co4),
-                            new Tuple5<
-                                    SimpleTypes,
-                                    Book,
-                                    ComplexNestedObject1,
-                                    BookAuthor,
-                                    ComplexNestedObject2>(e, b4, o5, ba2, co4),
-                            new Tuple5<
-                                    SimpleTypes,
-                                    Book,
-                                    ComplexNestedObject1,
-                                    BookAuthor,
-                                    ComplexNestedObject2>(f, b5, o1, ba2, co4),
-                            new Tuple5<
-                                    SimpleTypes,
-                                    Book,
-                                    ComplexNestedObject1,
-                                    BookAuthor,
-                                    ComplexNestedObject2>(g, b6, o4, ba1, co2)
+                            new Tuple5<>(a, b1, o1, ba1, co1),
+                            new Tuple5<>(b, b2, o2, ba2, co2),
+                            new Tuple5<>(c, b3, o3, ba1, co3),
+                            new Tuple5<>(d, b2, o4, ba1, co4),
+                            new Tuple5<>(e, b4, o5, ba2, co4),
+                            new Tuple5<>(f, b5, o1, ba2, co4),
+                            new Tuple5<>(g, b6, o4, ba1, co2)
                         };
 
         runTests(-1, testTuples);

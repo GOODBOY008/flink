@@ -29,17 +29,21 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import org.joda.time.LocalDate;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
 import java.util.HashSet;
 
 @SuppressWarnings("unchecked")
-public class KryoWithCustomSerializersTest extends AbstractGenericTypeSerializerTest {
+class KryoWithCustomSerializersTest extends AbstractGenericTypeSerializerTest {
 
     @Test
-    public void testJodaTime() {
-        Collection<LocalDate> b = new HashSet<LocalDate>();
+    void testJodaTime() {
+        Collection<LocalDate> b = new HashSet<>();
 
         b.add(new LocalDate(1L));
         b.add(new LocalDate(2L));
@@ -51,7 +55,7 @@ public class KryoWithCustomSerializersTest extends AbstractGenericTypeSerializer
     protected <T> TypeSerializer<T> createSerializer(Class<T> type) {
         ExecutionConfig conf = new ExecutionConfig();
         conf.registerTypeWithKryoSerializer(LocalDate.class, LocalDateSerializer.class);
-        TypeInformation<T> typeInfo = new GenericTypeInfo<T>(type);
+        TypeInformation<T> typeInfo = new GenericTypeInfo<>(type);
         return typeInfo.createSerializer(conf);
     }
 

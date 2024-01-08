@@ -32,8 +32,12 @@ import org.apache.flink.core.memory.DataInputView;
 import org.apache.flink.core.memory.DataOutputSerializer;
 import org.apache.flink.testutils.ClassLoaderUtils;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -49,19 +53,19 @@ public class KryoSerializerSnapshotTest {
     private ExecutionConfig oldConfig;
     private ExecutionConfig newConfig;
 
-    @Before
+    @BeforeEach
     public void setup() {
         oldConfig = new ExecutionConfig();
         newConfig = new ExecutionConfig();
     }
 
     @Test
-    public void sanityTest() {
+    void sanityTest() {
         assertThat(resolveKryoCompatibility(oldConfig, newConfig), isCompatibleAsIs());
     }
 
     @Test
-    public void addingTypesIsCompatibleAfterReconfiguration() {
+    void addingTypesIsCompatibleAfterReconfiguration() {
         oldConfig.registerKryoType(Animal.class);
 
         newConfig.registerKryoType(Animal.class);
@@ -73,7 +77,7 @@ public class KryoSerializerSnapshotTest {
     }
 
     @Test
-    public void replacingKryoSerializersIsCompatibleAsIs() {
+    void replacingKryoSerializersIsCompatibleAsIs() {
         oldConfig.registerKryoType(Animal.class);
         oldConfig.registerTypeWithKryoSerializer(Dog.class, DogKryoSerializer.class);
 
@@ -86,7 +90,7 @@ public class KryoSerializerSnapshotTest {
     }
 
     @Test
-    public void reorderingIsCompatibleAfterReconfiguration() {
+    void reorderingIsCompatibleAfterReconfiguration() {
         oldConfig.registerKryoType(Parrot.class);
         oldConfig.registerKryoType(Dog.class);
 
@@ -99,7 +103,7 @@ public class KryoSerializerSnapshotTest {
     }
 
     @Test
-    public void tryingToRestoreWithNonExistingClassShouldBeIncompatible() throws IOException {
+    void tryingToRestoreWithNonExistingClassShouldBeIncompatible() throws IOException {
         TypeSerializerSnapshot<Animal> restoredSnapshot = kryoSnapshotWithMissingClass();
 
         TypeSerializer<Animal> currentSerializer =

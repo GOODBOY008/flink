@@ -31,22 +31,22 @@ import org.apache.flink.api.java.typeutils.runtime.tuple.base.TupleComparatorTes
 
 class TupleComparatorILDC3Test extends TupleComparatorTestBase<Tuple3<Integer, Long, Double>> {
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") final
     Tuple3<Integer, Long, Double>[] dataISD =
             new Tuple3[] {
-                new Tuple3<Integer, Long, Double>(4, Long.valueOf(4), 20.0),
-                new Tuple3<Integer, Long, Double>(5, Long.valueOf(1), 20.0),
-                new Tuple3<Integer, Long, Double>(5, Long.valueOf(2), 20.0),
-                new Tuple3<Integer, Long, Double>(5, Long.valueOf(10), 23.0),
-                new Tuple3<Integer, Long, Double>(5, Long.valueOf(19), 24.0),
-                new Tuple3<Integer, Long, Double>(5, Long.valueOf(20), 24.0),
-                new Tuple3<Integer, Long, Double>(5, Long.valueOf(24), 25.0),
-                new Tuple3<Integer, Long, Double>(5, Long.valueOf(25), 25.0)
+                new Tuple3<>(4, Long.valueOf(4), 20.0),
+                new Tuple3<>(5, Long.valueOf(1), 20.0),
+                new Tuple3<>(5, Long.valueOf(2), 20.0),
+                new Tuple3<>(5, Long.valueOf(10), 23.0),
+                new Tuple3<>(5, Long.valueOf(19), 24.0),
+                new Tuple3<>(5, Long.valueOf(20), 24.0),
+                new Tuple3<>(5, Long.valueOf(24), 25.0),
+                new Tuple3<>(5, Long.valueOf(25), 25.0)
             };
 
     @Override
     protected TupleComparator<Tuple3<Integer, Long, Double>> createComparator(boolean ascending) {
-        return new TupleComparator<Tuple3<Integer, Long, Double>>(
+        return new TupleComparator<>(
                 new int[] {2, 0, 1},
                 new TypeComparator[] {
                     new DoubleComparator(ascending),
@@ -61,7 +61,7 @@ class TupleComparatorILDC3Test extends TupleComparatorTestBase<Tuple3<Integer, L
     @SuppressWarnings("unchecked")
     @Override
     protected TupleSerializer<Tuple3<Integer, Long, Double>> createSerializer() {
-        return new TupleSerializer<Tuple3<Integer, Long, Double>>(
+        return new TupleSerializer<>(
                 (Class<Tuple3<Integer, Long, Double>>) (Class<?>) Tuple3.class,
                 new TypeSerializer[] {
                     new IntSerializer(), new LongSerializer(), new DoubleSerializer()

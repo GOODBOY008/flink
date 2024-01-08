@@ -24,9 +24,11 @@ import org.apache.flink.core.memory.DataOutputView;
 import org.apache.flink.types.Record;
 import org.apache.flink.types.Value;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -53,10 +55,10 @@ class ValueTypeInfoTest extends TypeInformationTestBase<ValueTypeInfo<?>> {
         private static final long serialVersionUID = -492760806806568285L;
 
         @Override
-        public void write(DataOutputView out) throws IOException {}
+        public void write(DataOutputView out) {}
 
         @Override
-        public void read(DataInputView in) throws IOException {}
+        public void read(DataInputView in) {}
     }
 
     public static class AlternativeClass implements Value {
@@ -64,9 +66,9 @@ class ValueTypeInfoTest extends TypeInformationTestBase<ValueTypeInfo<?>> {
         private static final long serialVersionUID = -163437084575260172L;
 
         @Override
-        public void write(DataOutputView out) throws IOException {}
+        public void write(DataOutputView out) {}
 
         @Override
-        public void read(DataInputView in) throws IOException {}
+        public void read(DataInputView in) {}
     }
 }

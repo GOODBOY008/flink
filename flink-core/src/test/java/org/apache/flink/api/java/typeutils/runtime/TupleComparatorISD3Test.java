@@ -31,22 +31,22 @@ import org.apache.flink.api.java.typeutils.runtime.tuple.base.TupleComparatorTes
 
 class TupleComparatorISD3Test extends TupleComparatorTestBase<Tuple3<Integer, String, Double>> {
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") final
     Tuple3<Integer, String, Double>[] dataISD =
             new Tuple3[] {
-                new Tuple3<Integer, String, Double>(4, "hello", 20.0),
-                new Tuple3<Integer, String, Double>(4, "hello", 23.2),
-                new Tuple3<Integer, String, Double>(4, "world", 20.0),
-                new Tuple3<Integer, String, Double>(5, "hello", 20.0),
-                new Tuple3<Integer, String, Double>(5, "hello", 23.2),
-                new Tuple3<Integer, String, Double>(5, "world", 20.0),
-                new Tuple3<Integer, String, Double>(6, "hello", 20.0),
-                new Tuple3<Integer, String, Double>(6, "hello", 23.2)
+                new Tuple3<>(4, "hello", 20.0),
+                new Tuple3<>(4, "hello", 23.2),
+                new Tuple3<>(4, "world", 20.0),
+                new Tuple3<>(5, "hello", 20.0),
+                new Tuple3<>(5, "hello", 23.2),
+                new Tuple3<>(5, "world", 20.0),
+                new Tuple3<>(6, "hello", 20.0),
+                new Tuple3<>(6, "hello", 23.2)
             };
 
     @Override
     protected TupleComparator<Tuple3<Integer, String, Double>> createComparator(boolean ascending) {
-        return new TupleComparator<Tuple3<Integer, String, Double>>(
+        return new TupleComparator<>(
                 new int[] {0, 1, 2},
                 new TypeComparator[] {
                     new IntComparator(ascending),
@@ -61,7 +61,7 @@ class TupleComparatorISD3Test extends TupleComparatorTestBase<Tuple3<Integer, St
     @SuppressWarnings("unchecked")
     @Override
     protected TupleSerializer<Tuple3<Integer, String, Double>> createSerializer() {
-        return new TupleSerializer<Tuple3<Integer, String, Double>>(
+        return new TupleSerializer<>(
                 (Class<Tuple3<Integer, String, Double>>) (Class<?>) Tuple3.class,
                 new TypeSerializer[] {
                     new IntSerializer(), new StringSerializer(), new DoubleSerializer()

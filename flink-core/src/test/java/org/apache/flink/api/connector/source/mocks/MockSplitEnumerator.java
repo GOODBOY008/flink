@@ -25,7 +25,6 @@ import org.apache.flink.api.connector.source.SplitsAssignment;
 
 import javax.annotation.Nullable;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -94,7 +93,7 @@ public class MockSplitEnumerator implements SplitEnumerator<MockSourceSplit, Set
         }
         enumContext.assignSplits(
                 new SplitsAssignment<>(Collections.singletonMap(subtaskId, assignment)));
-        unassignedSplits.removeAll(assignment);
+        assignment.forEach(unassignedSplits::remove);
     }
 
     @Override
@@ -108,7 +107,7 @@ public class MockSplitEnumerator implements SplitEnumerator<MockSourceSplit, Set
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         this.closed = true;
     }
 
@@ -154,6 +153,6 @@ public class MockSplitEnumerator implements SplitEnumerator<MockSourceSplit, Set
                     }
                 });
         enumContext.assignSplits(new SplitsAssignment<>(assignment));
-        assignment.values().forEach(l -> unassignedSplits.removeAll(l));
+        assignment.values().forEach(unassignedSplits::removeAll);
     }
 }

@@ -20,10 +20,13 @@ package org.apache.flink.api.java.typeutils.runtime.kryo;
 
 import org.apache.flink.util.TestLogger;
 
-import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeFalse;
+import org.junit.jupiter.api.Assumptions;
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForClassTypes.within;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A test that validates that the concurrency checks in the Kryo Serializer are not hard coded to
@@ -49,10 +52,10 @@ public class KryoSerializerConcurrencyCheckInactiveITCase extends TestLogger {
      * concurrency checks are off by default.
      */
     @Test
-    public void testWithNoConcurrencyCheck() throws Exception {
+    void testWithNoConcurrencyCheck() throws Exception {
         // this test will fail on DEBUG log level: If we run the test with DEBUG log level
         // the KryoSerializer.CONCURRENT_ACCESS_CHECK will be enabled, causing a failure here.
-        assumeFalse(log.isDebugEnabled());
+        Assumptions.assumeFalse(log.isDebugEnabled());
         boolean assertionError;
         try {
             new KryoSerializerConcurrencyTest().testConcurrentUseOfSerializer();
@@ -61,9 +64,9 @@ public class KryoSerializerConcurrencyCheckInactiveITCase extends TestLogger {
             assertionError = true;
         }
 
-        assertTrue(
+   assertTrue(
+                assertionError,
                 "testConcurrentUseOfSerializer() should have failed if "
-                        + "concurrency checks are off by default",
-                assertionError);
+                        + "concurrency checks are off by default");
     }
 }
