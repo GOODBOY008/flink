@@ -157,7 +157,7 @@ class LocalFileSystemTest {
         assertThat(Arrays.equals(testbytes, testbytestest)).isTrue();
 
         // does lfs see two files?
-        assertThat(lfs.listStatus(pathtotmpdir).length).isEqualTo(2);
+        assertThat(lfs.listStatus(pathtotmpdir)).hasSize(2);
 
         // do we get exactly one blocklocation per file? no matter what start and len we provide
         assertThat(lfs.getFileBlockLocations(lfs.getFileStatus(pathtotestfile1), 0, 0).length)
@@ -353,48 +353,36 @@ class LocalFileSystemTest {
     }
 
     @Test
-    void testFlushMethodFailsOnClosedOutputStream() throws IOException {
+    void testFlushMethodFailsOnClosedOutputStream() {
         assertThatExceptionOfType(ClosedChannelException.class)
-                .isThrownBy(
-                        () -> {
-                            testMethodCallFailureOnClosedStream(FSDataOutputStream::flush);
-                        });
+                .isThrownBy(() -> testMethodCallFailureOnClosedStream(FSDataOutputStream::flush));
     }
 
     @Test
-    void testWriteIntegerMethodFailsOnClosedOutputStream() throws IOException {
+    void testWriteIntegerMethodFailsOnClosedOutputStream() {
         assertThatExceptionOfType(ClosedChannelException.class)
-                .isThrownBy(
-                        () -> {
-                            testMethodCallFailureOnClosedStream(os -> os.write(0));
-                        });
+                .isThrownBy(() -> testMethodCallFailureOnClosedStream(os -> os.write(0)));
     }
 
     @Test
-    void testWriteBytesMethodFailsOnClosedOutputStream() throws IOException {
+    void testWriteBytesMethodFailsOnClosedOutputStream() {
         assertThatExceptionOfType(ClosedChannelException.class)
-                .isThrownBy(
-                        () -> {
-                            testMethodCallFailureOnClosedStream(os -> os.write(new byte[0]));
-                        });
+                .isThrownBy(() -> testMethodCallFailureOnClosedStream(os -> os.write(new byte[0])));
     }
 
     @Test
-    void testWriteBytesSubArrayMethodFailsOnClosedOutputStream() throws IOException {
+    void testWriteBytesSubArrayMethodFailsOnClosedOutputStream() {
         assertThatExceptionOfType(ClosedChannelException.class)
                 .isThrownBy(
-                        () -> {
-                            testMethodCallFailureOnClosedStream(os -> os.write(new byte[0], 0, 0));
-                        });
+                        () ->
+                                testMethodCallFailureOnClosedStream(
+                                        os -> os.write(new byte[0], 0, 0)));
     }
 
     @Test
-    void testGetPosMethodFailsOnClosedOutputStream() throws IOException {
+    void testGetPosMethodFailsOnClosedOutputStream() {
         assertThatExceptionOfType(ClosedChannelException.class)
-                .isThrownBy(
-                        () -> {
-                            testMethodCallFailureOnClosedStream(FSDataOutputStream::getPos);
-                        });
+                .isThrownBy(() -> testMethodCallFailureOnClosedStream(FSDataOutputStream::getPos));
     }
 
     private void testMethodCallFailureOnClosedStream(

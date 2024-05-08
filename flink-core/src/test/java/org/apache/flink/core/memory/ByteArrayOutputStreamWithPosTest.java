@@ -47,7 +47,7 @@ class ByteArrayOutputStreamWithPosTest {
         stream.write(new byte[BUFFER_SIZE]);
 
         // check whether the buffer is filled fully
-        assertThat(stream.getBuf().length).isEqualTo(BUFFER_SIZE);
+        assertThat(stream.getBuf()).hasSize(BUFFER_SIZE);
 
         // check current position is the end of the buffer
         assertThat(stream.getPosition()).isEqualTo(BUFFER_SIZE);
@@ -60,7 +60,7 @@ class ByteArrayOutputStreamWithPosTest {
 
     /** Test setting negative position. */
     @Test
-    void testSetNegativePosition() throws Exception {
+    void testSetNegativePosition() {
         Throwable exception =
                 assertThrows(
                         IllegalArgumentException.class,
@@ -76,11 +76,11 @@ class ByteArrayOutputStreamWithPosTest {
     void testSetPositionLargerThanBufferSize() throws Exception {
         // fully fill the buffer
         stream.write(new byte[BUFFER_SIZE]);
-        assertThat(stream.getBuf().length).isEqualTo(BUFFER_SIZE);
+        assertThat(stream.getBuf()).hasSize(BUFFER_SIZE);
 
         // expand the buffer by setting position beyond the buffer length
         stream.setPosition(BUFFER_SIZE + 1);
-        assertThat(stream.getBuf().length).isEqualTo(BUFFER_SIZE * 2);
+        assertThat(stream.getBuf()).hasSize(BUFFER_SIZE * 2);
         assertThat(stream.getPosition()).isEqualTo(BUFFER_SIZE + 1);
     }
 
@@ -89,21 +89,22 @@ class ByteArrayOutputStreamWithPosTest {
     void testToString() throws IOException {
         byte[] data = "1234567890".getBytes(ConfigConstants.DEFAULT_CHARSET);
 
-        ByteArrayOutputStreamWithPos stream = new ByteArrayOutputStreamWithPos(data.length);
+        try (ByteArrayOutputStreamWithPos stream = new ByteArrayOutputStreamWithPos(data.length)) {
 
-        stream.write(data);
-        assertThat(stream.toString().getBytes(ConfigConstants.DEFAULT_CHARSET))
-                .containsExactly(data);
-
-        for (int i = 0; i < data.length; i++) {
-            stream.setPosition(i);
+            stream.write(data);
             assertThat(stream.toString().getBytes(ConfigConstants.DEFAULT_CHARSET))
-                    .containsExactly(Arrays.copyOf(data, i));
-        }
+                    .containsExactly(data);
 
-        // validate that the stored bytes are still tracked properly even when expanding array
-        stream.setPosition(data.length + 1);
-        assertThat(stream.toString().getBytes(ConfigConstants.DEFAULT_CHARSET))
-                .containsExactly(Arrays.copyOf(data, data.length + 1));
+            for (int i = 0; i < data.length; i++) {
+                stream.setPosition(i);
+                assertThat(stream.toString().getBytes(ConfigConstants.DEFAULT_CHARSET))
+                        .containsExactly(Arrays.copyOf(data, i));
+            }
+
+            // validate that the stored bytes are still tracked properly even when expanding array
+            stream.setPosition(data.length + 1);
+            assertThat(stream.toString().getBytes(ConfigConstants.DEFAULT_CHARSET))
+                    .containsExactly(Arrays.copyOf(data, data.length + 1));
+        }
     }
 }
