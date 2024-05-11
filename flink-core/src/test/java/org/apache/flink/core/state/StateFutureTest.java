@@ -23,7 +23,7 @@ import org.apache.flink.core.state.StateFutureImpl.AsyncFrameworkExceptionHandle
 import org.apache.flink.util.concurrent.ExecutorThreadFactory;
 import org.apache.flink.util.function.ThrowingRunnable;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -45,7 +45,7 @@ public class StateFutureTest {
             };
 
     @Test
-    public void basicSyncComplete() {
+    void basicSyncComplete() {
         StateFutureImpl.CallbackRunner runner = new TestCallbackRunner(null);
         final AtomicInteger counter = new AtomicInteger(0);
 
@@ -123,7 +123,7 @@ public class StateFutureTest {
     }
 
     @Test
-    public void testRunOnCorrectThread() throws Exception {
+    void testRunOnCorrectThread() throws Exception {
         final AtomicInteger threadIdProvider = new AtomicInteger(0);
         final ThreadLocal<Integer> threadId =
                 ThreadLocal.withInitial(threadIdProvider::getAndIncrement);

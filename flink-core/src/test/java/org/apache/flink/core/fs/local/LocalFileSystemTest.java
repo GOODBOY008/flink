@@ -98,7 +98,7 @@ class LocalFileSystemTest {
         final FileStatus[] statusforfiles = lfs.listStatus(pathtotmpdir);
 
         // no files in there.. hence, must be zero
-        assertThat(statusforfiles.length).isZero();
+        assertThat(statusforfiles).isEmpty();
 
         // check that lfs can delete directory..
         lfs.delete(pathtotmpdir, true);

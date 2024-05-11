@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.fail;
 
 /** Tests for the {@link AbstractAutoCloseableRegistry}. */
@@ -92,11 +93,8 @@ public abstract class AbstractAutoCloseableRegistryTest<C extends Closeable, E e
 
         final TestCloseable testCloseable = new TestCloseable();
 
-        try {
-            registerCloseable(testCloseable);
-            fail("Closed registry should not accept closeables!");
-        } catch (IOException expected) {
-        }
+        assertThatThrownBy(() -> registerCloseable(testCloseable))
+                .isInstanceOf(IOException.class);
 
         assertThat(testCloseable.isClosed()).isTrue();
         assertThat(unclosedCounter.get()).isZero();
@@ -125,11 +123,9 @@ public abstract class AbstractAutoCloseableRegistryTest<C extends Closeable, E e
         blockingCloseable.awaitClose(TEST_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
         final TestCloseable testCloseable = new TestCloseable();
-        try {
-            registerCloseable(testCloseable);
-            fail("Closed registry should not accept closeables!");
-        } catch (IOException ignored) {
-        }
+
+        assertThatThrownBy(() -> registerCloseable(testCloseable))
+                .isInstanceOf(IOException.class);
 
         blockingCloseable.unblockClose();
         closer.join();
