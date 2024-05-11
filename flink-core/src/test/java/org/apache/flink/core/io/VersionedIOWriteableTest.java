@@ -102,7 +102,7 @@ class VersionedIOWriteableTest {
                         })
                 .isInstanceOf(VersionMismatchException.class);
 
-        assertThat(testWriteable.getData()).isNull();
+        assertThat(finalTestWriteable.getData()).isNull();
     }
 
     static class TestWriteable extends VersionedIOReadableWritable {
