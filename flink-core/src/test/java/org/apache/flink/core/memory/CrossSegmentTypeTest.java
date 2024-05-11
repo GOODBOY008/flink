@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /** Verifies interoperability between heap and off-heap modes of {@link MemorySegment}. */
 class CrossSegmentTypeTest {
@@ -214,29 +214,17 @@ class CrossSegmentTypeTest {
         for (int off1 : validOffsets) {
             for (int off2 : validOffsets) {
                 for (int len : invalidLengths) {
-                    try {
-                        seg1.copyTo(off1, seg2, off2, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg1.copyTo(off1, seg2, off2, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
 
-                    try {
-                        seg1.copyTo(off2, seg2, off1, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg1.copyTo(off2, seg2, off1, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
 
-                    try {
-                        seg2.copyTo(off1, seg1, off2, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg2.copyTo(off1, seg1, off2, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
 
-                    try {
-                        seg2.copyTo(off2, seg1, off1, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg2.copyTo(off2, seg1, off1, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
                 }
             }
         }
@@ -244,29 +232,17 @@ class CrossSegmentTypeTest {
         for (int off1 : validOffsets) {
             for (int off2 : invalidOffsets) {
                 for (int len : validLengths) {
-                    try {
-                        seg1.copyTo(off1, seg2, off2, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg1.copyTo(off1, seg2, off2, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
 
-                    try {
-                        seg1.copyTo(off2, seg2, off1, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg1.copyTo(off2, seg2, off1, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
 
-                    try {
-                        seg2.copyTo(off1, seg1, off2, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg2.copyTo(off1, seg1, off2, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
 
-                    try {
-                        seg2.copyTo(off2, seg1, off1, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg2.copyTo(off2, seg1, off1, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
                 }
             }
         }
@@ -274,29 +250,17 @@ class CrossSegmentTypeTest {
         for (int off1 : invalidOffsets) {
             for (int off2 : validOffsets) {
                 for (int len : validLengths) {
-                    try {
-                        seg1.copyTo(off1, seg2, off2, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg1.copyTo(off1, seg2, off2, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
 
-                    try {
-                        seg1.copyTo(off2, seg2, off1, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg1.copyTo(off2, seg2, off1, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
 
-                    try {
-                        seg2.copyTo(off1, seg1, off2, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg2.copyTo(off1, seg1, off2, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
 
-                    try {
-                        seg2.copyTo(off2, seg1, off1, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg2.copyTo(off2, seg1, off1, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
                 }
             }
         }
@@ -304,29 +268,17 @@ class CrossSegmentTypeTest {
         for (int off1 : invalidOffsets) {
             for (int off2 : invalidOffsets) {
                 for (int len : validLengths) {
-                    try {
-                        seg1.copyTo(off1, seg2, off2, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg1.copyTo(off1, seg2, off2, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
 
-                    try {
-                        seg1.copyTo(off2, seg2, off1, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg1.copyTo(off2, seg2, off1, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
 
-                    try {
-                        seg2.copyTo(off1, seg1, off2, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg2.copyTo(off1, seg1, off2, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
 
-                    try {
-                        seg2.copyTo(off2, seg1, off1, len);
-                        fail("should fail with an IndexOutOfBoundsException");
-                    } catch (IndexOutOfBoundsException ignored) {
-                    }
+                    assertThatThrownBy(() -> seg2.copyTo(off2, seg1, off1, len))
+                            .isInstanceOf(IndexOutOfBoundsException.class);
                 }
             }
         }

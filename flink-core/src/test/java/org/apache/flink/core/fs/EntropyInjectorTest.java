@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /** Tests for the {@link EntropyInjector}. */
 class EntropyInjectorTest {
@@ -157,12 +157,12 @@ class EntropyInjectorTest {
         }
 
         // check that the safety net closed the stream
-        try {
-            out.write(42);
-            out.flush();
-            fail("stream should be already close and hence fail with an exception");
-        } catch (IOException ignored) {
-        }
+        assertThatThrownBy(
+                        () -> {
+                            out.write(42);
+                            out.flush();
+                        })
+                .isInstanceOf(IOException.class);
     }
 
     @Test

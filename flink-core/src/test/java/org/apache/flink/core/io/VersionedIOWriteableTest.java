@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class VersionedIOWriteableTest {
 
@@ -92,13 +92,15 @@ class VersionedIOWriteableTest {
             serialized = out.toByteArray();
         }
 
-        testWriteable = new TestWriteable(2);
-        try (ByteArrayInputStreamWithPos in = new ByteArrayInputStreamWithPos(serialized)) {
-            testWriteable.read(new DataInputViewStreamWrapper(in));
-            fail("Version mismatch expected.");
-        } catch (VersionMismatchException ignored) {
-
-        }
+        TestWriteable finalTestWriteable = new TestWriteable(2);
+        assertThatThrownBy(
+                        () -> {
+                            try (ByteArrayInputStreamWithPos in =
+                                    new ByteArrayInputStreamWithPos(serialized)) {
+                                finalTestWriteable.read(new DataInputViewStreamWrapper(in));
+                            }
+                        })
+                .isInstanceOf(VersionMismatchException.class);
 
         assertThat(testWriteable.getData()).isNull();
     }

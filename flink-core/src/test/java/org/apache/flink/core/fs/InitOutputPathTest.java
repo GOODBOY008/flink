@@ -39,7 +39,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static org.apache.flink.util.Preconditions.checkNotNull;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.fail;
 
 /** A test validating that the initialization of local output paths is properly synchronized. */
 public class InitOutputPathTest {

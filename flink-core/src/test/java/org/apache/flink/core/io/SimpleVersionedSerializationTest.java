@@ -118,10 +118,9 @@ class SimpleVersionedSerializationTest {
     void testUnderflow() throws Exception {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(
-                        () -> {
-                            SimpleVersionedSerialization.readVersionAndDeSerialize(
-                                    new TestStringSerializer(), new byte[7]);
-                        });
+                        () ->
+                                SimpleVersionedSerialization.readVersionAndDeSerialize(
+                                        new TestStringSerializer(), new byte[7]));
     }
 
     // ------------------------------------------------------------------------

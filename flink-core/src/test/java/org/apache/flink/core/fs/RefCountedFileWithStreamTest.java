@@ -58,8 +58,7 @@ class RefCountedFileWithStreamTest {
         fileUnderTest1.write(content, 0, content.length);
 
         fileUnderTest1.closeStream();
-        final RefCountedFileWithStream fileUnderTest = fileUnderTest1;
-        long fileLength = fileUnderTest.getLength();
+        long fileLength = fileUnderTest1.getLength();
 
         assertThat(fileLength).isEqualTo(content.length);
     }
@@ -74,7 +73,7 @@ class RefCountedFileWithStreamTest {
     }
 
     @Test
-    void writeAfterCloseShouldThrowException() throws IOException {
+    void writeAfterCloseShouldThrowException() {
         assertThatExceptionOfType(IOException.class)
                 .isThrownBy(
                         () -> {
@@ -88,7 +87,7 @@ class RefCountedFileWithStreamTest {
     }
 
     @Test
-    void flushAfterCloseShouldThrowException() throws IOException {
+    void flushAfterCloseShouldThrowException() {
         assertThatExceptionOfType(IOException.class)
                 .isThrownBy(
                         () -> {

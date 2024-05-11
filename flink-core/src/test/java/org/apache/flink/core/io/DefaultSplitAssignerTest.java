@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
 class DefaultSplitAssignerTest {
 
@@ -100,9 +99,7 @@ class DefaultSplitAssignerTest {
 
         // verify
         for (int i = 0; i < NUM_THREADS; i++) {
-            if (threads[i].isAlive()) {
-                fail("The concurrency test case is erroneous, the thread did not respond in time.");
-            }
+            assertThat(threads[i].isAlive()).isFalse();
         }
 
         assertThat(splitsRetrieved.get()).isEqualTo(NUM_SPLITS);

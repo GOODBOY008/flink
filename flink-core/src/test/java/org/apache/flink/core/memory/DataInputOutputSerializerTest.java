@@ -32,61 +32,55 @@ import java.util.ArrayDeque;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
 /** Tests for the combination of {@link DataOutputSerializer} and {@link DataInputDeserializer}. */
 class DataInputOutputSerializerTest {
 
     @Test
-    void testWrapAsByteBuffer() {
+    void testWrapAsByteBuffer() throws IOException {
         SerializationTestType randomInt = Util.randomRecord(SerializationTestTypeFactory.INT);
 
         DataOutputSerializer serializer = new DataOutputSerializer(randomInt.length());
         MemorySegment segment = MemorySegmentFactory.allocateUnpooledSegment(randomInt.length());
 
-        try {
-            // empty buffer, read buffer should be empty
-            ByteBuffer wrapper = serializer.wrapAsByteBuffer();
+        // empty buffer, read buffer should be empty
+        ByteBuffer wrapper = serializer.wrapAsByteBuffer();
 
-            assertThat(wrapper.position()).isZero();
-            assertThat(wrapper.limit()).isZero();
+        assertThat(wrapper.position()).isZero();
+        assertThat(wrapper.limit()).isZero();
 
-            // write to data output, read buffer should still be empty
-            randomInt.write(serializer);
+        // write to data output, read buffer should still be empty
+        randomInt.write(serializer);
 
-            assertThat(wrapper.position()).isZero();
-            assertThat(wrapper.limit()).isZero();
+        assertThat(wrapper.position()).isZero();
+        assertThat(wrapper.limit()).isZero();
 
-            // get updated read buffer, read buffer should contain written data
-            wrapper = serializer.wrapAsByteBuffer();
+        // get updated read buffer, read buffer should contain written data
+        wrapper = serializer.wrapAsByteBuffer();
 
-            assertThat(wrapper.position()).isZero();
-            assertThat(wrapper.limit()).isEqualTo(randomInt.length());
+        assertThat(wrapper.position()).isZero();
+        assertThat(wrapper.limit()).isEqualTo(randomInt.length());
 
-            // clear data output, read buffer should still contain written data
-            serializer.clear();
+        // clear data output, read buffer should still contain written data
+        serializer.clear();
 
-            assertThat(wrapper.position()).isZero();
-            assertThat(wrapper.limit()).isEqualTo(randomInt.length());
+        assertThat(wrapper.position()).isZero();
+        assertThat(wrapper.limit()).isEqualTo(randomInt.length());
 
-            // get updated read buffer, should be empty
-            wrapper = serializer.wrapAsByteBuffer();
+        // get updated read buffer, should be empty
+        wrapper = serializer.wrapAsByteBuffer();
 
-            assertThat(wrapper.position()).isZero();
-            assertThat(wrapper.limit()).isZero();
+        assertThat(wrapper.position()).isZero();
+        assertThat(wrapper.limit()).isZero();
 
-            // write to data output and read back to memory
-            randomInt.write(serializer);
-            wrapper = serializer.wrapAsByteBuffer();
+        // write to data output and read back to memory
+        randomInt.write(serializer);
+        wrapper = serializer.wrapAsByteBuffer();
 
-            segment.put(0, wrapper, randomInt.length());
+        segment.put(0, wrapper, randomInt.length());
 
-            assertThat(wrapper.position()).isEqualTo(randomInt.length());
-            assertThat(wrapper.limit()).isEqualTo(randomInt.length());
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Test encountered an unexpected exception.");
-        }
+        assertThat(wrapper.position()).isEqualTo(randomInt.length());
+        assertThat(wrapper.limit()).isEqualTo(randomInt.length());
     }
 
     @Test

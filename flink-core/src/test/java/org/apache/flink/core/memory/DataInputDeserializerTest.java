@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /** Test suite for the {@link DataInputDeserializer} class. */
 class DataInputDeserializerTest {
@@ -48,12 +48,7 @@ class DataInputDeserializerTest {
         dis.readByte();
         assertThat(dis.available()).isZero();
 
-        try {
-            dis.readByte();
-            fail("Did not throw expected IOException");
-        } catch (IOException e) {
-            // ignore
-        }
+        assertThatThrownBy(dis::readByte).isInstanceOf(IOException.class);
         assertThat(dis.available()).isZero();
     }
 

@@ -31,7 +31,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.fail;
 
 /** Tests for the {@link AbstractAutoCloseableRegistry}. */
 public abstract class AbstractAutoCloseableRegistryTest<C extends Closeable, E extends C, T> {
@@ -93,8 +92,7 @@ public abstract class AbstractAutoCloseableRegistryTest<C extends Closeable, E e
 
         final TestCloseable testCloseable = new TestCloseable();
 
-        assertThatThrownBy(() -> registerCloseable(testCloseable))
-                .isInstanceOf(IOException.class);
+        assertThatThrownBy(() -> registerCloseable(testCloseable)).isInstanceOf(IOException.class);
 
         assertThat(testCloseable.isClosed()).isTrue();
         assertThat(unclosedCounter.get()).isZero();
@@ -124,8 +122,7 @@ public abstract class AbstractAutoCloseableRegistryTest<C extends Closeable, E e
 
         final TestCloseable testCloseable = new TestCloseable();
 
-        assertThatThrownBy(() -> registerCloseable(testCloseable))
-                .isInstanceOf(IOException.class);
+        assertThatThrownBy(() -> registerCloseable(testCloseable)).isInstanceOf(IOException.class);
 
         blockingCloseable.unblockClose();
         closer.join();

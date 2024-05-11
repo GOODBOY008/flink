@@ -35,7 +35,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
 /** Tests for {@link StateFuture} related implementations. */
 public class StateFutureTest {
@@ -147,14 +146,9 @@ public class StateFutureTest {
                 });
 
         latch.await(20, TimeUnit.SECONDS);
-        if (latch.getCount() != 0) {
-            fail(
-                    "Wait timeout, some error may occurred in other thread. latch count="
-                            + latch.getCount());
-        }
-        if (exception.get() != null) {
-            fail("Exception thrown in other threads", exception.get());
-        }
+
+        assertThat(latch.getCount()).isEqualTo(0);
+        assertThat(exception.get()).isNull();
 
         MockValueState valueState = new MockValueState(executor);
         Runnable threadChecker =
@@ -203,15 +197,9 @@ public class StateFutureTest {
                 });
 
         latch2.await(20, TimeUnit.SECONDS);
-        if (latch2.getCount() != 0) {
-            fail(
-                    "Wait timeout, some error may occurred in other thread. latch count="
-                            + latch2.getCount());
-        }
-        if (exception.get() != null) {
-            fail("Exception thrown in other threads", exception.get());
-        }
 
+        assertThat(latch2.getCount()).isEqualTo(0);
+        assertThat(exception.get()).isNull();
         assertThat(list.size()).isEqualTo(7);
     }
 

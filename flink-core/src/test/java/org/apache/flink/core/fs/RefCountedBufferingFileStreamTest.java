@@ -57,7 +57,7 @@ class RefCountedBufferingFileStreamTest {
     }
 
     @Test
-    void testExceptionWhenWritingToClosedFile() throws IOException {
+    void testExceptionWhenWritingToClosedFile() {
         assertThatExceptionOfType(IOException.class)
                 .isThrownBy(
                         () -> {
